@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reference guide for Citrix XenServer Management API">
+  
+  
+  <title>Citrix XenServer Management API</title>
+  
+
+  <link rel="shortcut icon" href="
+https://www.citrix.com/etc/designs/citrix/icon-favicon.png">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/highlight.css">
+  <link rel="stylesheet" href="./css/override.css" type="text/css" />
+  <link rel="stylesheet" href="./css/font-awesome.css" type="text/css" />
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "None";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-1.10.2.min.js"></script>
+  <script src="./js/bootstrap-3.0.3.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script>
+  <script src="./js/base.js"></script>
+  <script src="./js/custom.js"></script>
+  <script src="./js/nav.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document" data-spy="scroll" data-target=".bs-sidebar">
+
+	<div class="header-top">
+		<div class="header-top-left">
+			<a href="http://citrix.github.io" class="logo-position"><img height="60" src="https://thumbnail-ec2.sharefile.com/thumbnail.aspx?encparams=ypL2J0l-In6gqXJ7yeyKP8A1rqwKMH-C8-nfkJcHJNIN7Y0yZiJsYOcUe-uc0YeZzWLQSFSd1FnuMHPa30XSSINHuGOA8nvvnBT5WmjGlKvd5mxJ4IfT7iTVyHELwhWQiNCznPCiIFyhkA78uKX77PlU2iyhM4YdRM1NKabBe-4wXuiFJsbtAxyJ2UukO_E2ZSf1W3l75Dw8G0zflVkT-EFqyx1zSGId0qzLjm6nzJ8dA9zo-1AJzUisdzmGMzHOq_LMsOWyaalvmcWvCkl-q10GBSbfekfTIFW9LpZNYjkLNSnK8rcwNjWVr_jYayrGjIj2e5dDIMiDj3NRvW51AvHRjxYH9xRRRtY$" target="_blank" class="logo-citrix"><span style="color:#fff;font-size: 20px;position: relative;top:4px;left: 5px">SDK Reference</span></a>
+		</div>
+		<div class="header-top-right">
+			<ul>
+			<!--	<li class="list-inline home"><a href=".">HOME</a></li>
+				<li class="list-inline support"><a href="http://support.citrix.com">SUPPORT</a></li>-->
+				<form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+            <li class="list-inline support"><input name="q" id="txtName" type="text" placeholder="Search SDKs"
+            class="searchdocs">
+<a class="fa fa-search errspan"></a></li>
+</form>
+				<!--<li class="list-inline"><a href="http://citrix.com/download">DOWNLOADS</a></li>-->
+			</ul>
+
+		</div>
+	</div>
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+	<i class="fa fa-search"></i>
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" role="navigation" aria-label="main navigation">
+			<div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#citrix-xenserver-management-api">Citrix XenServer Management API</a></li>
+        
+    
+        <li class="main "><a href="#overview">Overview</a></li>
+        
+            <li><a href="#xenapi-classes">XenAPI Classes</a></li>
+        
+            <li><a href="#classes-fields-and-messages">Classes, Fields and Messages</a></li>
+        
+    
+        <li class="main "><a href="#auth">Auth</a></li>
+        
+            <li><a href="#class-auth">Class: auth</a></li>
+        
+    
+        <li class="main "><a href="#blob">blob</a></li>
+        
+            <li><a href="#class-blob">Class: blob</a></li>
+        
+    
+        <li class="main "><a href="#bond">Bond</a></li>
+        
+            <li><a href="#class-bond">Class: Bond</a></li>
+        
+    
+        <li class="main "><a href="#console">console</a></li>
+        
+            <li><a href="#class-console">Class: console</a></li>
+        
+    
+        <li class="main "><a href="#crashdump">crashdump</a></li>
+        
+            <li><a href="#class-crashdump">Class: crashdump</a></li>
+        
+    
+        <li class="main "><a href="#data_source">data_source</a></li>
+        
+            <li><a href="#class-data_source">Class: data_source</a></li>
+        
+    
+        <li class="main "><a href="#dr_task">DR_task</a></li>
+        
+            <li><a href="#class-dr_task">Class: DR_task</a></li>
+        
+    
+    </ul>
+</div>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+         <!-- <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Management API</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div> -->
+          <div role="main">
+            <div class="section">
+             
+                <h1 id="citrix-xenserver-management-api"><a class="toclink" href="#citrix-xenserver-management-api">Citrix XenServer Management API</a></h1>
+<h1 id="overview"><a class="toclink" href="#overview">Overview</a></h1>
+<h2 id="xenapi-classes"><a class="toclink" href="#xenapi-classes">XenAPI Classes</a></h2>
+<p>Click on a class to view the associated fields and messages.</p>
+<p><img alt="Alt text" src="./img/classes.png" /></p>
+<h2 id="classes-fields-and-messages"><a class="toclink" href="#classes-fields-and-messages">Classes, Fields and Messages</a></h2>
+<p>Classes have both fields and messages. Messages are either implicit or explicit where an implicit message is one of:</p>
+<ul>
+<li>a constructor (usually called "create");</li>
+<li>a destructor (usually called "destroy");</li>
+<li>"get_by_name_label";</li>
+<li>"get_by_uuid"</li>
+<li>"get_record"; and</li>
+<li>"get_all".</li>
+</ul>
+<p>Explicit messages include all the rest, more class-specific messages (e.g. "VM.start", "VM.clone")</p>
+<p>Every field has at least one accessor depending both on its type and whether it is read-only or read-write. Accessors for a field named "X" would be a proper subset of:</p>
+<ul>
+<li>set_X: change the value of field X (only if it is read-write);</li>
+<li>get_X: retrieve the value of field X;</li>
+<li>add_to_X: add a key/value pair (only if field has type set or map); and</li>
+<li>remove_from_X: remove a key (only if a field has type set or map).</li>
+</ul>
+<h1 id="auth"><a class="toclink" href="#auth">Auth</a></h1>
+<h2 id="class-auth"><a class="toclink" href="#class-auth">Class: auth</a></h2>
+<p>Management of remote authentication services</p>
+<h3 id="fields"><a class="toclink" href="#fields">Fields</a></h3>
+<p>None.</p>
+<h3 id="messages"><a class="toclink" href="#messages">Messages</a></h3>
+<p>Messages</p>
+<div class="codehilite"><pre><span></span>string set get_group_membership (string)
+
+This calls queries the external directory service to obtain the transitively-closed set of groups that the the subject_identifier is member of.
+
+Parameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service
+
+Minimum role:   read-only
+
+Result: set of subject_identifiers that provides the group membership of subject_identifier passed as argument, it contains, recursively, all groups a subject_identifier is member of.
+
+Published in:   XenServer 5.5   
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string get_subject_identifier (string)
+
+This call queries the external directory service to obtain the subject_identifier as a string from the human-readable subject_name
+
+Parameters: string subject_name The human-readable subject_name, such as a username or a groupname
+
+Minimum role:   read-only
+
+Result: the subject_identifier obtained from the external directory service
+
+Published in:   XenServer 5.5
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>(string → string) map get_subject_information_from_identifier (string)
+
+This call queries the external directory service to obtain the user information (e.g. username, organization etc) from the specified subject_identifier
+
+Parameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service
+
+Minimum role:   read-only
+
+Result: key-value pairs containing at least a key called subject_name
+
+Published in:   XenServer 5.5   
+</pre></div>
+
+
+<h1 id="blob"><a class="toclink" href="#blob">blob</a></h1>
+<h2 id="class-blob"><a class="toclink" href="#class-blob">Class: blob</a></h2>
+<p>A placeholder for a binary blob</p>
+<h3 id="fields_1"><a class="toclink" href="#fields_1">Fields</a></h3>
+<div class="codehilite"><pre><span></span>datetime last_updated [read-only]
+
+Time at which the data in the blob was last updated
+
+Published in:   XenServer 4.0   Time at which the data in the blob was last updated
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string mime_type [read-only]
+
+The mime type associated with this object. Defaults to &#39;application/octet-stream&#39; if the empty string is supplied
+
+Published in:   XenServer 4.0   The mime type associated with this object. Defaults to &#39;application/octet-stream&#39; if the empty string is supplied
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string name_description [read/write]
+
+a notes field containing human-readable description
+
+Default value:  &quot;&quot;
+
+Published in:   XenServer 4.0   a notes field containing human-readable description
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string name_label [read/write]
+
+a human-readable name
+
+Default value:  &quot;&quot;
+
+Published in:   XenServer 4.0   a human-readable name
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>bool public [read/write]
+
+True if the blob is publicly accessible
+
+Default value:  false
+
+Published in:   XenServer 6.1   True if the blob is publicly accessible
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>int size [read-only]
+
+Size of the binary data, in bytes
+
+Published in:   XenServer 4.0   Size of the binary data, in bytes
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string uuid [read-only]
+
+Unique identifier/object reference
+
+Published in:   XenServer 4.0   Unique identifier/object reference
+</pre></div>
+
+
+<h3 id="messages_1"><a class="toclink" href="#messages_1">Messages</a></h3>
+<div class="codehilite"><pre><span></span>blob ref create (string, bool)
+
+Create a placeholder for a binary blob
+
+Parameters: string mime_type    The mime-type of the blob. Defaults to &#39;application/octet-stream&#39; if the empty string is supplied
+
+bool public True if the blob should be publicly available
+
+Minimum role:   pool-operator
+
+Result: The reference to the created blob
+
+Published in:   XenServer 5.0   Create a placeholder for a binary blob
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>void destroy (blob ref)
+
+Parameters: blob ref self   The reference of the blob to destroy
+
+Minimum role:   pool-operator
+
+Published in:   XenServer 5.0
+</pre></div>
+
+
+<h1 id="bond"><a class="toclink" href="#bond">Bond</a></h1>
+<h2 id="class-bond"><a class="toclink" href="#class-bond">Class: Bond</a></h2>
+<h3 id="enums"><a class="toclink" href="#enums">Enums</a></h3>
+<div class="codehilite"><pre><span></span>bond_mode
+
+Values: balance-slb Source-level balancing
+
+active-backup   Active/passive bonding: only one NIC is carrying traffic
+
+lacp    Link aggregation control protocol
+</pre></div>
+
+
+<h3 id="fields_2"><a class="toclink" href="#fields_2">Fields</a></h3>
+<div class="codehilite"><pre><span></span>int links_up [read-only]
+
+Number of links up in this bond
+
+Default value:  0
+
+Published in:   XenServer 6.1   Number of links up in this bond
+
+PIF ref master [read-only]
+
+The bonded interface
+
+Default value:  Null
+
+Published in:   XenServer 4.1   The bonded interface
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>bond_mode mode [read-only]
+
+The algorithm used to distribute traffic among the bonded NICs
+
+Default value:  balance-slb
+
+Published in:   XenServer 6.0   
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>(string → string) map other_config [read/write]
+
+additional configuration
+
+Default value:  {}
+
+Published in:   XenServer 4.1   additional configuration
+
+PIF ref primary_slave [read-only]
+
+The PIF of which the IP configuration and MAC were copied to the bond, and which will receive all configuration/VLANs/VIFs on the bond if the bond is destroyed
+
+Default value:  OpaqueRef:NULL
+
+Published in:   XenServer 6.0   
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>(string → string) map properties [read-only]
+
+Additional configuration properties specific to the bond mode.
+
+Default value:  {}
+
+Published in:   XenServer 6.1   Additional configuration properties specific to the bond mode.
+
+PIF ref set slaves [read-only]
+
+The interfaces which are part of this bond
+
+Published in:   XenServer 4.1   The interfaces which are part of this bond
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string uuid [read-only]
+
+Unique identifier/object reference
+
+Published in:   XenServer 4.0   Unique identifier/object reference
+</pre></div>
+
+
+<h3 id="messages_2"><a class="toclink" href="#messages_2">Messages</a></h3>
+<div class="codehilite"><pre><span></span>Bond ref create (network ref, PIF ref set, string, bond_mode, (string → string) map)
+
+Create an interface bond
+
+Parameters: network ref network Network to add the bonded PIF to
+
+PIF ref set members PIFs to add to this bond
+
+string MAC  The MAC address to use on the bond itself. If this parameter is the empty string then the bond will inherit its MAC address from the primary slave.
+
+bond_mode mode  Bonding mode to use for the new bond
+
+(string → string) map properties    Additional configuration parameters specific to the bond mode
+
+Minimum role:   pool-operator
+
+Result: The reference of the created Bond object
+
+Published in:   XenServer 4.1   Create an interface bond
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>void destroy (Bond ref)
+
+Destroy an interface bond
+
+Parameters: Bond ref self   Bond to destroy
+
+Minimum role:   pool-operator
+
+Published in:   XenServer 4.1   Destroy an interface bond
+
+void set_mode (Bond ref, bond_mode)
+
+Change the bond mode
+
+Parameters: Bond ref self   The bond
+
+bond_mode value The new bond mode
+
+Minimum role:   pool-operator
+
+Published in:   XenServer 6.0   
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>void set_property (Bond ref, string, string)
+
+Set the value of a property of the bond
+
+Parameters: Bond ref self   The bond
+
+string name The property name
+
+string value    The property value
+
+Minimum role:   pool-operator
+
+Published in:   XenServer 6.1   Set the value of a property of the bond
+</pre></div>
+
+
+<h1 id="console"><a class="toclink" href="#console">console</a></h1>
+<h2 id="class-console"><a class="toclink" href="#class-console">Class: console</a></h2>
+<p>A console</p>
+<h3 id="enums_1"><a class="toclink" href="#enums_1">Enums</a></h3>
+<div class="codehilite"><pre><span></span>console_protocol
+
+Values: vt100   VT100 terminal
+
+rfb Remote FrameBuffer protocol (as used in VNC)
+
+rdp Remote Desktop Protocol
+</pre></div>
+
+
+<h3 id="fields_3"><a class="toclink" href="#fields_3">Fields</a></h3>
+<div class="codehilite"><pre><span></span>string location [read-only]
+
+URI for the console service
+
+Published in:   XenServer 4.0   URI for the console service
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>(string → string) map other_config [read/write]
+
+additional configuration
+
+Published in:   XenServer 4.0   additional configuration
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>console_protocol protocol [read-only]
+
+the protocol used by this console
+
+Published in:   XenServer 4.0   the protocol used by this console
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string uuid [read-only]
+
+Unique identifier/object reference
+
+Published in:   XenServer 4.0   Unique identifier/object reference
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>VM ref VM [read-only]
+
+VM to which this console is attached
+
+Published in:   XenServer 4.0   VM to which this console is attached
+</pre></div>
+
+
+<h3 id="messages_3"><a class="toclink" href="#messages_3">Messages</a></h3>
+<p>None.</p>
+<h1 id="crashdump"><a class="toclink" href="#crashdump">crashdump</a></h1>
+<h2 id="class-crashdump"><a class="toclink" href="#class-crashdump">Class: crashdump</a></h2>
+<p>A VM crashdump</p>
+<h3 id="fields_4"><a class="toclink" href="#fields_4">Fields</a></h3>
+<div class="codehilite"><pre><span></span>(string → string) map other_config [read/write]
+
+additional configuration
+
+Default value:  {}
+
+Published in:   XenServer 4.1   additional configuration
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string uuid [read-only]
+
+Unique identifier/object reference
+
+Published in:   XenServer 4.0   Unique identifier/object reference
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>VDI ref VDI [read-only]
+
+the virtual disk
+
+Published in:   XenServer 4.0   the virtual disk
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>VM ref VM [read-only]
+
+the virtual machine
+
+Published in:   XenServer 4.0   the virtual machine
+</pre></div>
+
+
+<h3 id="messages_4"><a class="toclink" href="#messages_4">Messages</a></h3>
+<div class="codehilite"><pre><span></span>void destroy (crashdump ref)
+Destroy the specified crashdump
+Parameters: crashdump ref self  The crashdump to destroy
+Minimum role:   pool-operator
+Published in:   XenServer 4.0   Destroy the specified crashdump
+</pre></div>
+
+
+<h1 id="data_source"><a class="toclink" href="#data_source">data_source</a></h1>
+<h2 id="class-data_source"><a class="toclink" href="#class-data_source">Class: data_source</a></h2>
+<p>Data sources for logging in RRDs</p>
+<h3 id="fields_5"><a class="toclink" href="#fields_5">Fields</a></h3>
+<div class="codehilite"><pre><span></span>bool enabled [read-only]
+
+true if the data source is being logged
+
+Published in:   XenServer 4.0   true if the data source is being logged
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>float max [read-only]
+
+the maximum value of the data source
+
+Published in:   XenServer 4.0   the maximum value of the data source
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>float min [read-only]
+
+the minimum value of the data source
+
+Published in:   XenServer 4.0   the minimum value of the data source
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string name_description [read-only]
+
+a notes field containing human-readable description
+
+Default value:  &quot;&quot;
+
+Published in:   XenServer 4.0   a notes field containing human-readable description
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string name_label [read-only]
+
+a human-readable name
+
+Default value:  &quot;&quot;
+
+Published in:   XenServer 4.0   a human-readable name
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>bool standard [read-only]
+
+true if the data source is enabled by default. Non-default data sources cannot be disabled
+
+Published in:   XenServer 4.0   true if the data source is enabled by default. Non-default data sources cannot be disabled
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string units [read-only]
+
+the units of the value
+
+Published in:   XenServer 4.0   the units of the value
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>float value [read-only]
+
+current value of the data source
+
+Published in:   XenServer 4.0   current value of the data source
+</pre></div>
+
+
+<h3 id="messages_5"><a class="toclink" href="#messages_5">Messages</a></h3>
+<p>None.</p>
+<h1 id="dr_task"><a class="toclink" href="#dr_task">DR_task</a></h1>
+<h2 id="class-dr_task"><a class="toclink" href="#class-dr_task">Class: DR_task</a></h2>
+<p>DR task</p>
+<h3 id="fields_6"><a class="toclink" href="#fields_6">Fields</a></h3>
+<div class="codehilite"><pre><span></span>SR ref set introduced_SRs [read-only]
+
+All SRs introduced by this appliance
+
+Published in:   XenServer 4.0   All SRs introduced by this appliance
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>string uuid [read-only]
+
+Unique identifier/object reference
+
+Published in:   XenServer 4.0   Unique identifier/object reference
+</pre></div>
+
+
+<h3 id="messages_6"><a class="toclink" href="#messages_6">Messages</a></h3>
+<div class="codehilite"><pre><span></span>DR_task ref create (string, (string → string) map, string set)
+
+Create a disaster recovery task which will query the supplied list of devices
+
+Parameters: string type The SR driver type of the SRs to introduce
+
+(string → string) map device_config The device configuration of the SRs to introduce
+
+string set whitelist    The devices to use for disaster recovery
+
+Minimum role:   pool-operator
+
+Result: The reference to the created task
+
+Published in:   XenServer 6.0   Create a disaster recovery task which will query the supplied list of devices
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>void destroy (DR_task ref)
+
+Destroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required
+
+Parameters: DR_task ref self    The disaster recovery task to destroy
+
+Minimum role:   pool-operator
+
+Published in:   XenServer 6.0   Destroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required
+</pre></div>
+              
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<!--<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+	<div class="footer-right">
+		<ul class="social-links">
+			<li class="list-inline"><a href="https://twitter.com/citrix"><i class="fa fa-twitter"></i>@citrix</a></li>
+			<li class="list-inline"><a href="mailto:support@citrix.com"><i class="fa fa-envelope-o"></i>support@citrix.com</a></li>
+		</ul>
+		<ul class="inner-pages">
+			<li class="list-inline"><a href="http://citrix.com/about/legal">Privacy and Terms</li>
+		</ul>
+	</div>
+</div>-->
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.15.3
+Build Date UTC : 2017-01-04 10:53:03.582951
+-->

@@ -1,0 +1,179 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Citrix XenServer Management API\n\n\nOverview\n\n\nXenAPI Classes\n\n\nClick on a class to view the associated fields and messages.\n\n\n\n\nClasses, Fields and Messages\n\n\nClasses have both fields and messages. Messages are either implicit or explicit where an implicit message is one of:\n\n\n\n\na constructor (usually called \"create\");\n\n\na destructor (usually called \"destroy\");\n\n\n\"get_by_name_label\";\n\n\n\"get_by_uuid\"\n\n\n\"get_record\"; and\n\n\n\"get_all\".\n\n\n\n\nExplicit messages include all the rest, more class-specific messages (e.g. \"VM.start\", \"VM.clone\")\n\n\nEvery field has at least one accessor depending both on its type and whether it is read-only or read-write. Accessors for a field named \"X\" would be a proper subset of:\n\n\n\n\nset_X: change the value of field X (only if it is read-write);\n\n\nget_X: retrieve the value of field X;\n\n\nadd_to_X: add a key/value pair (only if field has type set or map); and\n\n\nremove_from_X: remove a key (only if a field has type set or map).\n\n\n\n\nAuth\n\n\nClass: auth\n\n\nManagement of remote authentication services\n\n\nFields\n\n\nNone.\n\n\nMessages\n\n\nMessages\n\n\nstring set get_group_membership (string)\n\nThis calls queries the external directory service to obtain the transitively-closed set of groups that the the subject_identifier is member of.\n\nParameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service\n\nMinimum role:   read-only\n\nResult: set of subject_identifiers that provides the group membership of subject_identifier passed as argument, it contains, recursively, all groups a subject_identifier is member of.\n\nPublished in:   XenServer 5.5   \n\n\n\n\n\nstring get_subject_identifier (string)\n\nThis call queries the external directory service to obtain the subject_identifier as a string from the human-readable subject_name\n\nParameters: string subject_name The human-readable subject_name, such as a username or a groupname\n\nMinimum role:   read-only\n\nResult: the subject_identifier obtained from the external directory service\n\nPublished in:   XenServer 5.5\n\n\n\n\n\n(string \u2192 string) map get_subject_information_from_identifier (string)\n\nThis call queries the external directory service to obtain the user information (e.g. username, organization etc) from the specified subject_identifier\n\nParameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service\n\nMinimum role:   read-only\n\nResult: key-value pairs containing at least a key called subject_name\n\nPublished in:   XenServer 5.5   \n\n\n\n\n\nblob\n\n\nClass: blob\n\n\nA placeholder for a binary blob\n\n\nFields\n\n\ndatetime last_updated [read-only]\n\nTime at which the data in the blob was last updated\n\nPublished in:   XenServer 4.0   Time at which the data in the blob was last updated\n\n\n\n\n\nstring mime_type [read-only]\n\nThe mime type associated with this object. Defaults to \napplication/octet-stream\n if the empty string is supplied\n\nPublished in:   XenServer 4.0   The mime type associated with this object. Defaults to \napplication/octet-stream\n if the empty string is supplied\n\n\n\n\n\nstring name_description [read/write]\n\na notes field containing human-readable description\n\nDefault value:  \n\n\nPublished in:   XenServer 4.0   a notes field containing human-readable description\n\n\n\n\n\nstring name_label [read/write]\n\na human-readable name\n\nDefault value:  \n\n\nPublished in:   XenServer 4.0   a human-readable name\n\n\n\n\n\nbool public [read/write]\n\nTrue if the blob is publicly accessible\n\nDefault value:  false\n\nPublished in:   XenServer 6.1   True if the blob is publicly accessible\n\n\n\n\n\nint size [read-only]\n\nSize of the binary data, in bytes\n\nPublished in:   XenServer 4.0   Size of the binary data, in bytes\n\n\n\n\n\nstring uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference\n\n\n\n\n\nMessages\n\n\nblob ref create (string, bool)\n\nCreate a placeholder for a binary blob\n\nParameters: string mime_type    The mime-type of the blob. Defaults to \napplication/octet-stream\n if the empty string is supplied\n\nbool public True if the blob should be publicly available\n\nMinimum role:   pool-operator\n\nResult: The reference to the created blob\n\nPublished in:   XenServer 5.0   Create a placeholder for a binary blob\n\n\n\n\n\nvoid destroy (blob ref)\n\nParameters: blob ref self   The reference of the blob to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 5.0\n\n\n\n\n\nBond\n\n\nClass: Bond\n\n\nEnums\n\n\nbond_mode\n\nValues: balance-slb Source-level balancing\n\nactive-backup   Active/passive bonding: only one NIC is carrying traffic\n\nlacp    Link aggregation control protocol\n\n\n\n\n\nFields\n\n\nint links_up [read-only]\n\nNumber of links up in this bond\n\nDefault value:  0\n\nPublished in:   XenServer 6.1   Number of links up in this bond\n\nPIF ref master [read-only]\n\nThe bonded interface\n\nDefault value:  Null\n\nPublished in:   XenServer 4.1   The bonded interface\n\n\n\n\n\nbond_mode mode [read-only]\n\nThe algorithm used to distribute traffic among the bonded NICs\n\nDefault value:  balance-slb\n\nPublished in:   XenServer 6.0   \n\n\n\n\n\n(string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nDefault value:  {}\n\nPublished in:   XenServer 4.1   additional configuration\n\nPIF ref primary_slave [read-only]\n\nThe PIF of which the IP configuration and MAC were copied to the bond, and which will receive all configuration/VLANs/VIFs on the bond if the bond is destroyed\n\nDefault value:  OpaqueRef:NULL\n\nPublished in:   XenServer 6.0   \n\n\n\n\n\n(string \u2192 string) map properties [read-only]\n\nAdditional configuration properties specific to the bond mode.\n\nDefault value:  {}\n\nPublished in:   XenServer 6.1   Additional configuration properties specific to the bond mode.\n\nPIF ref set slaves [read-only]\n\nThe interfaces which are part of this bond\n\nPublished in:   XenServer 4.1   The interfaces which are part of this bond\n\n\n\n\n\nstring uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference\n\n\n\n\n\nMessages\n\n\nBond ref create (network ref, PIF ref set, string, bond_mode, (string \u2192 string) map)\n\nCreate an interface bond\n\nParameters: network ref network Network to add the bonded PIF to\n\nPIF ref set members PIFs to add to this bond\n\nstring MAC  The MAC address to use on the bond itself. If this parameter is the empty string then the bond will inherit its MAC address from the primary slave.\n\nbond_mode mode  Bonding mode to use for the new bond\n\n(string \u2192 string) map properties    Additional configuration parameters specific to the bond mode\n\nMinimum role:   pool-operator\n\nResult: The reference of the created Bond object\n\nPublished in:   XenServer 4.1   Create an interface bond\n\n\n\n\n\nvoid destroy (Bond ref)\n\nDestroy an interface bond\n\nParameters: Bond ref self   Bond to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 4.1   Destroy an interface bond\n\nvoid set_mode (Bond ref, bond_mode)\n\nChange the bond mode\n\nParameters: Bond ref self   The bond\n\nbond_mode value The new bond mode\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.0   \n\n\n\n\n\nvoid set_property (Bond ref, string, string)\n\nSet the value of a property of the bond\n\nParameters: Bond ref self   The bond\n\nstring name The property name\n\nstring value    The property value\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.1   Set the value of a property of the bond\n\n\n\n\n\nconsole\n\n\nClass: console\n\n\nA console\n\n\nEnums\n\n\nconsole_protocol\n\nValues: vt100   VT100 terminal\n\nrfb Remote FrameBuffer protocol (as used in VNC)\n\nrdp Remote Desktop Protocol\n\n\n\n\n\nFields\n\n\nstring location [read-only]\n\nURI for the console service\n\nPublished in:   XenServer 4.0   URI for the console service\n\n\n\n\n\n(string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nPublished in:   XenServer 4.0   additional configuration\n\n\n\n\n\nconsole_protocol protocol [read-only]\n\nthe protocol used by this console\n\nPublished in:   XenServer 4.0   the protocol used by this console\n\n\n\n\n\nstring uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference\n\n\n\n\n\nVM ref VM [read-only]\n\nVM to which this console is attached\n\nPublished in:   XenServer 4.0   VM to which this console is attached\n\n\n\n\n\nMessages\n\n\nNone.\n\n\ncrashdump\n\n\nClass: crashdump\n\n\nA VM crashdump\n\n\nFields\n\n\n(string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nDefault value:  {}\n\nPublished in:   XenServer 4.1   additional configuration\n\n\n\n\n\nstring uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference\n\n\n\n\n\nVDI ref VDI [read-only]\n\nthe virtual disk\n\nPublished in:   XenServer 4.0   the virtual disk\n\n\n\n\n\nVM ref VM [read-only]\n\nthe virtual machine\n\nPublished in:   XenServer 4.0   the virtual machine\n\n\n\n\n\nMessages\n\n\nvoid destroy (crashdump ref)\nDestroy the specified crashdump\nParameters: crashdump ref self  The crashdump to destroy\nMinimum role:   pool-operator\nPublished in:   XenServer 4.0   Destroy the specified crashdump\n\n\n\n\n\ndata_source\n\n\nClass: data_source\n\n\nData sources for logging in RRDs\n\n\nFields\n\n\nbool enabled [read-only]\n\ntrue if the data source is being logged\n\nPublished in:   XenServer 4.0   true if the data source is being logged\n\n\n\n\n\nfloat max [read-only]\n\nthe maximum value of the data source\n\nPublished in:   XenServer 4.0   the maximum value of the data source\n\n\n\n\n\nfloat min [read-only]\n\nthe minimum value of the data source\n\nPublished in:   XenServer 4.0   the minimum value of the data source\n\n\n\n\n\nstring name_description [read-only]\n\na notes field containing human-readable description\n\nDefault value:  \n\n\nPublished in:   XenServer 4.0   a notes field containing human-readable description\n\n\n\n\n\nstring name_label [read-only]\n\na human-readable name\n\nDefault value:  \n\n\nPublished in:   XenServer 4.0   a human-readable name\n\n\n\n\n\nbool standard [read-only]\n\ntrue if the data source is enabled by default. Non-default data sources cannot be disabled\n\nPublished in:   XenServer 4.0   true if the data source is enabled by default. Non-default data sources cannot be disabled\n\n\n\n\n\nstring units [read-only]\n\nthe units of the value\n\nPublished in:   XenServer 4.0   the units of the value\n\n\n\n\n\nfloat value [read-only]\n\ncurrent value of the data source\n\nPublished in:   XenServer 4.0   current value of the data source\n\n\n\n\n\nMessages\n\n\nNone.\n\n\nDR_task\n\n\nClass: DR_task\n\n\nDR task\n\n\nFields\n\n\nSR ref set introduced_SRs [read-only]\n\nAll SRs introduced by this appliance\n\nPublished in:   XenServer 4.0   All SRs introduced by this appliance\n\n\n\n\n\nstring uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference\n\n\n\n\n\nMessages\n\n\nDR_task ref create (string, (string \u2192 string) map, string set)\n\nCreate a disaster recovery task which will query the supplied list of devices\n\nParameters: string type The SR driver type of the SRs to introduce\n\n(string \u2192 string) map device_config The device configuration of the SRs to introduce\n\nstring set whitelist    The devices to use for disaster recovery\n\nMinimum role:   pool-operator\n\nResult: The reference to the created task\n\nPublished in:   XenServer 6.0   Create a disaster recovery task which will query the supplied list of devices\n\n\n\n\n\nvoid destroy (DR_task ref)\n\nDestroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required\n\nParameters: DR_task ref self    The disaster recovery task to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.0   Destroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required", 
+            "title": "Management API"
+        }, 
+        {
+            "location": "/#citrix-xenserver-management-api", 
+            "text": "", 
+            "title": "Citrix XenServer Management API"
+        }, 
+        {
+            "location": "/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/#xenapi-classes", 
+            "text": "Click on a class to view the associated fields and messages.", 
+            "title": "XenAPI Classes"
+        }, 
+        {
+            "location": "/#classes-fields-and-messages", 
+            "text": "Classes have both fields and messages. Messages are either implicit or explicit where an implicit message is one of:   a constructor (usually called \"create\");  a destructor (usually called \"destroy\");  \"get_by_name_label\";  \"get_by_uuid\"  \"get_record\"; and  \"get_all\".   Explicit messages include all the rest, more class-specific messages (e.g. \"VM.start\", \"VM.clone\")  Every field has at least one accessor depending both on its type and whether it is read-only or read-write. Accessors for a field named \"X\" would be a proper subset of:   set_X: change the value of field X (only if it is read-write);  get_X: retrieve the value of field X;  add_to_X: add a key/value pair (only if field has type set or map); and  remove_from_X: remove a key (only if a field has type set or map).", 
+            "title": "Classes, Fields and Messages"
+        }, 
+        {
+            "location": "/#auth", 
+            "text": "", 
+            "title": "Auth"
+        }, 
+        {
+            "location": "/#class-auth", 
+            "text": "Management of remote authentication services", 
+            "title": "Class: auth"
+        }, 
+        {
+            "location": "/#fields", 
+            "text": "None.", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages", 
+            "text": "Messages  string set get_group_membership (string)\n\nThis calls queries the external directory service to obtain the transitively-closed set of groups that the the subject_identifier is member of.\n\nParameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service\n\nMinimum role:   read-only\n\nResult: set of subject_identifiers that provides the group membership of subject_identifier passed as argument, it contains, recursively, all groups a subject_identifier is member of.\n\nPublished in:   XenServer 5.5     string get_subject_identifier (string)\n\nThis call queries the external directory service to obtain the subject_identifier as a string from the human-readable subject_name\n\nParameters: string subject_name The human-readable subject_name, such as a username or a groupname\n\nMinimum role:   read-only\n\nResult: the subject_identifier obtained from the external directory service\n\nPublished in:   XenServer 5.5  (string \u2192 string) map get_subject_information_from_identifier (string)\n\nThis call queries the external directory service to obtain the user information (e.g. username, organization etc) from the specified subject_identifier\n\nParameters: string subject_identifier   A string containing the subject_identifier, unique in the external directory service\n\nMinimum role:   read-only\n\nResult: key-value pairs containing at least a key called subject_name\n\nPublished in:   XenServer 5.5", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#blob", 
+            "text": "", 
+            "title": "blob"
+        }, 
+        {
+            "location": "/#class-blob", 
+            "text": "A placeholder for a binary blob", 
+            "title": "Class: blob"
+        }, 
+        {
+            "location": "/#fields_1", 
+            "text": "datetime last_updated [read-only]\n\nTime at which the data in the blob was last updated\n\nPublished in:   XenServer 4.0   Time at which the data in the blob was last updated  string mime_type [read-only]\n\nThe mime type associated with this object. Defaults to  application/octet-stream  if the empty string is supplied\n\nPublished in:   XenServer 4.0   The mime type associated with this object. Defaults to  application/octet-stream  if the empty string is supplied  string name_description [read/write]\n\na notes field containing human-readable description\n\nDefault value:   \n\nPublished in:   XenServer 4.0   a notes field containing human-readable description  string name_label [read/write]\n\na human-readable name\n\nDefault value:   \n\nPublished in:   XenServer 4.0   a human-readable name  bool public [read/write]\n\nTrue if the blob is publicly accessible\n\nDefault value:  false\n\nPublished in:   XenServer 6.1   True if the blob is publicly accessible  int size [read-only]\n\nSize of the binary data, in bytes\n\nPublished in:   XenServer 4.0   Size of the binary data, in bytes  string uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_1", 
+            "text": "blob ref create (string, bool)\n\nCreate a placeholder for a binary blob\n\nParameters: string mime_type    The mime-type of the blob. Defaults to  application/octet-stream  if the empty string is supplied\n\nbool public True if the blob should be publicly available\n\nMinimum role:   pool-operator\n\nResult: The reference to the created blob\n\nPublished in:   XenServer 5.0   Create a placeholder for a binary blob  void destroy (blob ref)\n\nParameters: blob ref self   The reference of the blob to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 5.0", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#bond", 
+            "text": "", 
+            "title": "Bond"
+        }, 
+        {
+            "location": "/#class-bond", 
+            "text": "", 
+            "title": "Class: Bond"
+        }, 
+        {
+            "location": "/#enums", 
+            "text": "bond_mode\n\nValues: balance-slb Source-level balancing\n\nactive-backup   Active/passive bonding: only one NIC is carrying traffic\n\nlacp    Link aggregation control protocol", 
+            "title": "Enums"
+        }, 
+        {
+            "location": "/#fields_2", 
+            "text": "int links_up [read-only]\n\nNumber of links up in this bond\n\nDefault value:  0\n\nPublished in:   XenServer 6.1   Number of links up in this bond\n\nPIF ref master [read-only]\n\nThe bonded interface\n\nDefault value:  Null\n\nPublished in:   XenServer 4.1   The bonded interface  bond_mode mode [read-only]\n\nThe algorithm used to distribute traffic among the bonded NICs\n\nDefault value:  balance-slb\n\nPublished in:   XenServer 6.0     (string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nDefault value:  {}\n\nPublished in:   XenServer 4.1   additional configuration\n\nPIF ref primary_slave [read-only]\n\nThe PIF of which the IP configuration and MAC were copied to the bond, and which will receive all configuration/VLANs/VIFs on the bond if the bond is destroyed\n\nDefault value:  OpaqueRef:NULL\n\nPublished in:   XenServer 6.0     (string \u2192 string) map properties [read-only]\n\nAdditional configuration properties specific to the bond mode.\n\nDefault value:  {}\n\nPublished in:   XenServer 6.1   Additional configuration properties specific to the bond mode.\n\nPIF ref set slaves [read-only]\n\nThe interfaces which are part of this bond\n\nPublished in:   XenServer 4.1   The interfaces which are part of this bond  string uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_2", 
+            "text": "Bond ref create (network ref, PIF ref set, string, bond_mode, (string \u2192 string) map)\n\nCreate an interface bond\n\nParameters: network ref network Network to add the bonded PIF to\n\nPIF ref set members PIFs to add to this bond\n\nstring MAC  The MAC address to use on the bond itself. If this parameter is the empty string then the bond will inherit its MAC address from the primary slave.\n\nbond_mode mode  Bonding mode to use for the new bond\n\n(string \u2192 string) map properties    Additional configuration parameters specific to the bond mode\n\nMinimum role:   pool-operator\n\nResult: The reference of the created Bond object\n\nPublished in:   XenServer 4.1   Create an interface bond  void destroy (Bond ref)\n\nDestroy an interface bond\n\nParameters: Bond ref self   Bond to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 4.1   Destroy an interface bond\n\nvoid set_mode (Bond ref, bond_mode)\n\nChange the bond mode\n\nParameters: Bond ref self   The bond\n\nbond_mode value The new bond mode\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.0     void set_property (Bond ref, string, string)\n\nSet the value of a property of the bond\n\nParameters: Bond ref self   The bond\n\nstring name The property name\n\nstring value    The property value\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.1   Set the value of a property of the bond", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#console", 
+            "text": "", 
+            "title": "console"
+        }, 
+        {
+            "location": "/#class-console", 
+            "text": "A console", 
+            "title": "Class: console"
+        }, 
+        {
+            "location": "/#enums_1", 
+            "text": "console_protocol\n\nValues: vt100   VT100 terminal\n\nrfb Remote FrameBuffer protocol (as used in VNC)\n\nrdp Remote Desktop Protocol", 
+            "title": "Enums"
+        }, 
+        {
+            "location": "/#fields_3", 
+            "text": "string location [read-only]\n\nURI for the console service\n\nPublished in:   XenServer 4.0   URI for the console service  (string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nPublished in:   XenServer 4.0   additional configuration  console_protocol protocol [read-only]\n\nthe protocol used by this console\n\nPublished in:   XenServer 4.0   the protocol used by this console  string uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference  VM ref VM [read-only]\n\nVM to which this console is attached\n\nPublished in:   XenServer 4.0   VM to which this console is attached", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_3", 
+            "text": "None.", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#crashdump", 
+            "text": "", 
+            "title": "crashdump"
+        }, 
+        {
+            "location": "/#class-crashdump", 
+            "text": "A VM crashdump", 
+            "title": "Class: crashdump"
+        }, 
+        {
+            "location": "/#fields_4", 
+            "text": "(string \u2192 string) map other_config [read/write]\n\nadditional configuration\n\nDefault value:  {}\n\nPublished in:   XenServer 4.1   additional configuration  string uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference  VDI ref VDI [read-only]\n\nthe virtual disk\n\nPublished in:   XenServer 4.0   the virtual disk  VM ref VM [read-only]\n\nthe virtual machine\n\nPublished in:   XenServer 4.0   the virtual machine", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_4", 
+            "text": "void destroy (crashdump ref)\nDestroy the specified crashdump\nParameters: crashdump ref self  The crashdump to destroy\nMinimum role:   pool-operator\nPublished in:   XenServer 4.0   Destroy the specified crashdump", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#data_source", 
+            "text": "", 
+            "title": "data_source"
+        }, 
+        {
+            "location": "/#class-data_source", 
+            "text": "Data sources for logging in RRDs", 
+            "title": "Class: data_source"
+        }, 
+        {
+            "location": "/#fields_5", 
+            "text": "bool enabled [read-only]\n\ntrue if the data source is being logged\n\nPublished in:   XenServer 4.0   true if the data source is being logged  float max [read-only]\n\nthe maximum value of the data source\n\nPublished in:   XenServer 4.0   the maximum value of the data source  float min [read-only]\n\nthe minimum value of the data source\n\nPublished in:   XenServer 4.0   the minimum value of the data source  string name_description [read-only]\n\na notes field containing human-readable description\n\nDefault value:   \n\nPublished in:   XenServer 4.0   a notes field containing human-readable description  string name_label [read-only]\n\na human-readable name\n\nDefault value:   \n\nPublished in:   XenServer 4.0   a human-readable name  bool standard [read-only]\n\ntrue if the data source is enabled by default. Non-default data sources cannot be disabled\n\nPublished in:   XenServer 4.0   true if the data source is enabled by default. Non-default data sources cannot be disabled  string units [read-only]\n\nthe units of the value\n\nPublished in:   XenServer 4.0   the units of the value  float value [read-only]\n\ncurrent value of the data source\n\nPublished in:   XenServer 4.0   current value of the data source", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_5", 
+            "text": "None.", 
+            "title": "Messages"
+        }, 
+        {
+            "location": "/#dr_task", 
+            "text": "", 
+            "title": "DR_task"
+        }, 
+        {
+            "location": "/#class-dr_task", 
+            "text": "DR task", 
+            "title": "Class: DR_task"
+        }, 
+        {
+            "location": "/#fields_6", 
+            "text": "SR ref set introduced_SRs [read-only]\n\nAll SRs introduced by this appliance\n\nPublished in:   XenServer 4.0   All SRs introduced by this appliance  string uuid [read-only]\n\nUnique identifier/object reference\n\nPublished in:   XenServer 4.0   Unique identifier/object reference", 
+            "title": "Fields"
+        }, 
+        {
+            "location": "/#messages_6", 
+            "text": "DR_task ref create (string, (string \u2192 string) map, string set)\n\nCreate a disaster recovery task which will query the supplied list of devices\n\nParameters: string type The SR driver type of the SRs to introduce\n\n(string \u2192 string) map device_config The device configuration of the SRs to introduce\n\nstring set whitelist    The devices to use for disaster recovery\n\nMinimum role:   pool-operator\n\nResult: The reference to the created task\n\nPublished in:   XenServer 6.0   Create a disaster recovery task which will query the supplied list of devices  void destroy (DR_task ref)\n\nDestroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required\n\nParameters: DR_task ref self    The disaster recovery task to destroy\n\nMinimum role:   pool-operator\n\nPublished in:   XenServer 6.0   Destroy the disaster recovery task, detaching and forgetting any SRs introduced which are no longer required", 
+            "title": "Messages"
+        }
+    ]
+}
