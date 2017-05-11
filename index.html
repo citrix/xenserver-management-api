@@ -1,479 +1,482 @@
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Reference guide for Citrix XenServer Management API">
-  
-  
-  <title>Citrix XenServer Management API</title>
-  
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+  <!--<![endif]-->
 
-  <link rel="shortcut icon" href="
-https://www.citrix.com/etc/designs/citrix/icon-favicon.png">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="description" content="Reference guide for Citrix XenServer Management API">  
+    <title>Citrix XenServer Management API</title>
+     
+    <link rel="shortcut icon" href="
+https://www.citrix.com/etc/designs/citrix/icon-favicon.png"> 
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+    <link rel="stylesheet" href="./css/highlight.css">
+    <link rel="stylesheet" href="./css/override.css" type="text/css" />
+    <link rel="stylesheet" href="./css/font-awesome.css" type="text/css" /> 
+    <script>
+      // Current page data
+      var mkdocs_page_name = "None";
+      var mkdocs_page_input_path = "index.md";
+      var mkdocs_page_url = "/";
 
-  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="./css/base.css">
-  <link rel="stylesheet" href="./css/highlight.css">
-  <link rel="stylesheet" href="./css/override.css" type="text/css" />
-  <link rel="stylesheet" href="./css/font-awesome.css" type="text/css" />
-
-  
-  <script>
-    // Current page data
-    var mkdocs_page_name = "None";
-    var mkdocs_page_input_path = "index.md";
-    var mkdocs_page_url = "/";
-  </script>
-  
-  <script src="./js/jquery-1.10.2.min.js"></script>
-  <script src="./js/bootstrap-3.0.3.min.js"></script>
-  <script src="./js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="./js/highlight.pack.js"></script>
-  <script src="./js/theme.js"></script>
-  <script src="./js/base.js"></script>
-  <script src="./js/custom.js"></script>
-  <script src="./js/nav.js"></script> 
-
-  
-</head>
-
-<body class="wy-body-for-nav" role="document" data-spy="scroll" data-target=".bs-sidebar">
-
-	<div class="header-top">
-		<div class="header-top-left">
-			<a href="http://citrix.github.io" class="logo-position"><img height="60" src="https://thumbnail-ec2.sharefile.com/thumbnail.aspx?encparams=ypL2J0l-In6gqXJ7yeyKP8A1rqwKMH-C8-nfkJcHJNIN7Y0yZiJsYOcUe-uc0YeZzWLQSFSd1FnuMHPa30XSSINHuGOA8nvvnBT5WmjGlKvd5mxJ4IfT7iTVyHELwhWQiNCznPCiIFyhkA78uKX77PlU2iyhM4YdRM1NKabBe-4wXuiFJsbtAxyJ2UukO_E2ZSf1W3l75Dw8G0zflVkT-EFqyx1zSGId0qzLjm6nzJ8dA9zo-1AJzUisdzmGMzHOq_LMsOWyaalvmcWvCkl-q10GBSbfekfTIFW9LpZNYjkLNSnK8rcwNjWVr_jYayrGjIj2e5dDIMiDj3NRvW51AvHRjxYH9xRRRtY$" target="_blank" class="logo-citrix"><span style="color:#fff;font-size: 20px;position: relative;top:4px;left: 5px">SDK Reference</span></a>
-		</div>
-		<div class="header-top-right">
-			<ul>
-			<!--	<li class="list-inline home"><a href=".">HOME</a></li>
-				<li class="list-inline support"><a href="http://support.citrix.com">SUPPORT</a></li>-->
-				<form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-            <li class="list-inline support"><input name="q" id="txtName" type="text" placeholder="Search SDKs"
-            class="searchdocs">
-<a class="fa fa-search errspan"></a></li>
-</form>
-				<!--<li class="list-inline"><a href="http://citrix.com/download">DOWNLOADS</a></li>-->
-			</ul>
-
-		</div>
-	</div>
-  <div class="wy-grid-for-nav">
-
+    </script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-      <div class="wy-side-nav-search">
-        <div role="search">
+    <script src="./js/jquery-2.1.1.min.js"></script>
+    <script src="./js/modernizr-2.8.3.min.js"></script>
+    <script type="text/javascript" src="./js/highlight.pack.js"></script>
+    <script src="./js/theme.js"></script>
+    <script src="./js/custom.js"></script>  
+  </head>
+
+  <body class="wy-body-for-nav" role="document">
+
+    <div class="header-top">
+      
+        <div class="header-top-left">
+          <a href="http://citrix.github.io" class="logo-position"><img height="60" src="./img/citrixlogoblack.png" target="_blank" class="logo-citrix"><span style="color:#000;font-size: 20px;position: relative;top:4px;left:20px;">Developer Documentation</span></a>
+        </div>
+        <div class="header-top-right">
+          <ul>
+
+            <form id="rtd-search-form" class="wy-form" action="./search.html" method="get">
+             <ul class="header-elements">
+              <li class="list-inline support">
+                <input name="q" id="txtName" type="text" placeholder="Search SDKs" class="searchdocs">
+                <a class="fa fa-search errspan"></a>
+              </li>
+             <li> <a href="javascript:void(0);" style="font-size: 22px;position: relative;left: -10px;top: 3px"><i class="fa fa-globe"></i></a></li>
+             </ul>
+            </form>
+
+          </ul>
+
+        </div>
+      
+    </div>
+    <div class="body">
+      <div class="wy-grid-for-nav">
+
+        
+        <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+          <div class="wy-side-nav-search">
+            <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
 	<i class="fa fa-search"></i>
     <input type="text" name="q" placeholder="Search docs" />
   </form>
 </div>
-      </div>
+          </div>
 
-      <div class="wy-menu wy-menu-vertical" role="navigation" aria-label="main navigation">
-			<div class="bs-sidebar hidden-print affix well" role="complementary">
-    <ul class="nav bs-sidenav">
-    
-        <li class="main active"><a href="#citrix-xenserver-management-api">Citrix XenServer Management API</a></li>
-        
-    
-        <li class="main "><a href="#overview">Overview</a></li>
-        
-            <li><a href="#xenapi-classes">XenAPI Classes</a></li>
-        
-            <li><a href="#classes-fields-and-messages">Classes, Fields and Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-auth">Class: auth</a></li>
-        
-            <li><a href="#fields">Fields</a></li>
-        
-            <li><a href="#messages">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-blob">Class: blob</a></li>
-        
-            <li><a href="#fields_1">Fields</a></li>
-        
-            <li><a href="#messages_1">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-bond">Class: Bond</a></li>
-        
-            <li><a href="#enums">Enums</a></li>
-        
-            <li><a href="#fields_2">Fields</a></li>
-        
-            <li><a href="#messages_2">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-console">Class: console</a></li>
-        
-            <li><a href="#enums_1">Enums</a></li>
-        
-            <li><a href="#fields_3">Fields</a></li>
-        
-            <li><a href="#messages_3">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-crashdump">Class: crashdump</a></li>
-        
-            <li><a href="#fields_4">Fields</a></li>
-        
-            <li><a href="#messages_4">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-data_source">Class: data_source</a></li>
-        
-            <li><a href="#fields_5">Fields</a></li>
-        
-            <li><a href="#messages_5">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-dr_task">Class: DR_task</a></li>
-        
-            <li><a href="#fields_6">Fields</a></li>
-        
-            <li><a href="#messages_6">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-event">Class: event</a></li>
-        
-            <li><a href="#enums_2">Enums</a></li>
-        
-            <li><a href="#fields_7">Fields</a></li>
-        
-            <li><a href="#messages_7">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-gpu_group">Class: GPU_group</a></li>
-        
-            <li><a href="#enums_3">Enums</a></li>
-        
-            <li><a href="#fields_8">Fields</a></li>
-        
-            <li><a href="#messages_8">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-host">Class: host</a></li>
-        
-            <li><a href="#enums_4">Enums</a></li>
-        
-            <li><a href="#fields_9">Fields</a></li>
-        
-    
-        <li class="main "><a href="#class-host_cpu">Class: host_cpu</a></li>
-        
-            <li><a href="#fields_10">Fields</a></li>
-        
-            <li><a href="#messages_9">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-host_crashdump">Class: host_crashdump</a></li>
-        
-            <li><a href="#fields_11">Fields</a></li>
-        
-            <li><a href="#messages_10">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-host_metrics">Class: host_metrics</a></li>
-        
-            <li><a href="#fields_12">Fields</a></li>
-        
-            <li><a href="#messages_11">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-host_patch">Class: host_patch</a></li>
-        
-            <li><a href="#fields_13">Fields</a></li>
-        
-            <li><a href="#messages_12">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-lvhd">Class: LVHD</a></li>
-        
-            <li><a href="#fields_14">Fields</a></li>
-        
-            <li><a href="#messages_13">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-message">Class: message</a></li>
-        
-            <li><a href="#enums_5">Enums</a></li>
-        
-            <li><a href="#fields_15">Fields</a></li>
-        
-            <li><a href="#messages_14">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-network">Class: network</a></li>
-        
-            <li><a href="#enums_6">Enums</a></li>
-        
-            <li><a href="#fields_16">Fields</a></li>
-        
-            <li><a href="#messages_15">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pbd">Class: PBD</a></li>
-        
-            <li><a href="#fields_17">Fields</a></li>
-        
-            <li><a href="#messages_16">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pci">Class: PCI</a></li>
-        
-            <li><a href="#fields_18">Fields</a></li>
-        
-            <li><a href="#messages_17">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pgpu">Class: PGPU</a></li>
-        
-            <li><a href="#enums_7">Enums</a></li>
-        
-            <li><a href="#fields_19">Fields</a></li>
-        
-            <li><a href="#messages_18">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pif">Class: PIF</a></li>
-        
-            <li><a href="#enums_8">Enums</a></li>
-        
-            <li><a href="#fields_20">Fields</a></li>
-        
-            <li><a href="#messages_19">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pif_metrics">Class: PIF_metrics</a></li>
-        
-            <li><a href="#fields_21">Fields</a></li>
-        
-            <li><a href="#messages_20">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pool">Class: pool</a></li>
-        
-            <li><a href="#enums_9">Enums</a></li>
-        
-            <li><a href="#fields_22">Fields</a></li>
-        
-            <li><a href="#messages_21">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-pool_patch">Class: pool_patch</a></li>
-        
-            <li><a href="#enums_10">Enums</a></li>
-        
-            <li><a href="#fields_23">Fields</a></li>
-        
-            <li><a href="#messages_22">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-role">Class: role</a></li>
-        
-            <li><a href="#fields_24">Fields</a></li>
-        
-            <li><a href="#messages_23">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-secret">Class: secret</a></li>
-        
-            <li><a href="#fields_25">Fields</a></li>
-        
-            <li><a href="#messages_24">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-session">Class: session</a></li>
-        
-            <li><a href="#fields_26">Fields</a></li>
-        
-            <li><a href="#messages_25">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-sm">Class: SM</a></li>
-        
-            <li><a href="#fields_27">Fields</a></li>
-        
-            <li><a href="#messages_26">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-sr">Class: SR</a></li>
-        
-            <li><a href="#enums_11">Enums</a></li>
-        
-            <li><a href="#fields_28">Fields</a></li>
-        
-            <li><a href="#messages_27">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-subject">Class: subject</a></li>
-        
-            <li><a href="#fields_29">Fields</a></li>
-        
-            <li><a href="#messages_28">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-task">Class: task</a></li>
-        
-            <li><a href="#enums_12">Enums</a></li>
-        
-            <li><a href="#fields_30">Fields</a></li>
-        
-            <li><a href="#messages_29">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-tunnel">Class: tunnel</a></li>
-        
-            <li><a href="#fields_31">Fields</a></li>
-        
-            <li><a href="#messages_30">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-user">Class: user</a></li>
-        
-            <li><a href="#fields_32">Fields</a></li>
-        
-            <li><a href="#messages_31">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vbd">Class: VBD</a></li>
-        
-            <li><a href="#enums_13">Enums</a></li>
-        
-            <li><a href="#fields_33">Fields</a></li>
-        
-            <li><a href="#messages_32">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vbd_metrics">Class: VBD_metrics</a></li>
-        
-            <li><a href="#fields_34">Fields</a></li>
-        
-            <li><a href="#messages_33">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vdi">Class: VDI</a></li>
-        
-            <li><a href="#enums_14">Enums</a></li>
-        
-            <li><a href="#fields_35">Fields</a></li>
-        
-            <li><a href="#messages_34">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vgpu">Class: VGPU</a></li>
-        
-            <li><a href="#fields_36">Fields</a></li>
-        
-            <li><a href="#messages_35">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vgpu_type">Class: VGPU_type</a></li>
-        
-            <li><a href="#enums_15">Enums</a></li>
-        
-            <li><a href="#fields_37">Fields</a></li>
-        
-            <li><a href="#messages_36">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vif">Class: VIF</a></li>
-        
-            <li><a href="#enums_16">Enums</a></li>
-        
-            <li><a href="#fields_38">Fields</a></li>
-        
-            <li><a href="#messages_37">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vif_metrics">Class: VIF_metrics</a></li>
-        
-            <li><a href="#fields_39">Fields</a></li>
-        
-            <li><a href="#messages_38">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vlan">Class: VLAN</a></li>
-        
-            <li><a href="#fields_40">Fields</a></li>
-        
-            <li><a href="#messages_39">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vm">Class: VM</a></li>
-        
-            <li><a href="#enums_17">Enums</a></li>
-        
-            <li><a href="#fields_41">Fields</a></li>
-        
-            <li><a href="#messages_40">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vm_appliance">Class: VM_appliance</a></li>
-        
-            <li><a href="#enums_18">Enums</a></li>
-        
-            <li><a href="#fields_42">Fields</a></li>
-        
-            <li><a href="#messages_41">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vm_guest_metrics">Class: VM_guest_metrics</a></li>
-        
-            <li><a href="#enums_19">Enums</a></li>
-        
-            <li><a href="#fields_43">Fields</a></li>
-        
-            <li><a href="#messages_42">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vm_metrics">Class: VM_metrics</a></li>
-        
-            <li><a href="#fields_44">Fields</a></li>
-        
-            <li><a href="#messages_43">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vmpp">Class: VMPP</a></li>
-        
-            <li><a href="#enums_20">Enums</a></li>
-        
-            <li><a href="#fields_45">Fields</a></li>
-        
-            <li><a href="#messages_44">Messages</a></li>
-        
-    
-        <li class="main "><a href="#class-vtpm">Class: VTPM</a></li>
-        
-            <li><a href="#fields_46">Fields</a></li>
-        
-            <li><a href="#messages_45">Messages</a></li>
-        
-    
-    </ul>
-</div>
-      </div>
-      &nbsp;
-    </nav>
+          <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+            <ul class="current">
+              
+              
+    <li class="toctree-l1 current">
+        <a class="toctree-l1-a current" href=".">Management API</a>
+		
+            <ul style="margin-left: 0px;padding-left:15px;border-left: 1px solid #b2b2b2;">
+            
+                <li class="toctree-l3"><a href="#citrix-xenserver-management-api" style="padding:0px;position: relative;">&nbsp;Citrix XenServer Management API</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#overview" style="padding:0px;position: relative;">&nbsp;Overview</a></li>
+                
+                    <li><a class="toctree-l4" href="#xenapi-classes" style="padding:0px;position: relative;">XenAPI Classes</a></li>
+                
+                    <li><a class="toctree-l4" href="#classes-fields-and-messages" style="padding:0px;position: relative;">Classes, Fields and Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-auth" style="padding:0px;position: relative;">&nbsp;Class: auth</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-blob" style="padding:0px;position: relative;">&nbsp;Class: blob</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_1" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_1" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-bond" style="padding:0px;position: relative;">&nbsp;Class: Bond</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_2" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_2" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-console" style="padding:0px;position: relative;">&nbsp;Class: console</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_1" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_3" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_3" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-crashdump" style="padding:0px;position: relative;">&nbsp;Class: crashdump</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_4" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_4" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-data_source" style="padding:0px;position: relative;">&nbsp;Class: data_source</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_5" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_5" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-dr_task" style="padding:0px;position: relative;">&nbsp;Class: DR_task</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_6" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_6" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-event" style="padding:0px;position: relative;">&nbsp;Class: event</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_2" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_7" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_7" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-gpu_group" style="padding:0px;position: relative;">&nbsp;Class: GPU_group</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_3" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_8" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_8" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-host" style="padding:0px;position: relative;">&nbsp;Class: host</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_4" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_9" style="padding:0px;position: relative;">Fields</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-host_cpu" style="padding:0px;position: relative;">&nbsp;Class: host_cpu</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_10" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_9" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-host_crashdump" style="padding:0px;position: relative;">&nbsp;Class: host_crashdump</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_11" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_10" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-host_metrics" style="padding:0px;position: relative;">&nbsp;Class: host_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_12" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_11" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-host_patch" style="padding:0px;position: relative;">&nbsp;Class: host_patch</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_13" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_12" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-lvhd" style="padding:0px;position: relative;">&nbsp;Class: LVHD</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_14" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_13" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-message" style="padding:0px;position: relative;">&nbsp;Class: message</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_5" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_15" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_14" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-network" style="padding:0px;position: relative;">&nbsp;Class: network</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_6" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_16" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_15" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pbd" style="padding:0px;position: relative;">&nbsp;Class: PBD</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_17" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_16" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pci" style="padding:0px;position: relative;">&nbsp;Class: PCI</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_18" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_17" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pgpu" style="padding:0px;position: relative;">&nbsp;Class: PGPU</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_7" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_19" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_18" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pif" style="padding:0px;position: relative;">&nbsp;Class: PIF</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_8" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_20" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_19" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pif_metrics" style="padding:0px;position: relative;">&nbsp;Class: PIF_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_21" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_20" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pool" style="padding:0px;position: relative;">&nbsp;Class: pool</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_9" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_22" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_21" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-pool_patch" style="padding:0px;position: relative;">&nbsp;Class: pool_patch</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_10" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_23" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_22" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-role" style="padding:0px;position: relative;">&nbsp;Class: role</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_24" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_23" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-secret" style="padding:0px;position: relative;">&nbsp;Class: secret</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_25" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_24" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-session" style="padding:0px;position: relative;">&nbsp;Class: session</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_26" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_25" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-sm" style="padding:0px;position: relative;">&nbsp;Class: SM</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_27" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_26" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-sr" style="padding:0px;position: relative;">&nbsp;Class: SR</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_11" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_28" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_27" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-subject" style="padding:0px;position: relative;">&nbsp;Class: subject</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_29" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_28" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-task" style="padding:0px;position: relative;">&nbsp;Class: task</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_12" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_30" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_29" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-tunnel" style="padding:0px;position: relative;">&nbsp;Class: tunnel</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_31" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_30" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-user" style="padding:0px;position: relative;">&nbsp;Class: user</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_32" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_31" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vbd" style="padding:0px;position: relative;">&nbsp;Class: VBD</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_13" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_33" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_32" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vbd_metrics" style="padding:0px;position: relative;">&nbsp;Class: VBD_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_34" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_33" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vdi" style="padding:0px;position: relative;">&nbsp;Class: VDI</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_14" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_35" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_34" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vgpu" style="padding:0px;position: relative;">&nbsp;Class: VGPU</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_36" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_35" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vgpu_type" style="padding:0px;position: relative;">&nbsp;Class: VGPU_type</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_15" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_37" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_36" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vif" style="padding:0px;position: relative;">&nbsp;Class: VIF</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_16" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_38" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_37" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vif_metrics" style="padding:0px;position: relative;">&nbsp;Class: VIF_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_39" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_38" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vlan" style="padding:0px;position: relative;">&nbsp;Class: VLAN</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_40" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_39" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vm" style="padding:0px;position: relative;">&nbsp;Class: VM</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_17" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_41" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_40" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vm_appliance" style="padding:0px;position: relative;">&nbsp;Class: VM_appliance</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_18" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_42" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_41" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vm_guest_metrics" style="padding:0px;position: relative;">&nbsp;Class: VM_guest_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_19" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_43" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_42" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vm_metrics" style="padding:0px;position: relative;">&nbsp;Class: VM_metrics</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_44" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_43" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vmpp" style="padding:0px;position: relative;">&nbsp;Class: VMPP</a></li>
+                
+                    <li><a class="toctree-l4" href="#enums_20" style="padding:0px;position: relative;">Enums</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_45" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_44" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-vtpm" style="padding:0px;position: relative;">&nbsp;Class: VTPM</a></li>
+                
+                    <li><a class="toctree-l4" href="#fields_46" style="padding:0px;position: relative;">Fields</a></li>
+                
+                    <li><a class="toctree-l4" href="#messages_45" style="padding:0px;position: relative;">Messages</a></li>
+                
+            
+            </ul>
+        
+    </li>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+			  
+            </ul>
+          </div>
+          &nbsp;
+        </nav>
 
-      
+        <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-         <!-- <div role="navigation" aria-label="breadcrumbs navigation">
+           
+          <div class="wy-nav-content">
+            <div class="rst-content">
+              <!-- <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".">Docs</a> &raquo;</li>
     
@@ -486,10 +489,22 @@ https://www.citrix.com/etc/designs/citrix/icon-favicon.png">
   </ul>
   <hr/>
 </div> -->
-          <div role="main">
-            <div class="section">
-             
-                <h1 id="citrix-xenserver-management-api"><a class="toclink" href="#citrix-xenserver-management-api">Citrix XenServer Management API</a></h1>
+              <div role="main">
+                <div class="section">
+                <div class="file-format">
+                 <div class="leftAlign" style="float: left;visibility: hidden;">
+                  </div>
+                  <div class="rightAlign" style="float: right;">
+                      <span>Download full document:</span>
+                      <ul class="file-types">
+                        <li><a style="border: 1px solid #EE3D24;padding: 5px;font-size: 11px;color: #EE3D24;border-radius: 5px;font-weight: 700">PDF</a></li>
+                        <li><a style="border: 1px solid #2A579A;padding: 5px;font-size: 11px;color: #2A579A;border-radius: 5px;font-weight: 700">DOCX</a></li>
+                        <li><a style="border: 1px solid #495164;padding: 5px;font-size: 11px;color: #495164;border-radius: 5px;font-weight: 700">EMAIL</a></li>
+                        <li><a style="border: 1px solid #495164;padding: 5px;font-size: 11px;color: #495164;border-radius: 5px;font-weight: 700">PRINT</a></li>
+                      </ul>
+                  </div>
+                  </div>
+                   <h1 id="citrix-xenserver-management-api"><a class="toclink" href="#citrix-xenserver-management-api">Citrix XenServer Management API</a></h1>
 <h1 id="overview"><a class="toclink" href="#overview">Overview</a></h1>
 <h2 id="xenapi-classes"><a class="toclink" href="#xenapi-classes">XenAPI Classes</a></h2>
 <p>Click on a class to view the associated fields and messages.</p>
@@ -1527,7 +1542,7 @@ Published in:   XenServer 5.5   configuration specific to external authenticatio
 
 <span class="nt">Default</span> <span class="nt">value</span><span class="o">:</span>  <span class="s2">&quot;&quot;</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.5</span>   <span class="nt">name</span> <span class="nt">of</span> <span class="nt">external</span> <span class="nt">authentication</span> <span class="nt">service</span> <span class="nt">configured</span><span class="o">;</span> <span class="nt">empty</span> <span class="nt">if</span> <span class="nt">none</span> <span class="nt">configured</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">5</span>   <span class="nt">name</span> <span class="nt">of</span> <span class="nt">external</span> <span class="nt">authentication</span> <span class="nt">service</span> <span class="nt">configured</span><span class="o">;</span> <span class="nt">empty</span> <span class="nt">if</span> <span class="nt">none</span> <span class="nt">configured</span><span class="o">.</span>
 </pre></div>
 
 
@@ -1537,7 +1552,7 @@ Published in:   XenServer 5.5   configuration specific to external authenticatio
 
 <span class="nt">Default</span> <span class="nt">value</span><span class="o">:</span>  <span class="s2">&quot;&quot;</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.5</span>   <span class="nt">type</span> <span class="nt">of</span> <span class="nt">external</span> <span class="nt">authentication</span> <span class="nt">service</span> <span class="nt">configured</span><span class="o">;</span> <span class="nt">empty</span> <span class="nt">if</span> <span class="nt">none</span> <span class="nt">configured</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">5</span>   <span class="nt">type</span> <span class="nt">of</span> <span class="nt">external</span> <span class="nt">authentication</span> <span class="nt">service</span> <span class="nt">configured</span><span class="o">;</span> <span class="nt">empty</span> <span class="nt">if</span> <span class="nt">none</span> <span class="nt">configured</span><span class="o">.</span>
 </pre></div>
 
 
@@ -3831,7 +3846,7 @@ Published in:   XenServer 4.0   machine-readable name of the interface (e.g. eth
 
 <div class="codehilite"><pre><span></span><span class="nt">bool</span> <span class="nt">disallow_unplug</span> <span class="cp">[</span><span class="nx">read</span><span class="p">/</span><span class="nx">write</span><span class="cp">]</span>
 
-<span class="nt">Prevent</span> <span class="nt">this</span> <span class="nt">PIF</span> <span class="nt">from</span> <span class="nt">being</span> <span class="nt">unplugged</span><span class="o">;</span> <span class="nt">set</span> <span class="nt">this</span> <span class="nt">to</span> <span class="nt">notify</span> <span class="nt">the</span> <span class="nt">management</span> <span class="nt">tool-stack</span> <span class="nt">that</span> <span class="nt">the</span> <span class="nt">PIF</span> <span class="nt">has</span> <span class="nt">a</span> <span class="nt">special</span> <span class="nt">use</span> <span class="nt">and</span> <span class="nt">should</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">unplugged</span> <span class="nt">under</span> <span class="nt">any</span> <span class="nt">circumstances</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">because</span> <span class="nt">you</span><span class="s1">&#39;re running storage traffic over it)</span>
+<span class="nt">Prevent</span> <span class="nt">this</span> <span class="nt">PIF</span> <span class="nt">from</span> <span class="nt">being</span> <span class="nt">unplugged</span><span class="o">;</span> <span class="nt">set</span> <span class="nt">this</span> <span class="nt">to</span> <span class="nt">notify</span> <span class="nt">the</span> <span class="nt">management</span> <span class="nt">tool-stack</span> <span class="nt">that</span> <span class="nt">the</span> <span class="nt">PIF</span> <span class="nt">has</span> <span class="nt">a</span> <span class="nt">special</span> <span class="nt">use</span> <span class="nt">and</span> <span class="nt">should</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">unplugged</span> <span class="nt">under</span> <span class="nt">any</span> <span class="nt">circumstances</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">because</span> <span class="nt">you</span><span class="s1">&#39;re running storage traffic over it)</span>
 
 <span class="s1">Default value:  false</span>
 
@@ -5896,7 +5911,7 @@ Published in:   XenServer 5.5   time when session was last validated
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">undefined</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Change</span> <span class="nt">the</span> <span class="nt">account</span> <span class="nt">password</span><span class="o">;</span> <span class="nt">if</span> <span class="nt">your</span> <span class="nt">session</span> <span class="nt">is</span> <span class="nt">authenticated</span> <span class="nt">with</span> <span class="nt">root</span> <span class="nt">priviledges</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">old_pwd</span> <span class="nt">is</span> <span class="nt">validated</span> <span class="nt">and</span> <span class="nt">the</span> <span class="nt">new_pwd</span> <span class="nt">is</span> <span class="nt">set</span> <span class="nt">regardless</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Change</span> <span class="nt">the</span> <span class="nt">account</span> <span class="nt">password</span><span class="o">;</span> <span class="nt">if</span> <span class="nt">your</span> <span class="nt">session</span> <span class="nt">is</span> <span class="nt">authenticated</span> <span class="nt">with</span> <span class="nt">root</span> <span class="nt">priviledges</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">old_pwd</span> <span class="nt">is</span> <span class="nt">validated</span> <span class="nt">and</span> <span class="nt">the</span> <span class="nt">new_pwd</span> <span class="nt">is</span> <span class="nt">set</span> <span class="nt">regardless</span>
 </pre></div>
 
 
@@ -8769,7 +8784,7 @@ Published in:   XenServer 4.0   ethernet MAC address of virtual interface, as ex
 
 <span class="nt">Default</span> <span class="nt">value</span><span class="o">:</span>  <span class="nt">false</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.5</span>   <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">MAC</span> <span class="nt">was</span> <span class="nt">autogenerated</span><span class="o">;</span> <span class="nt">false</span> <span class="nt">indicates</span> <span class="nt">it</span> <span class="nt">was</span> <span class="nt">set</span> <span class="nt">manually</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">5</span>   <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">MAC</span> <span class="nt">was</span> <span class="nt">autogenerated</span><span class="o">;</span> <span class="nt">false</span> <span class="nt">indicates</span> <span class="nt">it</span> <span class="nt">was</span> <span class="nt">set</span> <span class="nt">manually</span>
 </pre></div>
 
 
@@ -9110,23 +9125,23 @@ Published in:   XenServer 4.1   VLAN tag in use
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>PIF ref tagged_PIF [read-only]
+<div class="codehilite"><pre><span></span><span class="nx">PIF</span> <span class="nx">ref</span> <span class="nx">tagged_PIF</span> <span class="p">[</span><span class="nx">read</span><span class="o">-</span><span class="nx">only</span><span class="p">]</span>
 
-interface on which traffic is tagged
+<span class="kr">interface</span> <span class="nx">on</span> <span class="nx">which</span> <span class="nx">traffic</span> <span class="nx">is</span> <span class="nx">tagged</span>
 
-Default value:  Null
+<span class="nx">Default</span> <span class="nx">value</span>:  <span class="kt">Null</span>
 
-Published in:   XenServer 4.1   interface on which traffic is tagged
+<span class="nx">Published</span> <span class="k">in</span><span class="o">:</span>   <span class="nx">XenServer</span> <span class="mf">4.1</span>   <span class="kr">interface</span> <span class="nx">on</span> <span class="nx">which</span> <span class="nx">traffic</span> <span class="nx">is</span> <span class="nx">tagged</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>PIF ref untagged_PIF [read-only]
+<div class="codehilite"><pre><span></span><span class="nx">PIF</span> <span class="nx">ref</span> <span class="nx">untagged_PIF</span> <span class="p">[</span><span class="nx">read</span><span class="o">-</span><span class="nx">only</span><span class="p">]</span>
 
-interface on which traffic is untagged
+<span class="kr">interface</span> <span class="nx">on</span> <span class="nx">which</span> <span class="nx">traffic</span> <span class="nx">is</span> <span class="nx">untagged</span>
 
-Default value:  Null
+<span class="nx">Default</span> <span class="nx">value</span>:  <span class="kt">Null</span>
 
-Published in:   XenServer 4.1   interface on which traffic is untagged
+<span class="nx">Published</span> <span class="k">in</span><span class="o">:</span>   <span class="nx">XenServer</span> <span class="mf">4.1</span>   <span class="kr">interface</span> <span class="nx">on</span> <span class="nx">which</span> <span class="nx">traffic</span> <span class="nx">is</span> <span class="nx">untagged</span>
 </pre></div>
 
 
@@ -9483,7 +9498,7 @@ Deprecated in:  XenServer 6.0
 
 <span class="nt">Default</span> <span class="nt">value</span><span class="o">:</span>  <span class="s2">&quot;&quot;</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.0</span>   <span class="nt">has</span> <span class="nt">possible</span> <span class="nt">values</span><span class="o">:</span> <span class="s2">&quot;best-effort&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;try to restart this VM if possible but don&#39;t consider the Pool to be overcommitted if this is not possible&quot;</span><span class="o">;</span> <span class="s2">&quot;restart&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;this VM should be restarted&quot;</span><span class="o">;</span> <span class="s2">&quot;&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;do not try to restart this VM&quot;</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">has</span> <span class="nt">possible</span> <span class="nt">values</span><span class="o">:</span> <span class="s2">&quot;best-effort&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;try to restart this VM if possible but don&#39;t consider the Pool to be overcommitted if this is not possible&quot;</span><span class="o">;</span> <span class="s2">&quot;restart&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;this VM should be restarted&quot;</span><span class="o">;</span> <span class="s2">&quot;&quot;</span> <span class="nt">meaning</span> <span class="s2">&quot;do not try to restart this VM&quot;</span>
 </pre></div>
 
 
@@ -10140,13 +10155,13 @@ Published in:   Unreleased  Call a XenAPI plugin on this vm
 
 <span class="nt">VM_CHECKPOINT_RESUME_FAILED</span> <span class="nt">An</span> <span class="nt">error</span> <span class="nt">occured</span> <span class="nt">while</span> <span class="nt">restoring</span> <span class="nt">the</span> <span class="nt">memory</span> <span class="nt">image</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">virtual</span> <span class="nt">machine</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.6</span>   <span class="nt">Checkpoints</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Checkpoint</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">)</span> <span class="nt">and</span> <span class="nt">saves</span> <span class="nt">the</span> <span class="nt">memory</span> <span class="nt">image</span> <span class="nt">as</span> <span class="nt">well</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">6</span>   <span class="nt">Checkpoints</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Checkpoint</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">)</span> <span class="nt">and</span> <span class="nt">saves</span> <span class="nt">the</span> <span class="nt">memory</span> <span class="nt">image</span> <span class="nt">as</span> <span class="nt">well</span><span class="o">.</span>
 </pre></div>
 
 
 <div class="codehilite"><pre><span></span><span class="nt">void</span> <span class="nt">clean_reboot</span> <span class="o">(</span><span class="nt">VM</span> <span class="nt">ref</span><span class="o">)</span>
 
-<span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 
 <span class="nt">Parameters</span><span class="o">:</span> <span class="nt">VM</span> <span class="nt">ref</span> <span class="nt">vm</span>   <span class="nt">The</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">shutdown</span>
 
@@ -10160,13 +10175,13 @@ Published in:   Unreleased  Call a XenAPI plugin on this vm
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
 <div class="codehilite"><pre><span></span><span class="nt">void</span> <span class="nt">clean_shutdown</span> <span class="o">(</span><span class="nt">VM</span> <span class="nt">ref</span><span class="o">)</span>
 
-<span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 
 <span class="nt">Parameters</span><span class="o">:</span> <span class="nt">VM</span> <span class="nt">ref</span> <span class="nt">vm</span>   <span class="nt">The</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">shutdown</span>
 
@@ -10180,7 +10195,7 @@ Published in:   Unreleased  Call a XenAPI plugin on this vm
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">cleanly</span> <span class="nt">shutdown</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="o">(</span><span class="nt">Note</span><span class="o">:</span> <span class="nt">this</span> <span class="nt">may</span> <span class="nt">not</span> <span class="nt">be</span> <span class="nt">supported---e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">a</span> <span class="nt">guest</span> <span class="nt">agent</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10204,7 +10219,7 @@ Published in:   Unreleased  Call a XenAPI plugin on this vm
 
 <span class="nt">LICENCE_RESTRICTION</span> <span class="nt">This</span> <span class="nt">operation</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">allowed</span> <span class="nt">because</span> <span class="nt">your</span> <span class="nt">license</span> <span class="nt">lacks</span> <span class="nt">a</span> <span class="nt">needed</span> <span class="nt">feature</span><span class="o">.</span> <span class="nt">Please</span> <span class="nt">contact</span> <span class="nt">your</span> <span class="nt">support</span> <span class="nt">representative</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Clones</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Clone</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Clones</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Clone</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10244,7 +10259,7 @@ Published in:   XenServer 5.6   Computes the virtualization memory overhead of a
 
 <span class="nt">LICENCE_RESTRICTION</span> <span class="nt">This</span> <span class="nt">operation</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">allowed</span> <span class="nt">because</span> <span class="nt">your</span> <span class="nt">license</span> <span class="nt">lacks</span> <span class="nt">a</span> <span class="nt">needed</span> <span class="nt">feature</span><span class="o">.</span> <span class="nt">Please</span> <span class="nt">contact</span> <span class="nt">your</span> <span class="nt">support</span> <span class="nt">representative</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Copies</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">an</span> <span class="nt">SR</span><span class="o">.</span> <span class="nt">There</span> <span class="nt">must</span> <span class="nt">be</span> <span class="nt">a</span> <span class="nt">host</span> <span class="nt">that</span> <span class="nt">can</span> <span class="nt">see</span> <span class="nt">both</span> <span class="nt">the</span> <span class="nt">source</span> <span class="nt">and</span> <span class="nt">destination</span> <span class="nt">SRs</span> <span class="nt">simultaneously</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Copies</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">an</span> <span class="nt">SR</span><span class="o">.</span> <span class="nt">There</span> <span class="nt">must</span> <span class="nt">be</span> <span class="nt">a</span> <span class="nt">host</span> <span class="nt">that</span> <span class="nt">can</span> <span class="nt">see</span> <span class="nt">both</span> <span class="nt">the</span> <span class="nt">source</span> <span class="nt">and</span> <span class="nt">destination</span> <span class="nt">SRs</span> <span class="nt">simultaneously</span>
 </pre></div>
 
 
@@ -10342,7 +10357,7 @@ Published in:   XenServer 4.0   Returns a record describing the VM&#39;s dynamic
 
 <div class="codehilite"><pre><span></span><span class="nt">bool</span> <span class="nt">get_cooperative</span> <span class="o">(</span><span class="nt">VM</span> <span class="nt">ref</span><span class="o">)</span> <span class="nt">Deprecated</span>
 
-<span class="nt">Return</span> <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">currently</span> <span class="s1">&#39;co-operative&#39;</span> <span class="nt">i</span><span class="nc">.e</span><span class="o">.</span> <span class="nt">is</span> <span class="nt">expected</span> <span class="nt">to</span> <span class="nt">reach</span> <span class="nt">a</span> <span class="nt">balloon</span> <span class="nt">target</span> <span class="nt">and</span> <span class="nt">actually</span> <span class="nt">has</span> <span class="nt">done</span>
+<span class="nt">Return</span> <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">currently</span> <span class="s1">&#39;co-operative&#39;</span> <span class="nt">i</span><span class="p">.</span><span class="nc">e</span><span class="o">.</span> <span class="nt">is</span> <span class="nt">expected</span> <span class="nt">to</span> <span class="nt">reach</span> <span class="nt">a</span> <span class="nt">balloon</span> <span class="nt">target</span> <span class="nt">and</span> <span class="nt">actually</span> <span class="nt">has</span> <span class="nt">done</span>
 
 <span class="nt">Parameters</span><span class="o">:</span> <span class="nt">VM</span> <span class="nt">ref</span> <span class="nt">self</span> <span class="nt">The</span> <span class="nt">VM</span>
 
@@ -10350,9 +10365,9 @@ Published in:   XenServer 4.0   Returns a record describing the VM&#39;s dynamic
 
 <span class="nt">Result</span><span class="o">:</span> <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">currently</span> <span class="s1">&#39;co-operative&#39;</span><span class="o">;</span> <span class="nt">false</span> <span class="nt">otherwise</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.6</span>   <span class="nt">Return</span> <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">currently</span> <span class="s1">&#39;co-operative&#39;</span> <span class="nt">i</span><span class="nc">.e</span><span class="o">.</span> <span class="nt">is</span> <span class="nt">expected</span> <span class="nt">to</span> <span class="nt">reach</span> <span class="nt">a</span> <span class="nt">balloon</span> <span class="nt">target</span> <span class="nt">and</span> <span class="nt">actually</span> <span class="nt">has</span> <span class="nt">done</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">6</span>   <span class="nt">Return</span> <span class="nt">true</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">currently</span> <span class="s1">&#39;co-operative&#39;</span> <span class="nt">i</span><span class="p">.</span><span class="nc">e</span><span class="o">.</span> <span class="nt">is</span> <span class="nt">expected</span> <span class="nt">to</span> <span class="nt">reach</span> <span class="nt">a</span> <span class="nt">balloon</span> <span class="nt">target</span> <span class="nt">and</span> <span class="nt">actually</span> <span class="nt">has</span> <span class="nt">done</span>
 
-<span class="nt">Deprecated</span> <span class="nt">in</span><span class="o">:</span>  <span class="nt">XenServer</span> <span class="nt">6</span><span class="nc">.1</span>   
+<span class="nt">Deprecated</span> <span class="nt">in</span><span class="o">:</span>  <span class="nt">XenServer</span> <span class="nt">6</span><span class="p">.</span><span class="nc">1</span>   
 </pre></div>
 
 
@@ -10414,7 +10429,7 @@ Published in:   XenServer 6.5   List all the SR&#39;s that are required for the 
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Stop</span> <span class="nt">executing</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">without</span> <span class="nt">attempting</span> <span class="nt">a</span> <span class="nt">clean</span> <span class="nt">shutdown</span> <span class="nt">and</span> <span class="nt">immediately</span> <span class="nt">restart</span> <span class="nt">the</span> <span class="nt">VM</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Stop</span> <span class="nt">executing</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">without</span> <span class="nt">attempting</span> <span class="nt">a</span> <span class="nt">clean</span> <span class="nt">shutdown</span> <span class="nt">and</span> <span class="nt">immediately</span> <span class="nt">restart</span> <span class="nt">the</span> <span class="nt">VM</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10434,7 +10449,7 @@ Published in:   XenServer 6.5   List all the SR&#39;s that are required for the 
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Stop</span> <span class="nt">executing</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">without</span> <span class="nt">attempting</span> <span class="nt">a</span> <span class="nt">clean</span> <span class="nt">shutdown</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Stop</span> <span class="nt">executing</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">without</span> <span class="nt">attempting</span> <span class="nt">a</span> <span class="nt">clean</span> <span class="nt">shutdown</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10502,7 +10517,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">Parameters</span><span class="o">:</span> <span class="nt">VM</span> <span class="nt">ref</span> <span class="nt">vm</span>   <span class="nt">The</span> <span class="nt">VM</span>
 
-<span class="o">(</span><span class="nt">string</span> <span class="err">→</span> <span class="nt">string</span><span class="o">)</span> <span class="nt">map</span> <span class="nt">dest</span>  <span class="nt">The</span> <span class="nt">result</span> <span class="nt">of</span> <span class="nt">a</span> <span class="nt">Host</span><span class="nc">.migrate_receive</span> <span class="nt">call</span><span class="o">.</span>
+<span class="o">(</span><span class="nt">string</span> <span class="err">→</span> <span class="nt">string</span><span class="o">)</span> <span class="nt">map</span> <span class="nt">dest</span>  <span class="nt">The</span> <span class="nt">result</span> <span class="nt">of</span> <span class="nt">a</span> <span class="nt">Host</span><span class="p">.</span><span class="nc">migrate_receive</span> <span class="nt">call</span><span class="o">.</span>
 
 <span class="nt">bool</span> <span class="nt">live</span>   <span class="nt">Live</span> <span class="nt">migration</span>
 
@@ -10520,7 +10535,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">LICENCE_RESTRICTION</span> <span class="nt">This</span> <span class="nt">operation</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">allowed</span> <span class="nt">because</span> <span class="nt">your</span> <span class="nt">license</span> <span class="nt">lacks</span> <span class="nt">a</span> <span class="nt">needed</span> <span class="nt">feature</span><span class="o">.</span> <span class="nt">Please</span> <span class="nt">contact</span> <span class="nt">your</span> <span class="nt">support</span> <span class="nt">representative</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">6</span><span class="nc">.1</span>   <span class="nt">Migrate</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">another</span> <span class="nt">host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">6</span><span class="p">.</span><span class="nc">1</span>   <span class="nt">Migrate</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">another</span> <span class="nt">host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10540,7 +10555,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Pause</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Pause</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10566,7 +10581,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">VM_MIGRATE_FAILED</span>   <span class="nt">An</span> <span class="nt">error</span> <span class="nt">occurred</span> <span class="nt">during</span> <span class="nt">the</span> <span class="nt">migration</span> <span class="nt">process</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Migrate</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">another</span> <span class="nt">Host</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Migrate</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">another</span> <span class="nt">Host</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10578,7 +10593,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">pool-operator</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Reset</span> <span class="nt">the</span> <span class="nt">power-state</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">halted</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">database</span> <span class="nt">only</span><span class="o">.</span> <span class="o">(</span><span class="nt">Used</span> <span class="nt">to</span> <span class="nt">recover</span> <span class="nt">from</span> <span class="nt">slave</span> <span class="nt">failures</span> <span class="nt">in</span> <span class="nt">pooling</span> <span class="nt">scenarios</span> <span class="nt">by</span> <span class="nt">resetting</span> <span class="nt">the</span> <span class="nt">power-states</span> <span class="nt">of</span> <span class="nt">VMs</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">dead</span> <span class="nt">slaves</span> <span class="nt">to</span> <span class="nt">halted</span><span class="o">.)</span> <span class="nt">This</span> <span class="nt">is</span> <span class="nt">a</span> <span class="nt">potentially</span> <span class="nt">dangerous</span> <span class="nt">operation</span><span class="o">;</span> <span class="nt">use</span> <span class="nt">with</span> <span class="nt">care</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Reset</span> <span class="nt">the</span> <span class="nt">power-state</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">halted</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">database</span> <span class="nt">only</span><span class="o">.</span> <span class="o">(</span><span class="nt">Used</span> <span class="nt">to</span> <span class="nt">recover</span> <span class="nt">from</span> <span class="nt">slave</span> <span class="nt">failures</span> <span class="nt">in</span> <span class="nt">pooling</span> <span class="nt">scenarios</span> <span class="nt">by</span> <span class="nt">resetting</span> <span class="nt">the</span> <span class="nt">power-states</span> <span class="nt">of</span> <span class="nt">VMs</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">dead</span> <span class="nt">slaves</span> <span class="nt">to</span> <span class="nt">halted</span><span class="o">.)</span> <span class="nt">This</span> <span class="nt">is</span> <span class="nt">a</span> <span class="nt">potentially</span> <span class="nt">dangerous</span> <span class="nt">operation</span><span class="o">;</span> <span class="nt">use</span> <span class="nt">with</span> <span class="nt">care</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10598,7 +10613,7 @@ Published in:   XenServer 4.1   Returns the maximum amount of guest memory which
 
 <span class="nt">LICENCE_RESTRICTION</span> <span class="nt">This</span> <span class="nt">operation</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">allowed</span> <span class="nt">because</span> <span class="nt">your</span> <span class="nt">license</span> <span class="nt">lacks</span> <span class="nt">a</span> <span class="nt">needed</span> <span class="nt">feature</span><span class="o">.</span> <span class="nt">Please</span> <span class="nt">contact</span> <span class="nt">your</span> <span class="nt">support</span> <span class="nt">representative</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Inspects</span> <span class="nt">the</span> <span class="nt">disk</span> <span class="nt">configuration</span> <span class="nt">contained</span> <span class="nt">within</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">other_config</span><span class="o">,</span> <span class="nt">creates</span> <span class="nt">VDIs</span> <span class="nt">and</span> <span class="nt">VBDs</span> <span class="nt">and</span> <span class="nt">then</span> <span class="nt">executes</span> <span class="nt">any</span> <span class="nt">applicable</span> <span class="nt">post-install</span> <span class="nt">script</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Inspects</span> <span class="nt">the</span> <span class="nt">disk</span> <span class="nt">configuration</span> <span class="nt">contained</span> <span class="nt">within</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">other_config</span><span class="o">,</span> <span class="nt">creates</span> <span class="nt">VDIs</span> <span class="nt">and</span> <span class="nt">VBDs</span> <span class="nt">and</span> <span class="nt">then</span> <span class="nt">executes</span> <span class="nt">any</span> <span class="nt">applicable</span> <span class="nt">post-install</span> <span class="nt">script</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10670,7 +10685,7 @@ Published in:   XenServer 6.0   Recover the VM
 
 <span class="nt">bool</span> <span class="nt">start_paused</span>   <span class="nt">Resume</span> <span class="nt">VM</span> <span class="nt">in</span> <span class="nt">paused</span> <span class="nt">state</span> <span class="nt">if</span> <span class="nt">set</span> <span class="nt">to</span> <span class="nt">true</span><span class="o">.</span>
 
-<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">resume</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-resume</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">was</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
+<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">resume</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-resume</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">was</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">vm-operator</span>
 
@@ -10680,7 +10695,7 @@ Published in:   XenServer 6.0   Recover the VM
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Awaken</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">resume</span> <span class="nt">it</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Suspended</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Awaken</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">resume</span> <span class="nt">it</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Suspended</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10694,7 +10709,7 @@ Published in:   XenServer 6.0   Recover the VM
 
 <span class="nt">bool</span> <span class="nt">start_paused</span>   <span class="nt">Resume</span> <span class="nt">VM</span> <span class="nt">in</span> <span class="nt">paused</span> <span class="nt">state</span> <span class="nt">if</span> <span class="nt">set</span> <span class="nt">to</span> <span class="nt">true</span><span class="o">.</span>
 
-<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">resume</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-resume</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">was</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
+<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">resume</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-resume</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">was</span> <span class="nt">running</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">vm-power-admin</span>
 
@@ -10704,7 +10719,7 @@ Published in:   XenServer 6.0   Recover the VM
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Awaken</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">resume</span> <span class="nt">it</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">particular</span> <span class="nt">Host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Suspended</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Awaken</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">resume</span> <span class="nt">it</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">particular</span> <span class="nt">Host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Suspended</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10738,7 +10753,7 @@ Published in:   XenServer 5.5   Returns mapping of hosts to ratings, indicating 
 
 <span class="nt">VM_REVERT_FAILED</span>    <span class="nt">An</span> <span class="nt">error</span> <span class="nt">occured</span> <span class="nt">while</span> <span class="nt">reverting</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">virtual</span> <span class="nt">machine</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">snapshot</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.6</span>   <span class="nt">Reverts</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">a</span> <span class="nt">previous</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">6</span>   <span class="nt">Reverts</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">a</span> <span class="nt">previous</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10754,7 +10769,7 @@ Published in:   XenServer 5.5   Returns mapping of hosts to ratings, indicating 
 
 <span class="nt">Errors</span><span class="o">:</span> <span class="nt">VM_BAD_POWER_STATE</span>  <span class="nt">You</span> <span class="nt">attempted</span> <span class="nt">an</span> <span class="nt">operation</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">that</span> <span class="nt">was</span> <span class="nt">not</span> <span class="nt">in</span> <span class="nt">an</span> <span class="nt">appropriate</span> <span class="nt">power</span> <span class="nt">state</span> <span class="nt">at</span> <span class="nt">the</span> <span class="nt">time</span><span class="o">;</span> <span class="nt">for</span> <span class="nt">example</span><span class="o">,</span> <span class="nt">you</span> <span class="nt">attempted</span> <span class="nt">to</span> <span class="nt">start</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">that</span> <span class="nt">was</span> <span class="nt">already</span> <span class="nt">running</span><span class="o">.</span> <span class="nt">The</span> <span class="nt">parameters</span> <span class="nt">returned</span> <span class="nt">are</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">handle</span><span class="o">,</span> <span class="nt">and</span> <span class="nt">the</span> <span class="nt">expected</span> <span class="nt">and</span> <span class="nt">actual</span> <span class="nt">VM</span> <span class="nt">state</span> <span class="nt">at</span> <span class="nt">the</span> <span class="nt">time</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">call</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Send</span> <span class="nt">the</span> <span class="nt">given</span> <span class="nt">key</span> <span class="nt">as</span> <span class="nt">a</span> <span class="nt">sysrq</span> <span class="nt">to</span> <span class="nt">this</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">The</span> <span class="nt">key</span> <span class="nt">is</span> <span class="nt">specified</span> <span class="nt">as</span> <span class="nt">a</span> <span class="nt">single</span> <span class="nt">character</span> <span class="o">(</span><span class="nt">a</span> <span class="nt">String</span> <span class="nt">of</span> <span class="nt">length</span> <span class="nt">1</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Send</span> <span class="nt">the</span> <span class="nt">given</span> <span class="nt">key</span> <span class="nt">as</span> <span class="nt">a</span> <span class="nt">sysrq</span> <span class="nt">to</span> <span class="nt">this</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">The</span> <span class="nt">key</span> <span class="nt">is</span> <span class="nt">specified</span> <span class="nt">as</span> <span class="nt">a</span> <span class="nt">single</span> <span class="nt">character</span> <span class="o">(</span><span class="nt">a</span> <span class="nt">String</span> <span class="nt">of</span> <span class="nt">length</span> <span class="nt">1</span><span class="o">).</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -10770,7 +10785,7 @@ Published in:   XenServer 5.5   Returns mapping of hosts to ratings, indicating 
 
 <span class="nt">Errors</span><span class="o">:</span> <span class="nt">VM_BAD_POWER_STATE</span>  <span class="nt">You</span> <span class="nt">attempted</span> <span class="nt">an</span> <span class="nt">operation</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">that</span> <span class="nt">was</span> <span class="nt">not</span> <span class="nt">in</span> <span class="nt">an</span> <span class="nt">appropriate</span> <span class="nt">power</span> <span class="nt">state</span> <span class="nt">at</span> <span class="nt">the</span> <span class="nt">time</span><span class="o">;</span> <span class="nt">for</span> <span class="nt">example</span><span class="o">,</span> <span class="nt">you</span> <span class="nt">attempted</span> <span class="nt">to</span> <span class="nt">start</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">that</span> <span class="nt">was</span> <span class="nt">already</span> <span class="nt">running</span><span class="o">.</span> <span class="nt">The</span> <span class="nt">parameters</span> <span class="nt">returned</span> <span class="nt">are</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">handle</span><span class="o">,</span> <span class="nt">and</span> <span class="nt">the</span> <span class="nt">expected</span> <span class="nt">and</span> <span class="nt">actual</span> <span class="nt">VM</span> <span class="nt">state</span> <span class="nt">at</span> <span class="nt">the</span> <span class="nt">time</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">call</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Send</span> <span class="nt">the</span> <span class="nt">named</span> <span class="nt">trigger</span> <span class="nt">to</span> <span class="nt">this</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Send</span> <span class="nt">the</span> <span class="nt">named</span> <span class="nt">trigger</span> <span class="nt">to</span> <span class="nt">this</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -11114,7 +11129,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">6</span><span class="nc">.2</span>   <span class="nt">Attempts</span> <span class="nt">to</span> <span class="nt">first</span> <span class="nt">clean</span> <span class="nt">shutdown</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">if</span> <span class="nt">it</span> <span class="nt">should</span> <span class="nt">fail</span> <span class="nt">then</span> <span class="nt">perform</span> <span class="nt">a</span> <span class="nt">hard</span> <span class="nt">shutdown</span> <span class="nt">on</span> <span class="nt">it</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">6</span><span class="p">.</span><span class="nc">2</span>   <span class="nt">Attempts</span> <span class="nt">to</span> <span class="nt">first</span> <span class="nt">clean</span> <span class="nt">shutdown</span> <span class="nt">a</span> <span class="nt">VM</span> <span class="nt">and</span> <span class="nt">if</span> <span class="nt">it</span> <span class="nt">should</span> <span class="nt">fail</span> <span class="nt">then</span> <span class="nt">perform</span> <span class="nt">a</span> <span class="nt">hard</span> <span class="nt">shutdown</span> <span class="nt">on</span> <span class="nt">it</span><span class="o">.</span>
 </pre></div>
 
 
@@ -11136,7 +11151,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">OPERATION_NOT_ALLOWED</span>   <span class="nt">You</span> <span class="nt">attempted</span> <span class="nt">an</span> <span class="nt">operation</span> <span class="nt">that</span> <span class="nt">was</span> <span class="nt">not</span> <span class="nt">allowed</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.0</span>   <span class="nt">Snapshots</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Snapshot</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Snapshots</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Snapshot</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span>
 </pre></div>
 
 
@@ -11166,7 +11181,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">VM_SNAPSHOT_WITH_QUIESCE_NOT_SUPPORTED</span>  <span class="nt">The</span> <span class="nt">VSS</span> <span class="nt">plug-in</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">installed</span> <span class="nt">on</span> <span class="nt">this</span> <span class="nt">virtual</span> <span class="nt">machine</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="nc">.0</span>   <span class="nt">Snapshots</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">with</span> <span class="nt">quiesce</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Snapshot</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">5</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Snapshots</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">with</span> <span class="nt">quiesce</span><span class="o">,</span> <span class="nt">making</span> <span class="nt">a</span> <span class="nt">new</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">Snapshot</span> <span class="nt">automatically</span> <span class="nt">exploits</span> <span class="nt">the</span> <span class="nt">capabilities</span> <span class="nt">of</span> <span class="nt">the</span> <span class="nt">underlying</span> <span class="nt">storage</span> <span class="nt">repository</span> <span class="nt">in</span> <span class="nt">which</span> <span class="nt">the</span> <span class="nt">VM</span><span class="err">&#39;</span><span class="nt">s</span> <span class="nt">disk</span> <span class="nt">images</span> <span class="nt">are</span> <span class="nt">stored</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">Copy</span> <span class="nt">on</span> <span class="nt">Write</span><span class="o">).</span>
 </pre></div>
 
 
@@ -11178,7 +11193,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">bool</span> <span class="nt">start_paused</span>   <span class="nt">Instantiate</span> <span class="nt">VM</span> <span class="nt">in</span> <span class="nt">paused</span> <span class="nt">state</span> <span class="nt">if</span> <span class="nt">set</span> <span class="nt">to</span> <span class="nt">true</span><span class="o">.</span>
 
-<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">start</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-boot</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">last</span> <span class="nt">booted</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
+<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">start</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-boot</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">last</span> <span class="nt">booted</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">vm-operator</span>
 
@@ -11200,7 +11215,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">LICENCE_RESTRICTION</span> <span class="nt">This</span> <span class="nt">operation</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">allowed</span> <span class="nt">because</span> <span class="nt">your</span> <span class="nt">license</span> <span class="nt">lacks</span> <span class="nt">a</span> <span class="nt">needed</span> <span class="nt">feature</span><span class="o">.</span> <span class="nt">Please</span> <span class="nt">contact</span> <span class="nt">your</span> <span class="nt">support</span> <span class="nt">representative</span><span class="o">.</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Start</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">with</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Start</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">with</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
 </pre></div>
 
 
@@ -11214,7 +11229,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">bool</span> <span class="nt">start_paused</span>   <span class="nt">Instantiate</span> <span class="nt">VM</span> <span class="nt">in</span> <span class="nt">paused</span> <span class="nt">state</span> <span class="nt">if</span> <span class="nt">set</span> <span class="nt">to</span> <span class="nt">true</span><span class="o">.</span>
 
-<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">start</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-boot</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="nc">.g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">last</span> <span class="nt">booted</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
+<span class="nt">bool</span> <span class="nt">force</span>  <span class="nt">Attempt</span> <span class="nt">to</span> <span class="nt">force</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">start</span><span class="o">.</span> <span class="nt">If</span> <span class="nt">this</span> <span class="nt">flag</span> <span class="nt">is</span> <span class="nt">false</span> <span class="nt">then</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">may</span> <span class="nt">fail</span> <span class="nt">pre-boot</span> <span class="nt">safety</span> <span class="nt">checks</span> <span class="o">(</span><span class="nt">e</span><span class="p">.</span><span class="nc">g</span><span class="o">.</span> <span class="nt">if</span> <span class="nt">the</span> <span class="nt">CPU</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">last</span> <span class="nt">booted</span> <span class="nt">on</span> <span class="nt">looks</span> <span class="nt">substantially</span> <span class="nt">different</span> <span class="nt">to</span> <span class="nt">the</span> <span class="nt">current</span> <span class="nt">one</span><span class="o">)</span>
 
 <span class="nt">Minimum</span> <span class="nt">role</span><span class="o">:</span>   <span class="nt">vm-power-admin</span>
 
@@ -11230,7 +11245,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">UNKNOWN_BOOTLOADER</span>  <span class="nt">The</span> <span class="nt">requested</span> <span class="nt">bootloader</span> <span class="nt">is</span> <span class="nt">unknown</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Start</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">particular</span> <span class="nt">host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">with</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Start</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">on</span> <span class="nt">a</span> <span class="nt">particular</span> <span class="nt">host</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">function</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">with</span> <span class="nt">the</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Halted</span> <span class="nt">State</span><span class="o">.</span>
 </pre></div>
 
 
@@ -11250,7 +11265,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Suspend</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">disk</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Suspend</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">to</span> <span class="nt">disk</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Running</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -11268,7 +11283,7 @@ Published in:   XenServer 4.0   Set the number of VCPUs for a running VM
 
 <span class="nt">VM_IS_TEMPLATE</span>  <span class="nt">The</span> <span class="nt">operation</span> <span class="nt">attempted</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">valid</span> <span class="nt">for</span> <span class="nt">a</span> <span class="nt">template</span> <span class="nt">VM</span>
 
-<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="nc">.0</span>   <span class="nt">Resume</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Paused</span> <span class="nt">state</span><span class="o">.</span>
+<span class="nt">Published</span> <span class="nt">in</span><span class="o">:</span>   <span class="nt">XenServer</span> <span class="nt">4</span><span class="p">.</span><span class="nc">0</span>   <span class="nt">Resume</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span><span class="o">.</span> <span class="nt">This</span> <span class="nt">can</span> <span class="nt">only</span> <span class="nt">be</span> <span class="nt">called</span> <span class="nt">when</span> <span class="nt">the</span> <span class="nt">specified</span> <span class="nt">VM</span> <span class="nt">is</span> <span class="nt">in</span> <span class="nt">the</span> <span class="nt">Paused</span> <span class="nt">state</span><span class="o">.</span>
 </pre></div>
 
 
@@ -12355,20 +12370,19 @@ Published in:   XenServer 4.0   the virtual machine
 
 
 <h3 id="messages_45"><a class="toclink" href="#messages_45">Messages</a></h3>
-<p>None.</p>
-              
+<p>None.</p> 
+
+                </div>
+              </div>
 
             </div>
           </div>
 
-        </div>
+        </section>
+
       </div>
-
-    </section>
-
-  </div>
-
-<!--<div class="rst-versions" role="note" style="cursor: pointer">
+    </div>
+    <!--<div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
@@ -12385,10 +12399,11 @@ Published in:   XenServer 4.0   the virtual machine
 	</div>
 </div>-->
 
-</body>
+  </body>
+
 </html>
 
 <!--
-MkDocs version : 0.15.3
-Build Date UTC : 2017-01-05 14:48:05.174041
+MkDocs version : 0.16.1
+Build Date UTC : 2017-05-11 12:53:15
 -->
