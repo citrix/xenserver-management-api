@@ -1,8 +1,6 @@
-site_name: Citrix XenServer Management API
-site_description: Reference guide for Citrix XenServer Management API
+site_name: Citrix XenServer 7.1 LTSR Management API Reference
+site_description: Citrix XenServer 7.1 LTSR Management API Reference
 theme_dir: citrix-sdk
-#theme: mkdocs
-#repo_url: https://github.com/ajitchelat/AppDNA-SDK.git
 markdown_extensions:
   - admonition
   - codehilite
@@ -10,4 +8,7 @@ markdown_extensions:
      anchorlink: True
 
 pages:
-- Management API: index.md
+- Introduction: index.md
+- Wire Protocol for Remote API Calls: wire-protocol.md
+- VM Lifecycle: vm-lifecycle.md
+- API Reference: api-ref-autogen.md
