@@ -1,3 +1,4 @@
+
 # API Reference
 
 ## Classes
@@ -14,6 +15,7 @@ The following classes are defined:
 |`data_source       `|Data sources for logging in RRDs                                      |
 |`DR_task           `|DR task                                                               |
 |`event             `|Asynchronous event registration and handling                          |
+|`Feature           `|A new piece of functionality                                          |
 |`GPU_group         `|A group of compatible GPUs across the resource pool                   |
 |`host              `|A physical host                                                       |
 |`host_cpu          `|**Deprecated**. A physical CPU                                        |
@@ -31,11 +33,13 @@ The following classes are defined:
 |`pool              `|Pool&#45;wide information                                             |
 |`pool_patch        `|**Deprecated**. Pool&#45;wide patches                                 |
 |`pool_update       `|Pool&#45;wide updates to the host software                            |
+|`PUSB              `|A physical USB device                                                 |
 |`PVS_cache_storage `|Describes the storage that is available to a PVS site for caching purposes|
 |`PVS_proxy         `|a proxy connects a VM/VIF with a PVS site                             |
 |`PVS_server        `|individual machine serving provisioning &#40;block&#41; data          |
 |`PVS_site          `|machines serving blocks of data for provisioning VMs                  |
 |`role              `|A set of permissions associated with a subject                        |
+|`SDN_controller    `|Describes the SDN controller that is to connect with the pool         |
 |`secret            `|A secret                                                              |
 |`session           `|A session                                                             |
 |`SM                `|A storage manager plugin                                              |
@@ -43,10 +47,12 @@ The following classes are defined:
 |`subject           `|A user or group that can log in xapi                                  |
 |`task              `|A long&#45;running asynchronous task                                  |
 |`tunnel            `|A tunnel for network traffic                                          |
+|`USB_group         `|A group of compatible USBs across the resource pool                   |
 |`user              `|**Deprecated**. A user of the system                                  |
 |`VBD               `|A virtual block device                                                |
 |`VBD_metrics       `|**Removed**. The metrics associated with a virtual block device       |
 |`VDI               `|A virtual disk image                                                  |
+|`vdi_nbd_server_info`|Details for connecting to a VDI using the Network Block Device protocol|
 |`VGPU              `|A virtual GPU &#40;vGPU&#41;                                          |
 |`VGPU_type         `|A type of virtual GPU                                                 |
 |`VIF               `|A virtual network interface                                           |
@@ -57,7 +63,9 @@ The following classes are defined:
 |`VM_guest_metrics  `|The metrics reported by the guest &#40;as opposed to inferred from outside&#41;|
 |`VM_metrics        `|The metrics associated with a VM                                      |
 |`VMPP              `|**Removed**. VM Protection Policy                                     |
+|`VMSS              `|VM Snapshot Schedule                                                  |
 |`VTPM              `|A virtual TPM device                                                  |
+|`VUSB              `|Describes the vusb device                                             |
 
 ## Relationships Between Classes
 
@@ -96,6 +104,7 @@ Fields that are bound together are shown in the following table:
 |`subject.roles                         `|`subject.roles                         `|unknown type   |
 |`role.subroles                         `|`role.subroles                         `|many-to-many   |
 |`VM.protection_policy                  `|`VMPP.VMs                              `|one-to-many    |
+|`VM.snapshot_schedule                  `|`VMSS.VMs                              `|one-to-many    |
 |`VM.appliance                          `|`VM_appliance.VMs                      `|one-to-many    |
 |`PGPU.GPU_group                        `|`GPU_group.PGPUs                       `|one-to-many    |
 |`VGPU.GPU_group                        `|`GPU_group.VGPUs                       `|one-to-many    |
@@ -113,6 +122,11 @@ Fields that are bound together are shown in the following table:
 |`PVS_server.site                       `|`PVS_site.servers                      `|one-to-many    |
 |`PVS_proxy.site                        `|`PVS_site.proxies                      `|one-to-many    |
 |`PVS_cache_storage.site                `|`PVS_site.cache_storage                `|one-to-many    |
+|`PUSB.host                             `|`host.PUSBs                            `|one-to-many    |
+|`PUSB.USB_group                        `|`USB_group.PUSBs                       `|one-to-many    |
+|`VUSB.USB_group                        `|`USB_group.VUSBs                       `|one-to-many    |
+|`VUSB.VM                               `|`VM.VUSBs                              `|one-to-many    |
+|`Feature.host                          `|`host.features                         `|one-to-many    |
 
 The following figure represents bound fields (as specified above) diagramatically, using crow's foot notation to specify one-to-one, one-to-many or many-to-many relationships:
 
@@ -170,8 +184,10 @@ The following enumeration types are used:
 |`Pool                                  `|Pool                                    |
 |`PVS_proxy                             `|PVS&#95;proxy                           |
 |`SR                                    `|SR                                      |
+|`VDI                                   `|VDI                                     |
 |`VM                                    `|VM                                      |
 |`VMPP                                  `|VMPP                                    |
+|`VMSS                                  `|VMSS                                    |
 
 |`enum console_protocol                 `|                                        |
 |:---------------------------------------|:---------------------------------------|
@@ -231,6 +247,11 @@ The following enumeration types are used:
 |:---------------------------------------|:---------------------------------------|
 |`attaching                             `|Indicates this network is attaching to a VIF or PIF|
 
+|`enum network_purpose                  `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`insecure_nbd                          `|Network Block Device service without integrity or confidentiality: NOT RECOMMENDED|
+|`nbd                                   `|Network Block Device service using TLS  |
+
 |`enum on_boot                          `|                                        |
 |:---------------------------------------|:---------------------------------------|
 |`persist                               `|Standard behaviour.                     |
@@ -257,6 +278,12 @@ The following enumeration types are used:
 |`enable_on_reboot                      `|On host reboot dom0 will be allowed to access this device|
 |`enabled                               `|dom0 can access this device as normal   |
 
+|`enum pif_igmp_status                  `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`disabled                              `|IGMP Snooping is disabled in the corresponding backend bridge.'|
+|`enabled                               `|IGMP Snooping is enabled in the corresponding backend bridge.'|
+|`unknown                               `|IGMP snooping status is unknown. If this is a VLAN master, then please consult the underlying VLAN slave PIF.|
+
 |`enum pool_allowed_operations          `|                                        |
 |:---------------------------------------|:---------------------------------------|
 |`ha_disable                            `|Indicates this pool is in the process of disabling HA|
@@ -275,6 +302,11 @@ The following enumeration types are used:
 |`initialised                           `|The proxy is setup but has not yet cached anything|
 |`stopped                               `|The proxy is not currently running      |
 
+|`enum sdn_controller_protocol          `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`pssl                                  `|Passive ssl connection                  |
+|`ssl                                   `|Active ssl connection                   |
+
 |`enum storage_operations               `|                                        |
 |:---------------------------------------|:---------------------------------------|
 |`destroy                               `|Destroying the SR                       |
@@ -287,10 +319,15 @@ The following enumeration types are used:
 |`update                                `|Refresh the fields on the SR            |
 |`vdi_clone                             `|Cloneing a VDI                          |
 |`vdi_create                            `|Creating a new VDI                      |
+|`vdi_data_destroy                      `|Deleting the data of the VDI            |
 |`vdi_destroy                           `|Destroying a VDI                        |
+|`vdi_disable_cbt                       `|Disabling changed block tracking for a VDI|
+|`vdi_enable_cbt                        `|Enabling changed block tracking for a VDI|
 |`vdi_introduce                         `|Introducing a new VDI                   |
+|`vdi_list_changed_blocks               `|Exporting a bitmap that shows the changed blocks between two VDIs|
 |`vdi_mirror                            `|Mirroring a VDI                         |
 |`vdi_resize                            `|Resizing a VDI                          |
+|`vdi_set_on_boot                       `|Setting the on&#95;boot field of the VDI|
 |`vdi_snapshot                          `|Snapshotting a VDI                      |
 
 |`enum task_allowed_operations          `|                                        |
@@ -346,19 +383,24 @@ The following enumeration types are used:
 |`blocked                               `|Operations on this VDI are temporarily blocked|
 |`clone                                 `|Cloning the VDI                         |
 |`copy                                  `|Copying the VDI                         |
+|`data_destroy                          `|Deleting the data of the VDI            |
 |`destroy                               `|Destroying the VDI                      |
+|`disable_cbt                           `|Disabling changed block tracking for a VDI|
+|`enable_cbt                            `|Enabling changed block tracking for a VDI|
 |`force_unlock                          `|Forcibly unlocking the VDI              |
 |`forget                                `|Forget about the VDI                    |
 |`generate_config                       `|Generating static configuration         |
+|`list_changed_blocks                   `|Exporting a bitmap that shows the changed blocks between two VDIs|
 |`mirror                                `|Mirroring the VDI                       |
 |`resize                                `|Resizing the VDI                        |
 |`resize_online                         `|Resizing the VDI which may or may not be online|
-|`scan                                  `|Scan backends for new or deleted VDIs   |
+|`set_on_boot                           `|Setting the on&#95;boot field of the VDI|
 |`snapshot                              `|Snapshotting the VDI                    |
 |`update                                `|Refreshing the fields of the VDI        |
 
 |`enum vdi_type                         `|                                        |
 |:---------------------------------------|:---------------------------------------|
+|`cbt_metadata                          `|Metadata about a snapshot VDI that has been deleted: the set of blocks that changed between some previous version of the disk and the version tracked by the snapshot.|
 |`crashdump                             `|a disk that stores VM crashdump information|
 |`ephemeral                             `|a disk that may be reformatted on upgrade|
 |`ha_statefile                          `|a disk used for HA storage heartbeating |
@@ -373,6 +415,7 @@ The following enumeration types are used:
 |`enum vgpu_type_implementation         `|                                        |
 |:---------------------------------------|:---------------------------------------|
 |`gvt_g                                 `|vGPU using Intel GVT&#45;g              |
+|`mxgpu                                 `|vGPU using AMD MxGPU                    |
 |`nvidia                                `|vGPU using NVIDIA hardware              |
 |`passthrough                           `|Pass through an entire physical GPU to a guest|
 
@@ -487,6 +530,23 @@ The following enumeration types are used:
 |`checkpoint                            `|The backup is a checkpoint              |
 |`snapshot                              `|The backup is a snapshot                |
 
+|`enum vmss_frequency                   `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`daily                                 `|Daily snapshots                         |
+|`hourly                                `|Hourly snapshots                        |
+|`weekly                                `|Weekly snapshots                        |
+
+|`enum vmss_type                        `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`checkpoint                            `|The snapshot is a checkpoint            |
+|`snapshot                              `|The snapshot is a disk snapshot         |
+|`snapshot_with_quiesce                 `|The snapshot is a VSS                   |
+
+|`enum vusb_operations                  `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`attach                                `|Attempting to attach this VUSB to a VM  |
+|`plug                                  `|Attempting to plug this VUSB into a VM  |
+|`unplug                                `|Attempting to hot unplug this VUSB      |
 
 ## Class: auth
 
@@ -608,6 +668,8 @@ The reference to the created blob
 #### RPC name: destroy
 
 _Overview:_
+
+
 
 _Signature:_
 
@@ -2237,6 +2299,266 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+## Class: Feature
+
+A new piece of functionality
+
+### Fields for class: Feature
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|enabled             |`bool              `|_RO/runtime_   |Indicates whether the feature is enabled|
+|experimental        |`bool              `|_RO/constructor_|Indicates whether the feature is experimental &#40;as opposed to stable and fully supported&#41;|
+|host                |`host ref          `|_RO/runtime_   |The host where this feature is available|
+|name&#95;description|`string            `|_RO/constructor_|a notes field containing human&#45;readable description|
+|name&#95;label      |`string            `|_RO/constructor_|a human&#45;readable name               |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+|version             |`string            `|_RO/constructor_|The version of this feature             |
+
+### RPCs associated with class: Feature
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the Features known to the system.
+
+_Signature:_
+
+```
+Feature ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of Feature references to Feature records for all Features known to the system.
+
+_Signature:_
+
+```
+(Feature ref -> Feature record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;name&#95;label
+
+_Overview:_
+
+Get all the Feature instances with the given label.
+
+_Signature:_
+
+```
+Feature ref set get_by_name_label (session ref session_id, string label)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|label                         |label of object to return               |
+
+_Return Type:_ `Feature ref set`
+
+references to objects with matching names
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the Feature instance with the specified UUID.
+
+_Signature:_
+
+```
+Feature ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `Feature ref`
+
+reference to the object
+
+#### RPC name: get&#95;enabled
+
+_Overview:_
+
+Get the enabled field of the given Feature.
+
+_Signature:_
+
+```
+bool get_enabled (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;experimental
+
+_Overview:_
+
+Get the experimental field of the given Feature.
+
+_Signature:_
+
+```
+bool get_experimental (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;host
+
+_Overview:_
+
+Get the host field of the given Feature.
+
+_Signature:_
+
+```
+host ref get_host (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `host ref`
+
+value of the field
+
+#### RPC name: get&#95;name&#95;description
+
+_Overview:_
+
+Get the name/description field of the given Feature.
+
+_Signature:_
+
+```
+string get_name_description (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;name&#95;label
+
+_Overview:_
+
+Get the name/label field of the given Feature.
+
+_Signature:_
+
+```
+string get_name_label (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given Feature.
+
+_Signature:_
+
+```
+Feature record get_record (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `Feature record`
+
+all fields from the object
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given Feature.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;version
+
+_Overview:_
+
+Get the version field of the given Feature.
+
+_Signature:_
+
+```
+string get_version (session ref session_id, Feature ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Feature ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
 ## Class: GPU&#95;group
 
 A group of compatible GPUs across the resource pool
@@ -2788,6 +3110,7 @@ A physical host
 |external&#95;auth&#95;configuration|`(string -> string) map`|_RO/runtime_   |configuration specific to external authentication service|
 |external&#95;auth&#95;service&#95;name|`string            `|_RO/runtime_   |name of external authentication service configured; empty if none configured.|
 |external&#95;auth&#95;type|`string            `|_RO/runtime_   |type of external authentication service configured; empty if none configured.|
+|features            |`Feature ref set   `|_RO/runtime_   |List of features available on this host |
 |guest&#95;VCPUs&#95;params|`(string -> string) map`|_RW_           |VCPUs params to apply to all resident guests|
 |ha&#95;network&#95;peers|`string set        `|_RO/runtime_   |The set of hosts visible via the network from this host|
 |ha&#95;statefiles   |`string set        `|_RO/runtime_   |The set of statefiles accessible from this host|
@@ -2809,6 +3132,7 @@ A physical host
 |PIFs                |`PIF ref set       `|_RO/runtime_   |physical network interfaces             |
 |power&#95;on&#95;config|`(string -> string) map`|_RO/runtime_   |The power on config                     |
 |power&#95;on&#95;mode|`string            `|_RO/runtime_   |The power on mode                       |
+|PUSBs               |`PUSB ref set      `|_RO/runtime_   |List of physical USBs in the host       |
 |resident&#95;VMs    |`VM ref set        `|_RO/runtime_   |list of VMs currently resident on host  |
 |sched&#95;policy    |`string            `|_RO/runtime_   |Scheduler policy currently in force on this host|
 |software&#95;version|`(string -> string) map`|_RO/constructor_|version strings                         |
@@ -4020,6 +4344,28 @@ _Return Type:_ `string`
 
 value of the field
 
+#### RPC name: get&#95;features
+
+_Overview:_
+
+Get the features field of the given host.
+
+_Signature:_
+
+```
+Feature ref set get_features (session ref session_id, host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `Feature ref set`
+
+value of the field
+
 #### RPC name: get&#95;guest&#95;VCPUs&#95;params
 
 _Overview:_
@@ -4525,6 +4871,28 @@ _Arguments:_
 |`host ref                    `|self                          |reference to the object                 |
 
 _Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;PUSBs
+
+_Overview:_
+
+Get the PUSBs field of the given host.
+
+_Signature:_
+
+```
+PUSB ref set get_PUSBs (session ref session_id, host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `PUSB ref set`
 
 value of the field
 
@@ -5821,19 +6189,19 @@ A physical CPU
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
-|family              |`int               `|_RO/runtime_   | the family &#40;number&#41; of the physical CPU|
-|features            |`string            `|_RO/runtime_   | the physical CPU feature bitmap|
-|flags               |`string            `|_RO/runtime_   | the flags of the physical CPU &#40;a decoded version of the features field&#41;|
-|host                |`host ref          `|_RO/runtime_   | the host the CPU is in  |
-|model               |`int               `|_RO/runtime_   | the model number of the physical CPU|
-|modelname           |`string            `|_RO/runtime_   | the model name of the physical CPU|
-|number              |`int               `|_RO/runtime_   | the number of the physical CPU within the host|
-|other&#95;config    |`(string -> string) map`|_RW_       | additional configuration|
-|speed               |`int               `|_RO/runtime_   | the speed of the physical CPU|
-|stepping            |`string            `|_RO/runtime_   | the stepping of the physical CPU|
-|utilisation         |`float             `|_RO/runtime_   | the current CPU utilisation|
-|uuid                |`string            `|_RO/runtime_   | Unique identifier/object reference|
-|vendor              |`string            `|_RO/runtime_   | the vendor of the physical CPU|
+|family              |`int               `|_RO/runtime_   |**Deprecated**. the family &#40;number&#41; of the physical CPU|
+|features            |`string            `|_RO/runtime_   |**Deprecated**. the physical CPU feature bitmap|
+|flags               |`string            `|_RO/runtime_   |**Deprecated**. the flags of the physical CPU &#40;a decoded version of the features field&#41;|
+|host                |`host ref          `|_RO/runtime_   |**Deprecated**. the host the CPU is in  |
+|model               |`int               `|_RO/runtime_   |**Deprecated**. the model number of the physical CPU|
+|modelname           |`string            `|_RO/runtime_   |**Deprecated**. the model name of the physical CPU|
+|number              |`int               `|_RO/runtime_   |**Deprecated**. the number of the physical CPU within the host|
+|other&#95;config    |`(string -> string) map`|_RW_           |**Deprecated**. additional configuration|
+|speed               |`int               `|_RO/runtime_   |**Deprecated**. the speed of the physical CPU|
+|stepping            |`string            `|_RO/runtime_   |**Deprecated**. the stepping of the physical CPU|
+|utilisation         |`float             `|_RO/runtime_   |**Deprecated**. the current CPU utilisation|
+|uuid                |`string            `|_RO/runtime_   |**Deprecated**. Unique identifier/object reference|
+|vendor              |`string            `|_RO/runtime_   |**Deprecated**. the vendor of the physical CPU|
 
 ### RPCs associated with class: host&#95;cpu
 
@@ -7664,16 +8032,41 @@ A virtual network
 |bridge              |`string            `|_RO/constructor_|name of the bridge corresponding to this network on the local host|
 |current&#95;operations|`(string -> network_operations) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
 |default&#95;locking&#95;mode|`network_default_locking_mode`|_RO/runtime_   |The network will use this value to determine the behaviour of all VIFs where locking&#95;mode = default|
+|managed             |`bool              `|_RO/constructor_|true if the bridge is managed by xapi   |
 |MTU                 |`int               `|_RW_           |MTU in octets                           |
 |name&#95;description|`string            `|_RW_           |a notes field containing human&#45;readable description|
 |name&#95;label      |`string            `|_RW_           |a human&#45;readable name               |
 |other&#95;config    |`(string -> string) map`|_RW_           |additional configuration                |
 |PIFs                |`PIF ref set       `|_RO/runtime_   |list of connected pifs                  |
+|purpose             |`network_purpose set`|_RO/runtime_   |Set of purposes for which the server will use this network|
 |tags                |`string set        `|_RW_           |user&#45;specified tags for categorization purposes|
 |uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
 |VIFs                |`VIF ref set       `|_RO/runtime_   |list of connected vifs                  |
 
 ### RPCs associated with class: network
+
+#### RPC name: add&#95;purpose
+
+_Overview:_
+
+Give a network a new purpose &#40;if not present already&#41;
+
+_Signature:_
+
+```
+void add_purpose (session ref session_id, network ref self, network_purpose value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|self                          |The network                             |
+|`network_purpose             `|value                         |The purpose to add                      |
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `NETWORK_INCOMPATIBLE_PURPOSES`
 
 #### RPC name: add&#95;tags
 
@@ -7983,6 +8376,28 @@ _Return Type:_ `network_default_locking_mode`
 
 value of the field
 
+#### RPC name: get&#95;managed
+
+_Overview:_
+
+Get the managed field of the given network.
+
+_Signature:_
+
+```
+bool get_managed (session ref session_id, network ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
 #### RPC name: get&#95;MTU
 
 _Overview:_
@@ -8221,6 +8636,27 @@ _Arguments:_
 |session ref                   |session_id                    |Reference to a valid session            |
 |`network ref                 `|self                          |reference to the object                 |
 |`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: remove&#95;purpose
+
+_Overview:_
+
+Remove a purpose from a network &#40;if present&#41;
+
+_Signature:_
+
+```
+void remove_purpose (session ref session_id, network ref self, network_purpose value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|self                          |The network                             |
+|`network_purpose             `|value                         |The purpose to remove                   |
 
 _Return Type:_ `void`
 
@@ -9134,6 +9570,7 @@ A physical GPU &#40;pGPU&#41;
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
+|compatibility&#95;metadata|`(string -> string) map`|_RO/runtime_   |PGPU metadata to determine whether a VGPU can migrate between two PGPUs|
 |dom0&#95;access     |`pgpu_dom0_access  `|_RO/runtime_   |The accessibility of this device from dom0|
 |enabled&#95;VGPU&#95;types|`VGPU_type ref set `|_RO/runtime_   |List of VGPU types which have been enabled for this PGPU|
 |GPU&#95;group       |`GPU_group ref     `|_RO/constructor_|GPU group the pGPU is contained in      |
@@ -9278,6 +9715,28 @@ _Arguments:_
 _Return Type:_ `PGPU ref`
 
 reference to the object
+
+#### RPC name: get&#95;compatibility&#95;metadata
+
+_Overview:_
+
+Get the compatibility&#95;metadata field of the given PGPU.
+
+_Signature:_
+
+```
+(string -> string) map get_compatibility_metadata (session ref session_id, PGPU ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PGPU ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
 
 #### RPC name: get&#95;dom0&#95;access
 
@@ -9688,6 +10147,7 @@ A physical network interface &#40;note separate VLANs are represented as several
 |DNS                 |`string            `|_RO/runtime_   |IP address of DNS servers to use        |
 |gateway             |`string            `|_RO/runtime_   |IP gateway                              |
 |host                |`host ref          `|_RO/constructor_|physical machine to which this pif is connected|
+|igmp&#95;snooping&#95;status|`pif_igmp_status   `|_RO/runtime_   |The IGMP snooping status of the corresponding network bridge|
 |IP                  |`string            `|_RO/runtime_   |IP address                              |
 |ip&#95;configuration&#95;mode|`ip_configuration_mode`|_RO/runtime_   |Sets if and how this interface gets an IP address|
 |IPv6                |`string set        `|_RO/runtime_   |IPv6 address                            |
@@ -10113,6 +10573,28 @@ _Arguments:_
 |`PIF ref                     `|self                          |reference to the object                 |
 
 _Return Type:_ `host ref`
+
+value of the field
+
+#### RPC name: get&#95;igmp&#95;snooping&#95;status
+
+_Overview:_
+
+Get the igmp&#95;snooping&#95;status field of the given PIF.
+
+_Signature:_
+
+```
+pif_igmp_status get_igmp_snooping_status (session ref session_id, PIF ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PIF ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `pif_igmp_status`
 
 value of the field
 
@@ -11333,6 +11815,7 @@ Pool&#45;wide information
 |ha&#95;plan&#95;exists&#95;for|`int               `|_RO/runtime_   |Number of future host failures we have managed to find a plan for. Once this reaches zero any future host failures will cause the failure of protected VMs.|
 |ha&#95;statefiles   |`string set        `|_RO/runtime_   |HA statefile VDIs in use                |
 |health&#95;check&#95;config|`(string -> string) map`|_RW_           |Configuration for the automatic health check feature|
+|igmp&#95;snooping&#95;enabled|`bool              `|_RO/runtime_   |true if IGMP snooping is enabled in the pool, false otherwise.|
 |live&#95;patching&#95;disabled|`bool              `|_RW_           |The pool&#45;wide flag to show if the live patching feauture is disabled or not.|
 |master              |`host ref          `|_RO/runtime_   |The host that is pool master            |
 |metadata&#95;VDIs   |`VDI ref set       `|_RO/runtime_   |The set of currently known metadata VDIs for this pool|
@@ -12383,6 +12866,28 @@ _Return Type:_ `(string -> string) map`
 
 value of the field
 
+#### RPC name: get&#95;igmp&#95;snooping&#95;enabled
+
+_Overview:_
+
+Get the igmp&#95;snooping&#95;enabled field of the given pool.
+
+_Signature:_
+
+```
+bool get_igmp_snooping_enabled (session ref session_id, pool ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
 #### RPC name: get&#95;license&#95;state
 
 _Overview:_
@@ -13016,6 +13521,28 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+#### RPC name: management&#95;reconfigure
+
+_Overview:_
+
+Reconfigure the management network interface for all Hosts in the Pool
+
+_Signature:_
+
+```
+void management_reconfigure (session ref session_id, network ref network)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|network                       |The network                             |
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `HA_IS_ENABLED`, `PIF_NOT_PRESENT`, `CANNOT_PLUG_BOND_SLAVE`, `PIF_INCOMPATIBLE_PRIMARY_ADDRESS_TYPE`, `PIF_HAS_NO_NETWORK_CONFIGURATION`, `PIF_HAS_NO_V6_NETWORK_CONFIGURATION`
+
 #### RPC name: recover&#95;slaves
 
 _Overview:_
@@ -13321,6 +13848,27 @@ _Arguments:_
 |session ref                   |session_id                    |Reference to a valid session            |
 |`pool ref                    `|self                          |reference to the object                 |
 |`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;igmp&#95;snooping&#95;enabled
+
+_Overview:_
+
+Enable or disable IGMP Snooping on the pool.
+
+_Signature:_
+
+```
+void set_igmp_snooping_enabled (session ref session_id, pool ref self, bool value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool ref                    `|self                          |The pool                                |
+|`bool                        `|value                         |Enable or disable IGMP Snooping on the pool|
 
 _Return Type:_ `void`
 
@@ -14170,17 +14718,40 @@ Pool&#45;wide updates to the host software
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
 |after&#95;apply&#95;guidance|`update_after_apply_guidance set`|_RO/constructor_|What the client should do after this update has been applied.|
+|enforce&#95;homogeneity|`bool              `|_RO/constructor_|Flag &#45; if true, all hosts in a pool must apply this update|
 |hosts               |`host ref set      `|_RO/runtime_   |The hosts that have applied this update.|
 |installation&#95;size|`int               `|_RO/constructor_|Size of the update in bytes             |
 |key                 |`string            `|_RO/constructor_|GPG key of the update                   |
 |name&#95;description|`string            `|_RO/constructor_|a notes field containing human&#45;readable description|
 |name&#95;label      |`string            `|_RO/constructor_|a human&#45;readable name               |
+|other&#95;config    |`(string -> string) map`|_RW_           |additional configuration                |
 |uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
 |vdi                 |`VDI ref           `|_RO/constructor_|VDI the update was uploaded to          |
 |version             |`string            `|_RO/constructor_|Update version number                   |
 
 ### RPCs associated with class: pool&#95;update
 
+#### RPC name: add&#95;to&#95;other&#95;config
+
+_Overview:_
+
+Add the given key&#45;value pair to the other&#95;config field of the given pool&#95;update.
+
+_Signature:_
+
+```
+void add_to_other_config (session ref session_id, pool_update ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool_update ref             `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to add                              |
+|`string                      `|value                         |Value to add                            |
+
+_Return Type:_ `void`
 
 #### RPC name: apply
 
@@ -14311,6 +14882,28 @@ _Return Type:_ `pool_update ref`
 
 reference to the object
 
+#### RPC name: get&#95;enforce&#95;homogeneity
+
+_Overview:_
+
+Get the enforce&#95;homogeneity field of the given pool&#95;update.
+
+_Signature:_
+
+```
+bool get_enforce_homogeneity (session ref session_id, pool_update ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool_update ref             `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
 #### RPC name: get&#95;hosts
 
 _Overview:_
@@ -14418,6 +15011,28 @@ _Arguments:_
 |`pool_update ref             `|self                          |reference to the object                 |
 
 _Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given pool&#95;update.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, pool_update ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool_update ref             `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
 
 value of the field
 
@@ -14593,6 +15208,529 @@ _Arguments:_
 _Return Type:_ `livepatch_status`
 
 The precheck pool update
+
+#### RPC name: remove&#95;from&#95;other&#95;config
+
+_Overview:_
+
+Remove the given key and its corresponding value from the other&#95;config field of the given pool&#95;update.  If the key is not in that Map, then do nothing.
+
+_Signature:_
+
+```
+void remove_from_other_config (session ref session_id, pool_update ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool_update ref             `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;other&#95;config
+
+_Overview:_
+
+Set the other&#95;config field of the given pool&#95;update.
+
+_Signature:_
+
+```
+void set_other_config (session ref session_id, pool_update ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`pool_update ref             `|self                          |reference to the object                 |
+|`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+## Class: PUSB
+
+A physical USB device
+
+### Fields for class: PUSB
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|description         |`string            `|_RO/constructor_|USB device description                  |
+|host                |`host ref          `|_RO/constructor_|Physical machine that owns the USB device|
+|other&#95;config    |`(string -> string) map`|_RW_           |additional configuration                |
+|passthrough&#95;enabled|`bool              `|_RO/runtime_   |enabled for passthrough                 |
+|path                |`string            `|_RO/constructor_|port path of USB device                 |
+|product&#95;desc    |`string            `|_RO/constructor_|product description of the USB device   |
+|product&#95;id      |`string            `|_RO/constructor_|product id of the USB device            |
+|serial              |`string            `|_RO/constructor_|serial of the USB device                |
+|USB&#95;group       |`USB_group ref     `|_RO/constructor_|USB group the PUSB is contained in      |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+|vendor&#95;desc     |`string            `|_RO/constructor_|vendor description of the USB device    |
+|vendor&#95;id       |`string            `|_RO/constructor_|vendor id of the USB device             |
+|version             |`string            `|_RO/constructor_|USB device version                      |
+
+### RPCs associated with class: PUSB
+
+#### RPC name: add&#95;to&#95;other&#95;config
+
+_Overview:_
+
+Add the given key&#45;value pair to the other&#95;config field of the given PUSB.
+
+_Signature:_
+
+```
+void add_to_other_config (session ref session_id, PUSB ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to add                              |
+|`string                      `|value                         |Value to add                            |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the PUSBs known to the system.
+
+_Signature:_
+
+```
+PUSB ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of PUSB references to PUSB records for all PUSBs known to the system.
+
+_Signature:_
+
+```
+(PUSB ref -> PUSB record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the PUSB instance with the specified UUID.
+
+_Signature:_
+
+```
+PUSB ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `PUSB ref`
+
+reference to the object
+
+#### RPC name: get&#95;description
+
+_Overview:_
+
+Get the description field of the given PUSB.
+
+_Signature:_
+
+```
+string get_description (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;host
+
+_Overview:_
+
+Get the host field of the given PUSB.
+
+_Signature:_
+
+```
+host ref get_host (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `host ref`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given PUSB.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;passthrough&#95;enabled
+
+_Overview:_
+
+Get the passthrough&#95;enabled field of the given PUSB.
+
+_Signature:_
+
+```
+bool get_passthrough_enabled (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;path
+
+_Overview:_
+
+Get the path field of the given PUSB.
+
+_Signature:_
+
+```
+string get_path (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;product&#95;desc
+
+_Overview:_
+
+Get the product&#95;desc field of the given PUSB.
+
+_Signature:_
+
+```
+string get_product_desc (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;product&#95;id
+
+_Overview:_
+
+Get the product&#95;id field of the given PUSB.
+
+_Signature:_
+
+```
+string get_product_id (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given PUSB.
+
+_Signature:_
+
+```
+PUSB record get_record (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `PUSB record`
+
+all fields from the object
+
+#### RPC name: get&#95;serial
+
+_Overview:_
+
+Get the serial field of the given PUSB.
+
+_Signature:_
+
+```
+string get_serial (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;USB&#95;group
+
+_Overview:_
+
+Get the USB&#95;group field of the given PUSB.
+
+_Signature:_
+
+```
+USB_group ref get_USB_group (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `USB_group ref`
+
+value of the field
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given PUSB.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;vendor&#95;desc
+
+_Overview:_
+
+Get the vendor&#95;desc field of the given PUSB.
+
+_Signature:_
+
+```
+string get_vendor_desc (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;vendor&#95;id
+
+_Overview:_
+
+Get the vendor&#95;id field of the given PUSB.
+
+_Signature:_
+
+```
+string get_vendor_id (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;version
+
+_Overview:_
+
+Get the version field of the given PUSB.
+
+_Signature:_
+
+```
+string get_version (session ref session_id, PUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: remove&#95;from&#95;other&#95;config
+
+_Overview:_
+
+Remove the given key and its corresponding value from the other&#95;config field of the given PUSB.  If the key is not in that Map, then do nothing.
+
+_Signature:_
+
+```
+void remove_from_other_config (session ref session_id, PUSB ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: scan
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void scan (session ref session_id, host ref host)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|host                          |The host                                |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;other&#95;config
+
+_Overview:_
+
+Set the other&#95;config field of the given PUSB.
+
+_Signature:_
+
+```
+void set_other_config (session ref session_id, PUSB ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |reference to the object                 |
+|`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;passthrough&#95;enabled
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void set_passthrough_enabled (session ref session_id, PUSB ref self, bool value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PUSB ref                    `|self                          |this PUSB                               |
+|`bool                        `|value                         |passthrough is enabled when true and disabled with false|
+
+_Return Type:_ `void`
 
 ## Class: PVS&#95;cache&#95;storage
 
@@ -15970,6 +17108,219 @@ _Arguments:_
 _Return Type:_ `string`
 
 value of the field
+
+## Class: SDN&#95;controller
+
+Describes the SDN controller that is to connect with the pool
+
+### Fields for class: SDN&#95;controller
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|address             |`string            `|_RO/constructor_|IP address of the controller            |
+|port                |`int               `|_RO/constructor_|TCP port of the controller              |
+|protocol            |`sdn_controller_protocol`|_RO/constructor_|Protocol to connect with SDN controller |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+
+### RPCs associated with class: SDN&#95;controller
+
+#### RPC name: forget
+
+_Overview:_
+
+Remove the OVS manager of the pool and destroy the db record.
+
+_Signature:_
+
+```
+void forget (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |this SDN controller                     |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;address
+
+_Overview:_
+
+Get the address field of the given SDN&#95;controller.
+
+_Signature:_
+
+```
+string get_address (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the SDN&#95;controllers known to the system.
+
+_Signature:_
+
+```
+SDN_controller ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of SDN&#95;controller references to SDN&#95;controller records for all SDN&#95;controllers known to the system.
+
+_Signature:_
+
+```
+(SDN_controller ref -> SDN_controller record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the SDN&#95;controller instance with the specified UUID.
+
+_Signature:_
+
+```
+SDN_controller ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `SDN_controller ref`
+
+reference to the object
+
+#### RPC name: get&#95;port
+
+_Overview:_
+
+Get the port field of the given SDN&#95;controller.
+
+_Signature:_
+
+```
+int get_port (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |reference to the object                 |
+
+_Return Type:_ `int`
+
+value of the field
+
+#### RPC name: get&#95;protocol
+
+_Overview:_
+
+Get the protocol field of the given SDN&#95;controller.
+
+_Signature:_
+
+```
+sdn_controller_protocol get_protocol (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |reference to the object                 |
+
+_Return Type:_ `sdn_controller_protocol`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given SDN&#95;controller.
+
+_Signature:_
+
+```
+SDN_controller record get_record (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |reference to the object                 |
+
+_Return Type:_ `SDN_controller record`
+
+all fields from the object
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given SDN&#95;controller.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, SDN_controller ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`SDN_controller ref          `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: introduce
+
+_Overview:_
+
+Introduce an SDN controller to the pool.
+
+_Signature:_
+
+```
+SDN_controller ref introduce (session ref session_id, sdn_controller_protocol protocol, string address, int port)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`sdn_controller_protocol     `|protocol                      |Protocol to connect with the controller.|
+|`string                      `|address                       |IP address of the controller.           |
+|`int                         `|port                          |TCP port of the controller.             |
+
+_Return Type:_ `SDN_controller ref`
+
+the introduced SDN controller
 
 ## Class: secret
 
@@ -19535,6 +20886,27 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+#### RPC name: set&#95;status
+
+_Overview:_
+
+Set the task status
+
+_Signature:_
+
+```
+void set_status (session ref session_id, task ref self, task_status_type value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`task ref                    `|self                          |Reference to the task object            |
+|`task_status_type            `|value                         |task status value to be set             |
+
+_Return Type:_ `void`
+
 ## Class: tunnel
 
 A tunnel for network traffic
@@ -19896,6 +21268,391 @@ _Arguments:_
 |:-----------------------------|:-----------------------------|:---------------------------------------|
 |session ref                   |session_id                    |Reference to a valid session            |
 |`tunnel ref                  `|self                          |reference to the object                 |
+|`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+## Class: USB&#95;group
+
+A group of compatible USBs across the resource pool
+
+### Fields for class: USB&#95;group
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|name&#95;description|`string            `|_RW_           |a notes field containing human&#45;readable description|
+|name&#95;label      |`string            `|_RW_           |a human&#45;readable name               |
+|other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
+|PUSBs               |`PUSB ref set      `|_RO/runtime_   |List of PUSBs in the group              |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+|VUSBs               |`VUSB ref set      `|_RO/runtime_   |List of VUSBs using the group           |
+
+### RPCs associated with class: USB&#95;group
+
+#### RPC name: add&#95;to&#95;other&#95;config
+
+_Overview:_
+
+Add the given key&#45;value pair to the other&#95;config field of the given USB&#95;group.
+
+_Signature:_
+
+```
+void add_to_other_config (session ref session_id, USB_group ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to add                              |
+|`string                      `|value                         |Value to add                            |
+
+_Return Type:_ `void`
+
+#### RPC name: create
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+USB_group ref create (session ref session_id, string name_label, string name_description, (string -> string) map other_config)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|name&#95;label                |                                        |
+|`string                      `|name&#95;description          |                                        |
+|`(string -> string) map      `|other&#95;config              |                                        |
+
+_Return Type:_ `USB_group ref`
+
+#### RPC name: destroy
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void destroy (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |The USB group to destroy                |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the USB&#95;groups known to the system.
+
+_Signature:_
+
+```
+USB_group ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of USB&#95;group references to USB&#95;group records for all USB&#95;groups known to the system.
+
+_Signature:_
+
+```
+(USB_group ref -> USB_group record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;name&#95;label
+
+_Overview:_
+
+Get all the USB&#95;group instances with the given label.
+
+_Signature:_
+
+```
+USB_group ref set get_by_name_label (session ref session_id, string label)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|label                         |label of object to return               |
+
+_Return Type:_ `USB_group ref set`
+
+references to objects with matching names
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the USB&#95;group instance with the specified UUID.
+
+_Signature:_
+
+```
+USB_group ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `USB_group ref`
+
+reference to the object
+
+#### RPC name: get&#95;name&#95;description
+
+_Overview:_
+
+Get the name/description field of the given USB&#95;group.
+
+_Signature:_
+
+```
+string get_name_description (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;name&#95;label
+
+_Overview:_
+
+Get the name/label field of the given USB&#95;group.
+
+_Signature:_
+
+```
+string get_name_label (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given USB&#95;group.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;PUSBs
+
+_Overview:_
+
+Get the PUSBs field of the given USB&#95;group.
+
+_Signature:_
+
+```
+PUSB ref set get_PUSBs (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `PUSB ref set`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given USB&#95;group.
+
+_Signature:_
+
+```
+USB_group record get_record (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `USB_group record`
+
+all fields from the object
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given USB&#95;group.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;VUSBs
+
+_Overview:_
+
+Get the VUSBs field of the given USB&#95;group.
+
+_Signature:_
+
+```
+VUSB ref set get_VUSBs (session ref session_id, USB_group ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+
+_Return Type:_ `VUSB ref set`
+
+value of the field
+
+#### RPC name: remove&#95;from&#95;other&#95;config
+
+_Overview:_
+
+Remove the given key and its corresponding value from the other&#95;config field of the given USB&#95;group.  If the key is not in that Map, then do nothing.
+
+_Signature:_
+
+```
+void remove_from_other_config (session ref session_id, USB_group ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;name&#95;description
+
+_Overview:_
+
+Set the name/description field of the given USB&#95;group.
+
+_Signature:_
+
+```
+void set_name_description (session ref session_id, USB_group ref self, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+|`string                      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;name&#95;label
+
+_Overview:_
+
+Set the name/label field of the given USB&#95;group.
+
+_Signature:_
+
+```
+void set_name_label (session ref session_id, USB_group ref self, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
+|`string                      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;other&#95;config
+
+_Overview:_
+
+Set the other&#95;config field of the given USB&#95;group.
+
+_Signature:_
+
+```
+void set_other_config (session ref session_id, USB_group ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`USB_group ref               `|self                          |reference to the object                 |
 |`(string -> string) map      `|value                         |New value to set                        |
 
 _Return Type:_ `void`
@@ -21500,6 +23257,7 @@ A virtual disk image
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
 |allow&#95;caching   |`bool              `|_RO/runtime_   |true if this VDI is to be cached in the local cache SR|
 |allowed&#95;operations|`vdi_operations set`|_RO/runtime_   |list of the operations allowed in this state. This list is advisory only and the server state may have changed by the time this field is read by a client.|
+|cbt&#95;enabled     |`bool              `|_RO/runtime_   |True if changed blocks are tracked for this VDI|
 |crash&#95;dumps     |`crashdump ref set `|_RO/runtime_   |list of crash dumps that refer to this disk|
 |current&#95;operations|`(string -> vdi_operations) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
 |is&#95;a&#95;snapshot|`bool              `|_RO/runtime_   |true if this is a snapshot.             |
@@ -21691,6 +23449,28 @@ _Return Type:_ `VDI ref`
 
 reference to the newly created object
 
+#### RPC name: data&#95;destroy
+
+_Overview:_
+
+Delete the data of the snapshot VDI, but keep its changed block tracking metadata. When successful, this call changes the type of the VDI to cbt&#95;metadata. This operation is idempotent: calling it on a VDI of type cbt&#95;metadata results in a no&#45;op, and no error will be thrown.
+
+_Signature:_
+
+```
+void data_destroy (session ref session_id, VDI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|self                          |The VDI whose data should be deleted.   |
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`, `VDI_MISSING`, `SR_NOT_ATTACHED`, `SR_HAS_NO_PBDS`, `OPERATION_NOT_ALLOWED`, `VDI_INCOMPATIBLE_TYPE`, `VDI_NO_CBT_METADATA`, `VDI_IN_USE`, `VDI_IS_A_PHYSICAL_DEVICE`
+
 #### RPC name: db&#95;forget
 
 _Overview:_
@@ -21720,7 +23500,7 @@ Create a new VDI record in the database only
 _Signature:_
 
 ```
-VDI ref db_introduce (session ref session_id, string uuid, string name_label, string name_description, SR ref SR, vdi_type type, bool sharable, bool read_only, (string -> string) map other_config, string location, (string -> string) map xenstore_data, (string -> string) map sm_config, bool managed, int virtual_size, int physical_utilisation, pool ref metadata_of_pool, bool is_a_snapshot, datetime snapshot_time, VDI ref snapshot_of)
+VDI ref db_introduce (session ref session_id, string uuid, string name_label, string name_description, SR ref SR, vdi_type type, bool sharable, bool read_only, (string -> string) map other_config, string location, (string -> string) map xenstore_data, (string -> string) map sm_config, bool managed, int virtual_size, int physical_utilisation, pool ref metadata_of_pool, bool is_a_snapshot, datetime snapshot_time, VDI ref snapshot_of, bool cbt_enabled)
 ```
 _Arguments:_
 
@@ -21745,6 +23525,7 @@ _Arguments:_
 |`bool                        `|is&#95;a&#95;snapshot         |Storage&#45;specific config             |
 |`datetime                    `|snapshot&#95;time             |Storage&#45;specific config             |
 |`VDI ref                     `|snapshot&#95;of               |Storage&#45;specific config             |
+|`bool                        `|cbt&#95;enabled               |True if changed blocks are tracked for this VDI|
 
 _Return Type:_ `VDI ref`
 
@@ -21769,6 +23550,50 @@ _Arguments:_
 |`VDI ref                     `|self                          |reference to the object                 |
 
 _Return Type:_ `void`
+
+#### RPC name: disable&#95;cbt
+
+_Overview:_
+
+Disable changed block tracking for the VDI. This call is only allowed on VDIs that support enabling CBT. It is an idempotent operation &#45; disabling CBT for a VDI for which CBT is not enabled results in a no&#45;op, and no error will be thrown.
+
+_Signature:_
+
+```
+void disable_cbt (session ref session_id, VDI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|self                          |The VDI for which CBT should be disabled|
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`, `VDI_MISSING`, `SR_NOT_ATTACHED`, `SR_HAS_NO_PBDS`, `OPERATION_NOT_ALLOWED`, `VDI_INCOMPATIBLE_TYPE`, `VDI_ON_BOOT_MODE_INCOMPATIBLE_WITH_OPERATION`
+
+#### RPC name: enable&#95;cbt
+
+_Overview:_
+
+Enable changed block tracking for the VDI. This call is idempotent &#45; enabling CBT for a VDI for which CBT is already enabled results in a no&#45;op, and no error will be thrown.
+
+_Signature:_
+
+```
+void enable_cbt (session ref session_id, VDI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|self                          |The VDI for which CBT should be enabled |
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`, `VDI_MISSING`, `SR_NOT_ATTACHED`, `SR_HAS_NO_PBDS`, `OPERATION_NOT_ALLOWED`, `VDI_INCOMPATIBLE_TYPE`, `VDI_ON_BOOT_MODE_INCOMPATIBLE_WITH_OPERATION`
 
 #### RPC name: forget
 
@@ -21899,6 +23724,28 @@ _Arguments:_
 _Return Type:_ `VDI ref`
 
 reference to the object
+
+#### RPC name: get&#95;cbt&#95;enabled
+
+_Overview:_
+
+Get the cbt&#95;enabled field of the given VDI.
+
+_Signature:_
+
+```
+bool get_cbt_enabled (session ref session_id, VDI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
 
 #### RPC name: get&#95;crash&#95;dumps
 
@@ -22141,6 +23988,30 @@ _Arguments:_
 _Return Type:_ `string`
 
 value of the field
+
+#### RPC name: get&#95;nbd&#95;info
+
+_Overview:_
+
+Get details specifying how to access this VDI via a Network Block Device server. For each of a set of NBD server addresses on which the VDI is available, the return value set contains a vdi&#95;nbd&#95;server&#95;info object that contains an exportname to request once the NBD connection is established, and connection details for the address. An empty list is returned if there is no network that has a PIF on a host with access to the relevant SR, or if no such network has been assigned an NBD&#45;related purpose in its purpose field. To access the given VDI, any of the vdi&#95;nbd&#95;server&#95;info objects can be used to make a connection to a server, and then the VDI will be available by requesting the exportname.
+
+_Signature:_
+
+```
+vdi_nbd_server_info record set get_nbd_info (session ref session_id, VDI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|self                          |The VDI to access via Network Block Device protocol|
+
+_Return Type:_ `vdi_nbd_server_info record set`
+
+The details necessary for connecting to the VDI over NBD. This includes an authentication token, so must be treated as sensitive material and must not be sent over insecure networks.
+
+_Possible Error Codes:_ `VDI_INCOMPATIBLE_TYPE`
 
 #### RPC name: get&#95;on&#95;boot
 
@@ -22602,6 +24473,31 @@ _Return Type:_ `VDI ref`
 The ref of the newly created VDI record.
 
 _Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`
+
+#### RPC name: list&#95;changed&#95;blocks
+
+_Overview:_
+
+Compare two VDIs in 64k block increments and report which blocks differ. This operation is not allowed when vdi&#95;to is attached to a VM.
+
+_Signature:_
+
+```
+string list_changed_blocks (session ref session_id, VDI ref vdi_from, VDI ref vdi_to)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VDI ref                     `|vdi&#95;from                  |The first VDI.                          |
+|`VDI ref                     `|vdi&#95;to                    |The second VDI.                         |
+
+_Return Type:_ `string`
+
+A base64 string&#45;encoding of the bitmap showing which blocks differ in the two VDIs.
+
+_Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`, `VDI_MISSING`, `SR_NOT_ATTACHED`, `SR_HAS_NO_PBDS`, `VDI_IN_USE`
 
 #### RPC name: open&#95;database
 
@@ -23222,6 +25118,24 @@ _Return Type:_ `void`
 
 _Possible Error Codes:_ `SR_OPERATION_NOT_SUPPORTED`
 
+## Class: vdi&#95;nbd&#95;server&#95;info
+
+Details for connecting to a VDI using the Network Block Device protocol
+
+### Fields for class: vdi&#95;nbd&#95;server&#95;info
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|address             |`string            `|_RO/runtime_   |An address on which the server can be reached; this can be IPv4, IPv6, or a DNS name.|
+|cert                |`string            `|_RO/runtime_   |The TLS certificate of the server       |
+|exportname          |`string            `|_RO/runtime_   |The exportname to request over NBD. This holds details including an authentication token, so it must be protected appropriately. Clients should regard the exportname as an opaque string or token.|
+|port                |`int               `|_RO/runtime_   |The TCP port                            |
+|subject             |`string            `|_RO/runtime_   |For convenience, this redundant field holds a DNS &#40;hostname&#41; subject of the certificate. This can be a wildcard, but only for a certificate that has a wildcard subject and no concrete hostname subjects.|
+
+### RPCs associated with class: vdi&#95;nbd&#95;server&#95;info
+
+Class vdi&#95;nbd&#95;server&#95;info has no additional RPCs associated with it.
+
 ## Class: VGPU
 
 A virtual GPU &#40;vGPU&#41;
@@ -23235,6 +25149,7 @@ A virtual GPU &#40;vGPU&#41;
 |GPU&#95;group       |`GPU_group ref     `|_RO/runtime_   |GPU group used by the vGPU              |
 |other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
 |resident&#95;on     |`PGPU ref          `|_RO/runtime_   |The PGPU on which this VGPU is running  |
+|scheduled&#95;to&#95;be&#95;resident&#95;on|`PGPU ref          `|_RO/runtime_   |The PGPU on which this VGPU is scheduled to run|
 |type                |`VGPU_type ref     `|_RO/runtime_   |Preset type for this VGPU               |
 |uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
 |VM                  |`VM ref            `|_RO/runtime_   |VM that owns the vGPU                   |
@@ -23473,6 +25388,28 @@ _Signature:_
 
 ```
 PGPU ref get_resident_on (session ref session_id, VGPU ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VGPU ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `PGPU ref`
+
+value of the field
+
+#### RPC name: get&#95;scheduled&#95;to&#95;be&#95;resident&#95;on
+
+_Overview:_
+
+Get the scheduled&#95;to&#95;be&#95;resident&#95;on field of the given VGPU.
+
+_Signature:_
+
+```
+PGPU ref get_scheduled_to_be_resident_on (session ref session_id, VGPU ref self)
 ```
 _Arguments:_
 
@@ -25798,7 +27735,9 @@ A virtual machine &#40;or 'guest'&#41;.
 |is&#95;a&#95;snapshot|`bool              `|_RO/runtime_   |true if this is a snapshot. Snapshotted VMs can never be started, they are used only for cloning other VMs|
 |is&#95;a&#95;template|`bool              `|_RW_           |true if this is a template. Template VMs can never be started, they are used only for cloning other VMs|
 |is&#95;control&#95;domain|`bool              `|_RO/runtime_   |true if this is a control domain &#40;domain 0 or a driver domain&#41;|
+|is&#95;default&#95;template|`bool              `|_RO/runtime_   |true if this is a default template. Default template VMs can never be started or migrated, they are used only for cloning other VMs|
 |is&#95;snapshot&#95;from&#95;vmpp|`bool              `|_RO/constructor_|**Deprecated**. true if this snapshot was created by the protection policy|
+|is&#95;vmss&#95;snapshot|`bool              `|_RO/constructor_|true if this snapshot was created by the snapshot schedule|
 |last&#95;boot&#95;CPU&#95;flags|`(string -> string) map`|_RO/runtime_   |describes the CPU flags on which the VM was last booted|
 |last&#95;booted&#95;record|`string            `|_RO/runtime_   |marshalled value containing VM record at time of last boot, updated dynamically to reflect the runtime state of the domain|
 |memory&#95;dynamic&#95;max|`int               `|_RO/constructor_|Dynamic maximum &#40;bytes&#41;         |
@@ -25831,6 +27770,7 @@ A virtual machine &#40;or 'guest'&#41;.
 |snapshot&#95;info   |`(string -> string) map`|_RO/runtime_   |Human&#45;readable information concerning this snapshot|
 |snapshot&#95;metadata|`string            `|_RO/runtime_   |Encoded information about the VM's metadata this is a snapshot of|
 |snapshot&#95;of     |`VM ref            `|_RO/runtime_   |Ref pointing to the VM this snapshot is of.|
+|snapshot&#95;schedule|`VMSS ref          `|_RO/constructor_|Ref pointing to a snapshot schedule for this VM|
 |snapshot&#95;time   |`datetime          `|_RO/runtime_   |Date/time when this snapshot was created.|
 |snapshots           |`VM ref set        `|_RO/runtime_   |List pointing to all the VM snapshots.  |
 |start&#95;delay     |`int               `|_RO/constructor_|The delay to wait before proceeding to the next order in the startup sequence &#40;seconds&#41;|
@@ -25848,6 +27788,7 @@ A virtual machine &#40;or 'guest'&#41;.
 |VGPUs               |`VGPU ref set      `|_RO/runtime_   |Virtual GPUs                            |
 |VIFs                |`VIF ref set       `|_RO/runtime_   |virtual network interfaces              |
 |VTPMs               |`VTPM ref set      `|_RO/runtime_   |virtual TPMs                            |
+|VUSBs               |`VUSB ref set      `|_RO/runtime_   |vitual usb devices                      |
 |xenstore&#95;data   |`(string -> string) map`|_RW_           |data to be inserted into the xenstore tree &#40;/local/domain/&lt;domid&gt;/vm&#45;data&#41; after the VM is created.|
 
 ### RPCs associated with class: VM
@@ -27216,6 +29157,28 @@ _Return Type:_ `bool`
 
 value of the field
 
+#### RPC name: get&#95;is&#95;default&#95;template
+
+_Overview:_
+
+Get the is&#95;default&#95;template field of the given VM.
+
+_Signature:_
+
+```
+bool get_is_default_template (session ref session_id, VM ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
 #### RPC name: get&#95;is&#95;snapshot&#95;from&#95;vmpp
 
 **This message is deprecated.**
@@ -27228,6 +29191,28 @@ _Signature:_
 
 ```
 bool get_is_snapshot_from_vmpp (session ref session_id, VM ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;is&#95;vmss&#95;snapshot
+
+_Overview:_
+
+Get the is&#95;vmss&#95;snapshot field of the given VM.
+
+_Signature:_
+
+```
+bool get_is_vmss_snapshot (session ref session_id, VM ref self)
 ```
 _Arguments:_
 
@@ -27994,6 +29979,28 @@ _Return Type:_ `VM ref`
 
 value of the field
 
+#### RPC name: get&#95;snapshot&#95;schedule
+
+_Overview:_
+
+Get the snapshot&#95;schedule field of the given VM.
+
+_Signature:_
+
+```
+VMSS ref get_snapshot_schedule (session ref session_id, VM ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |reference to the object                 |
+
+_Return Type:_ `VMSS ref`
+
+value of the field
+
 #### RPC name: get&#95;snapshot&#95;time
 
 _Overview:_
@@ -28388,6 +30395,28 @@ _Arguments:_
 |`VM ref                      `|self                          |reference to the object                 |
 
 _Return Type:_ `VTPM ref set`
+
+value of the field
+
+#### RPC name: get&#95;VUSBs
+
+_Overview:_
+
+Get the VUSBs field of the given VM.
+
+_Signature:_
+
+```
+VUSB ref set get_VUSBs (session ref session_id, VM ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |reference to the object                 |
+
+_Return Type:_ `VUSB ref set`
 
 value of the field
 
@@ -29127,6 +31156,29 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+#### RPC name: set&#95;bios&#95;strings
+
+_Overview:_
+
+Set custom BIOS strings to this VM. VM will be given a default set of BIOS strings, only some of which can be overridden by the supplied values. Allowed keys are: 'bios&#45;vendor', 'bios&#45;version', 'system&#45;manufacturer', 'system&#45;product&#45;name', 'system&#45;version', 'system&#45;serial&#45;number', 'enclosure&#45;asset&#45;tag'
+
+_Signature:_
+
+```
+void set_bios_strings (session ref session_id, VM ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |The VM to modify                        |
+|`(string -> string) map      `|value                         |The custom BIOS strings as a list of key&#45;value pairs|
+
+_Return Type:_ `void`
+
+_Possible Error Codes:_ `VM_BIOS_STRINGS_ALREADY_SET`, `INVALID_VALUE`
+
 #### RPC name: set&#95;blocked&#95;operations
 
 _Overview:_
@@ -29851,6 +31903,27 @@ _Arguments:_
 |session ref                   |session_id                    |Reference to a valid session            |
 |`VM ref                      `|self                          |The VM                                  |
 |`int                         `|value                         |This VM's shutdown delay in seconds     |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;snapshot&#95;schedule
+
+_Overview:_
+
+Set the value of the snapshot schedule field
+
+_Signature:_
+
+```
+void set_snapshot_schedule (session ref session_id, VM ref self, VMSS ref value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |The VM                                  |
+|`VMSS ref                    `|value                         |The value                               |
 
 _Return Type:_ `void`
 
@@ -32973,6 +35046,610 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+## Class: VMSS
+
+VM Snapshot Schedule
+
+### Fields for class: VMSS
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|enabled             |`bool              `|_RW_           |enable or disable this snapshot schedule|
+|frequency           |`vmss_frequency    `|_RO/constructor_|frequency of taking snapshot from snapshot schedule|
+|last&#95;run&#95;time|`datetime          `|_RO/runtime_   |time of the last snapshot               |
+|name&#95;description|`string            `|_RW_           |a notes field containing human&#45;readable description|
+|name&#95;label      |`string            `|_RW_           |a human&#45;readable name               |
+|retained&#95;snapshots|`int               `|_RO/constructor_|maximum number of snapshots that should be stored at any time|
+|schedule            |`(string -> string) map`|_RO/constructor_|schedule of the snapshot containing 'hour', 'min', 'days'. Date/time&#45;related information is in Local Timezone|
+|type                |`vmss_type         `|_RO/constructor_|type of the snapshot schedule           |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+|VMs                 |`VM ref set        `|_RO/runtime_   |all VMs attached to this snapshot schedule|
+
+### RPCs associated with class: VMSS
+
+#### RPC name: add&#95;to&#95;schedule
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void add_to_schedule (session ref session_id, VMSS ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`string                      `|key                           |the key to add                          |
+|`string                      `|value                         |the value to add                        |
+
+_Return Type:_ `void`
+
+#### RPC name: create
+
+_Overview:_
+
+Create a new VMSS instance, and return its handle.
+
+_Signature:_
+
+```
+VMSS ref create (session ref session_id, VMSS record args)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS record                 `|args                          |All constructor arguments               |
+
+_Return Type:_ `VMSS ref`
+
+reference to the newly created object
+
+#### RPC name: destroy
+
+_Overview:_
+
+Destroy the specified VMSS instance.
+
+_Signature:_
+
+```
+void destroy (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the VMSSs known to the system.
+
+_Signature:_
+
+```
+VMSS ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of VMSS references to VMSS records for all VMSSs known to the system.
+
+_Signature:_
+
+```
+(VMSS ref -> VMSS record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;name&#95;label
+
+_Overview:_
+
+Get all the VMSS instances with the given label.
+
+_Signature:_
+
+```
+VMSS ref set get_by_name_label (session ref session_id, string label)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|label                         |label of object to return               |
+
+_Return Type:_ `VMSS ref set`
+
+references to objects with matching names
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the VMSS instance with the specified UUID.
+
+_Signature:_
+
+```
+VMSS ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `VMSS ref`
+
+reference to the object
+
+#### RPC name: get&#95;enabled
+
+_Overview:_
+
+Get the enabled field of the given VMSS.
+
+_Signature:_
+
+```
+bool get_enabled (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;frequency
+
+_Overview:_
+
+Get the frequency field of the given VMSS.
+
+_Signature:_
+
+```
+vmss_frequency get_frequency (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `vmss_frequency`
+
+value of the field
+
+#### RPC name: get&#95;last&#95;run&#95;time
+
+_Overview:_
+
+Get the last&#95;run&#95;time field of the given VMSS.
+
+_Signature:_
+
+```
+datetime get_last_run_time (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `datetime`
+
+value of the field
+
+#### RPC name: get&#95;name&#95;description
+
+_Overview:_
+
+Get the name/description field of the given VMSS.
+
+_Signature:_
+
+```
+string get_name_description (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;name&#95;label
+
+_Overview:_
+
+Get the name/label field of the given VMSS.
+
+_Signature:_
+
+```
+string get_name_label (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given VMSS.
+
+_Signature:_
+
+```
+VMSS record get_record (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `VMSS record`
+
+all fields from the object
+
+#### RPC name: get&#95;retained&#95;snapshots
+
+_Overview:_
+
+Get the retained&#95;snapshots field of the given VMSS.
+
+_Signature:_
+
+```
+int get_retained_snapshots (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `int`
+
+value of the field
+
+#### RPC name: get&#95;schedule
+
+_Overview:_
+
+Get the schedule field of the given VMSS.
+
+_Signature:_
+
+```
+(string -> string) map get_schedule (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;type
+
+_Overview:_
+
+Get the type field of the given VMSS.
+
+_Signature:_
+
+```
+vmss_type get_type (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `vmss_type`
+
+value of the field
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given VMSS.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;VMs
+
+_Overview:_
+
+Get the VMs field of the given VMSS.
+
+_Signature:_
+
+```
+VM ref set get_VMs (session ref session_id, VMSS ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `VM ref set`
+
+value of the field
+
+#### RPC name: remove&#95;from&#95;schedule
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void remove_from_schedule (session ref session_id, VMSS ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`string                      `|key                           |the key to remove                       |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;enabled
+
+_Overview:_
+
+Set the enabled field of the given VMSS.
+
+_Signature:_
+
+```
+void set_enabled (session ref session_id, VMSS ref self, bool value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+|`bool                        `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;frequency
+
+_Overview:_
+
+Set the value of the frequency field
+
+_Signature:_
+
+```
+void set_frequency (session ref session_id, VMSS ref self, vmss_frequency value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`vmss_frequency              `|value                         |the snapshot schedule frequency         |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;last&#95;run&#95;time
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void set_last_run_time (session ref session_id, VMSS ref self, datetime value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`datetime                    `|value                         |the value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;name&#95;description
+
+_Overview:_
+
+Set the name/description field of the given VMSS.
+
+_Signature:_
+
+```
+void set_name_description (session ref session_id, VMSS ref self, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+|`string                      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;name&#95;label
+
+_Overview:_
+
+Set the name/label field of the given VMSS.
+
+_Signature:_
+
+```
+void set_name_label (session ref session_id, VMSS ref self, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |reference to the object                 |
+|`string                      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;retained&#95;snapshots
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void set_retained_snapshots (session ref session_id, VMSS ref self, int value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The schedule snapshot                   |
+|`int                         `|value                         |the value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;schedule
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void set_schedule (session ref session_id, VMSS ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`(string -> string) map      `|value                         |the value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;type
+
+_Overview:_
+
+
+
+_Signature:_
+
+```
+void set_type (session ref session_id, VMSS ref self, vmss_type value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|self                          |The snapshot schedule                   |
+|`vmss_type                   `|value                         |the snapshot schedule type              |
+
+_Return Type:_ `void`
+
+#### RPC name: snapshot&#95;now
+
+_Overview:_
+
+This call executes the snapshot schedule immediately
+
+_Signature:_
+
+```
+string snapshot_now (session ref session_id, VMSS ref vmss)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VMSS ref                    `|vmss                          |Snapshot Schedule to execute            |
+
+_Return Type:_ `string`
+
+An XMLRPC result
+
 ## Class: VTPM
 
 A virtual TPM device
@@ -33139,6 +35816,373 @@ _Return Type:_ `VM ref`
 
 value of the field
 
+## Class: VUSB
+
+Describes the vusb device
+
+### Fields for class: VUSB
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|allowed&#95;operations|`vusb_operations set`|_RO/runtime_   |list of the operations allowed in this state. This list is advisory only and the server state may have changed by the time this field is read by a client.|
+|current&#95;operations|`(string -> vusb_operations) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
+|currently&#95;attached|`bool              `|_RO/runtime_   |is the device currently attached        |
+|other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
+|USB&#95;group       |`USB_group ref     `|_RO/runtime_   |USB group used by the VUSB              |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+|VM                  |`VM ref            `|_RO/runtime_   |VM that owns the VUSB                   |
+
+### RPCs associated with class: VUSB
+
+#### RPC name: add&#95;to&#95;other&#95;config
+
+_Overview:_
+
+Add the given key&#45;value pair to the other&#95;config field of the given VUSB.
+
+_Signature:_
+
+```
+void add_to_other_config (session ref session_id, VUSB ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to add                              |
+|`string                      `|value                         |Value to add                            |
+
+_Return Type:_ `void`
+
+#### RPC name: create
+
+_Overview:_
+
+Create a new VUSB record in the database only
+
+_Signature:_
+
+```
+VUSB ref create (session ref session_id, VM ref VM, USB_group ref USB_group, (string -> string) map other_config)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|VM                            |The VM                                  |
+|`USB_group ref               `|USB&#95;group                 |                                        |
+|`(string -> string) map      `|other&#95;config              |                                        |
+
+_Return Type:_ `VUSB ref`
+
+The ref of the newly created VUSB record.
+
+#### RPC name: destroy
+
+_Overview:_
+
+Removes a VUSB record from the database
+
+_Signature:_
+
+```
+void destroy (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |The VUSB to destroy about               |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the VUSBs known to the system.
+
+_Signature:_
+
+```
+VUSB ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of VUSB references to VUSB records for all VUSBs known to the system.
+
+_Signature:_
+
+```
+(VUSB ref -> VUSB record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;allowed&#95;operations
+
+_Overview:_
+
+Get the allowed&#95;operations field of the given VUSB.
+
+_Signature:_
+
+```
+vusb_operations set get_allowed_operations (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `vusb_operations set`
+
+value of the field
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the VUSB instance with the specified UUID.
+
+_Signature:_
+
+```
+VUSB ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `VUSB ref`
+
+reference to the object
+
+#### RPC name: get&#95;current&#95;operations
+
+_Overview:_
+
+Get the current&#95;operations field of the given VUSB.
+
+_Signature:_
+
+```
+(string -> vusb_operations) map get_current_operations (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> vusb_operations) map`
+
+value of the field
+
+#### RPC name: get&#95;currently&#95;attached
+
+_Overview:_
+
+Get the currently&#95;attached field of the given VUSB.
+
+_Signature:_
+
+```
+bool get_currently_attached (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given VUSB.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given VUSB.
+
+_Signature:_
+
+```
+VUSB record get_record (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `VUSB record`
+
+all fields from the object
+
+#### RPC name: get&#95;USB&#95;group
+
+_Overview:_
+
+Get the USB&#95;group field of the given VUSB.
+
+_Signature:_
+
+```
+USB_group ref get_USB_group (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `USB_group ref`
+
+value of the field
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given VUSB.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;VM
+
+_Overview:_
+
+Get the VM field of the given VUSB.
+
+_Signature:_
+
+```
+VM ref get_VM (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `VM ref`
+
+value of the field
+
+#### RPC name: remove&#95;from&#95;other&#95;config
+
+_Overview:_
+
+Remove the given key and its corresponding value from the other&#95;config field of the given VUSB.  If the key is not in that Map, then do nothing.
+
+_Signature:_
+
+```
+void remove_from_other_config (session ref session_id, VUSB ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;other&#95;config
+
+_Overview:_
+
+Set the other&#95;config field of the given VUSB.
+
+_Signature:_
+
+```
+void set_other_config (session ref session_id, VUSB ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |reference to the object                 |
+|`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: unplug
+
+_Overview:_
+
+Unplug the vusb device from the vm.
+
+_Signature:_
+
+```
+void unplug (session ref session_id, VUSB ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VUSB ref                    `|self                          |vusb deivce                             |
+
+_Return Type:_ `void`
+
+
 ## Error Handling
 
 When a low-level transport error occurs, or a request is malformed at the HTTP
@@ -33196,7 +36240,8 @@ like this:
 Note that `ErrorDescription` value is an array of string values. The
 first element of the array is an error code; the remainder of the array are
 strings representing error parameters relating to that code.  In this case,
-the client has attempted to add the mapping _Customer &#45;&gt; eSpiel Incorporated_ to a Map, but it already contains the mapping
+the client has attempted to add the mapping _Customer &#45;&gt;
+eSpiel Incorporated_ to a Map, but it already contains the mapping
 _Customer &#45;&gt; eSpiel Inc._, and so the request has failed.
 
 Each possible error code is documented in the following section.
@@ -33272,6 +36317,24 @@ _Signature:_
 AUTH_ENABLE_FAILED_DOMAIN_LOOKUP_FAILED(message)
 ```
 
+#### AUTH&#95;ENABLE&#95;FAILED&#95;INVALID&#95;ACCOUNT
+
+The host failed to enable external authentication.
+
+_Signature:_
+```
+AUTH_ENABLE_FAILED_INVALID_ACCOUNT(message)
+```
+
+#### AUTH&#95;ENABLE&#95;FAILED&#95;INVALID&#95;OU
+
+The host failed to enable external authentication.
+
+_Signature:_
+```
+AUTH_ENABLE_FAILED_INVALID_OU(message)
+```
+
 #### AUTH&#95;ENABLE&#95;FAILED&#95;PERMISSION&#95;DENIED
 
 The host failed to enable external authentication.
@@ -33332,6 +36395,15 @@ _Signature:_
 BACKUP_SCRIPT_FAILED(log)
 ```
 
+#### BALLOONING&#95;TIMEOUT&#95;BEFORE&#95;MIGRATION
+
+Timeout trying to balloon down memory before VM migration. If the error occurs repeatedly, consider increasing the memory&#45;dynamic&#45;min value.
+
+_Signature:_
+```
+BALLOONING_TIMEOUT_BEFORE_MIGRATION(vm)
+```
+
 #### BOOTLOADER&#95;FAILED
 
 The bootloader returned an error
@@ -33339,6 +36411,15 @@ The bootloader returned an error
 _Signature:_
 ```
 BOOTLOADER_FAILED(vm, msg)
+```
+
+#### BRIDGE&#95;NAME&#95;EXISTS
+
+The specified bridge already exists.
+
+_Signature:_
+```
+BRIDGE_NAME_EXISTS(bridge)
 ```
 
 #### BRIDGE&#95;NOT&#95;AVAILABLE
@@ -33565,6 +36646,12 @@ _Signature:_
 ```
 COULD_NOT_IMPORT_DATABASE(reason)
 ```
+
+#### COULD&#95;NOT&#95;UPDATE&#95;IGMP&#95;SNOOPING&#95;EVERYWHERE
+
+The IGMP Snooping setting cannot be applied for some of the host, network&#40;s&#41;.
+
+No parameters.
 
 #### CPU&#95;FEATURE&#95;MASKING&#95;NOT&#95;SUPPORTED
 
@@ -34604,6 +37691,24 @@ _Signature:_
 NETWORK_CONTAINS_VIF(vifs)
 ```
 
+#### NETWORK&#95;INCOMPATIBLE&#95;PURPOSES
+
+You tried to add a purpose to a network but the new purpose is not compatible with an existing purpose of the network or other networks.
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_PURPOSES(new_purpose, conflicting_purpose)
+```
+
+#### NETWORK&#95;UNMANAGED
+
+The network is not managed by xapi.
+
+_Signature:_
+```
+NETWORK_UNMANAGED(network)
+```
+
 #### NOT&#95;ALLOWED&#95;ON&#95;OEM&#95;EDITION
 
 This command is not allowed on the OEM edition.
@@ -34654,6 +37759,15 @@ No parameters.
 The upper limit of active redo log instances was reached.
 
 No parameters.
+
+#### NVIDIA&#95;TOOLS&#95;ERROR
+
+Nvidia tools error. Please ensure that the latest Nvidia tools are installed
+
+_Signature:_
+```
+NVIDIA_TOOLS_ERROR(host)
+```
 
 #### OBJECT&#95;NOLONGER&#95;EXISTS
 
@@ -34719,6 +37833,15 @@ There is not enough space to upload the update
 _Signature:_
 ```
 OUT_OF_SPACE(location)
+```
+
+#### PASSTHROUGH&#95;NOT&#95;ENABLED
+
+The passthrough&#95;enabled must be true before passthrough usb to vm.
+
+_Signature:_
+```
+PASSTHROUGH_NOT_ENABLED(PUSB)
 ```
 
 #### PATCH&#95;ALREADY&#95;APPLIED
@@ -34976,6 +38099,15 @@ _Signature:_
 PIF_IS_VLAN(PIF)
 ```
 
+#### PIF&#95;NOT&#95;PRESENT
+
+This host has no PIF on the given network.
+
+_Signature:_
+```
+PIF_NOT_PRESENT(host, network)
+```
+
 #### PIF&#95;TUNNEL&#95;STILL&#95;EXISTS
 
 Operation cannot proceed while a tunnel exists on this interface.
@@ -35030,9 +38162,18 @@ _Signature:_
 POOL_AUTH_DISABLE_FAILED(host, message)
 ```
 
+#### POOL&#95;AUTH&#95;DISABLE&#95;FAILED&#95;INVALID&#95;ACCOUNT
+
+External authentication has been disabled with errors: Some AD machine accounts were not disabled on the AD server due to invalid account.
+
+_Signature:_
+```
+POOL_AUTH_DISABLE_FAILED_INVALID_ACCOUNT(host, message)
+```
+
 #### POOL&#95;AUTH&#95;DISABLE&#95;FAILED&#95;PERMISSION&#95;DENIED
 
-The pool failed to disable the external authentication of at least one host.
+External authentication has been disabled with errors: Your AD machine account was not disabled on the AD server as permission was denied.
 
 _Signature:_
 ```
@@ -35041,7 +38182,7 @@ POOL_AUTH_DISABLE_FAILED_PERMISSION_DENIED(host, message)
 
 #### POOL&#95;AUTH&#95;DISABLE&#95;FAILED&#95;WRONG&#95;CREDENTIALS
 
-The pool failed to disable the external authentication of at least one host.
+External authentication has been disabled with errors: Some AD machine accounts were not disabled on the AD server due to invalid credentials.
 
 _Signature:_
 ```
@@ -35075,6 +38216,15 @@ _Signature:_
 POOL_AUTH_ENABLE_FAILED_DUPLICATE_HOSTNAME(host, message)
 ```
 
+#### POOL&#95;AUTH&#95;ENABLE&#95;FAILED&#95;INVALID&#95;ACCOUNT
+
+The pool failed to enable external authentication.
+
+_Signature:_
+```
+POOL_AUTH_ENABLE_FAILED_INVALID_ACCOUNT(host, message)
+```
+
 #### POOL&#95;AUTH&#95;ENABLE&#95;FAILED&#95;INVALID&#95;OU
 
 The pool failed to enable external authentication.
@@ -35091,6 +38241,15 @@ The pool failed to enable external authentication.
 _Signature:_
 ```
 POOL_AUTH_ENABLE_FAILED_PERMISSION_DENIED(host, message)
+```
+
+#### POOL&#95;AUTH&#95;ENABLE&#95;FAILED&#95;UNAVAILABLE
+
+The pool failed to enable external authentication.
+
+_Signature:_
+```
+POOL_AUTH_ENABLE_FAILED_UNAVAILABLE(host, message)
 ```
 
 #### POOL&#95;AUTH&#95;ENABLE&#95;FAILED&#95;WRONG&#95;CREDENTIALS
@@ -35114,11 +38273,50 @@ The host joining the pool must not have any bonds.
 
 No parameters.
 
+#### POOL&#95;JOINING&#95;HOST&#95;HAS&#95;NON&#95;MANAGEMENT&#95;VLANS
+
+The host joining the pool must not have any non&#45;management vlans.
+
+No parameters.
+
+#### POOL&#95;JOINING&#95;HOST&#95;HAS&#95;TUNNELS
+
+The host joining the pool must not have any tunnels.
+
+No parameters.
+
+#### POOL&#95;JOINING&#95;HOST&#95;MANAGEMENT&#95;VLAN&#95;DOES&#95;NOT&#95;MATCH
+
+The host joining the pool must have the same management vlan.
+
+_Signature:_
+```
+POOL_JOINING_HOST_MANAGEMENT_VLAN_DOES_NOT_MATCH(local, remote)
+```
+
 #### POOL&#95;JOINING&#95;HOST&#95;MUST&#95;HAVE&#95;PHYSICAL&#95;MANAGEMENT&#95;NIC
 
 The host joining the pool must have a physical management NIC &#40;i.e. the management NIC must not be on a VLAN or bonded PIF&#41;.
 
 No parameters.
+
+#### POOL&#95;JOINING&#95;HOST&#95;MUST&#95;HAVE&#95;SAME&#95;API&#95;VERSION
+
+The host joining the pool must have the same API version as the pool master.
+
+_Signature:_
+```
+POOL_JOINING_HOST_MUST_HAVE_SAME_API_VERSION(host_api_version, master_api_version)
+```
+
+#### POOL&#95;JOINING&#95;HOST&#95;MUST&#95;HAVE&#95;SAME&#95;DB&#95;SCHEMA
+
+The host joining the pool must have the same database schema as the pool master.
+
+_Signature:_
+```
+POOL_JOINING_HOST_MUST_HAVE_SAME_DB_SCHEMA(host_db_schema, master_db_schema)
+```
 
 #### POOL&#95;JOINING&#95;HOST&#95;MUST&#95;HAVE&#95;SAME&#95;PRODUCT&#95;VERSION
 
@@ -35143,6 +38341,15 @@ No parameters.
 The provision call can only be invoked on templates, not regular VMs.
 
 No parameters.
+
+#### PUSB&#95;VDI&#95;CONFLICT
+
+The VDI corresponding to this PUSB has existing VBDs.
+
+_Signature:_
+```
+PUSB_VDI_CONFLICT(PUSB, VDI)
+```
 
 #### PVS&#95;CACHE&#95;STORAGE&#95;ALREADY&#95;PRESENT
 
@@ -35501,6 +38708,15 @@ _Signature:_
 TASK_CANCELLED(task)
 ```
 
+#### TLS&#95;CONNECTION&#95;FAILED
+
+Cannot contact the other host using TLS on the specified address and port
+
+_Signature:_
+```
+TLS_CONNECTION_FAILED(address, port)
+```
+
 #### TOO&#95;BUSY
 
 The request was rejected because the server is too busy.
@@ -35520,6 +38736,15 @@ You reached the maximal number of concurrently migrating VMs.
 _Signature:_
 ```
 TOO_MANY_STORAGE_MIGRATES(number)
+```
+
+#### TOO&#95;MANY&#95;VUSBS
+
+The VM has too many VUSBs.
+
+_Signature:_
+```
+TOO_MANY_VUSBS(number)
 ```
 
 #### TRANSPORT&#95;PIF&#95;NOT&#95;CONFIGURED
@@ -35609,6 +38834,15 @@ _Signature:_
 UPDATE_PRECHECK_FAILED_CONFLICT_PRESENT(update, conflict_update)
 ```
 
+#### UPDATE&#95;PRECHECK&#95;FAILED&#95;GPGKEY&#95;NOT&#95;IMPORTED
+
+The update precheck stage failed: RPM package validation requires a GPG key that is not present on the host.
+
+_Signature:_
+```
+UPDATE_PRECHECK_FAILED_GPGKEY_NOT_IMPORTED(update)
+```
+
 #### UPDATE&#95;PRECHECK&#95;FAILED&#95;OUT&#95;OF&#95;SPACE
 
 The update precheck stage failed: the server does not have enough space.
@@ -35643,6 +38877,51 @@ The update precheck stage failed: the server is of an incorrect version.
 _Signature:_
 ```
 UPDATE_PRECHECK_FAILED_WRONG_SERVER_VERSION(update, installed_version, required_version )
+```
+
+#### USB&#95;ALREADY&#95;ATTACHED
+
+The USB device is currently attached to a VM.
+
+_Signature:_
+```
+USB_ALREADY_ATTACHED(PUSB, VM)
+```
+
+#### USB&#95;GROUP&#95;CONFLICT
+
+USB&#95;groups are currently restricted to contain no more than one VUSB.
+
+_Signature:_
+```
+USB_GROUP_CONFLICT(USB_group)
+```
+
+#### USB&#95;GROUP&#95;CONTAINS&#95;NO&#95;PUSBS
+
+The USB group does not contain any PUSBs.
+
+_Signature:_
+```
+USB_GROUP_CONTAINS_NO_PUSBS(usb_group)
+```
+
+#### USB&#95;GROUP&#95;CONTAINS&#95;PUSB
+
+The USB group contains active PUSBs and cannot be deleted.
+
+_Signature:_
+```
+USB_GROUP_CONTAINS_PUSB(pusbs)
+```
+
+#### USB&#95;GROUP&#95;CONTAINS&#95;VUSB
+
+The USB group contains active VUSBs and cannot be deleted.
+
+_Signature:_
+```
+USB_GROUP_CONTAINS_VUSB(vusbs)
 ```
 
 #### USER&#95;IS&#95;NOT&#95;LOCAL&#95;SUPERUSER
@@ -35727,6 +39006,15 @@ This VM has locked the DVD drive tray, so the disk cannot be ejected
 _Signature:_
 ```
 VBD_TRAY_LOCKED(vbd)
+```
+
+#### VDI&#95;CBT&#95;ENABLED
+
+The requested operation is not allowed for VDIs with CBT enabled or VMs having such VDIs, and CBT is enabled for the specified VDI.
+
+_Signature:_
+```
+VDI_CBT_ENABLED(vdi)
 ```
 
 #### VDI&#95;CONTAINS&#95;METADATA&#95;OF&#95;THIS&#95;POOL
@@ -35852,6 +39140,15 @@ _Signature:_
 VDI_NOT_SPARSE(vdi)
 ```
 
+#### VDI&#95;NO&#95;CBT&#95;METADATA
+
+The requested operation is not allowed because the specified VDI does not have changed block tracking metadata.
+
+_Signature:_
+```
+VDI_NO_CBT_METADATA(vdi)
+```
+
 #### VDI&#95;ON&#95;BOOT&#95;MODE&#95;INCOMPATIBLE&#95;WITH&#95;OPERATION
 
 This operation is not permitted on VDIs in the 'on&#45;boot=reset' mode, or on VMs having such VDIs.
@@ -35874,6 +39171,15 @@ The VDI is too small. Please resize it to at least the minimum size.
 _Signature:_
 ```
 VDI_TOO_SMALL(vdi, minimum size)
+```
+
+#### VGPU&#95;DESTINATION&#95;INCOMPATIBLE
+
+The VGPU is not compatible with any PGPU in the destination.
+
+_Signature:_
+```
+VGPU_DESTINATION_INCOMPATIBLE(reason, vgpu, host)
 ```
 
 #### VGPU&#95;TYPE&#95;NOT&#95;COMPATIBLE&#95;WITH&#95;RUNNING&#95;TYPE
@@ -35951,6 +39257,12 @@ There is at least one VM assigned to this protection policy.
 
 No parameters.
 
+#### VMSS&#95;HAS&#95;VM
+
+There is at least one VM assigned to snapshot schedule.
+
+No parameters.
+
 #### VMS&#95;FAILED&#95;TO&#95;COOPERATE
 
 The given VMs failed to release memory when instructed to do so
@@ -35964,6 +39276,15 @@ This VM is assigned to a protection policy.
 _Signature:_
 ```
 VM_ASSIGNED_TO_PROTECTION_POLICY(vm, vmpp)
+```
+
+#### VM&#95;ASSIGNED&#95;TO&#95;SNAPSHOT&#95;SCHEDULE
+
+This VM is assigned to a snapshot schedule.
+
+_Signature:_
+```
+VM_ASSIGNED_TO_SNAPSHOT_SCHEDULE(vm, vmss)
 ```
 
 #### VM&#95;ATTACHED&#95;TO&#95;MORE&#95;THAN&#95;ONE&#95;VDI&#95;WITH&#95;TIMEOFFSET&#95;MARKED&#95;AS&#95;RESET&#95;ON&#95;BOOT
@@ -36068,6 +39389,15 @@ _Signature:_
 VM_HAS_CHECKPOINT(vm)
 ```
 
+#### VM&#95;HAS&#95;NO&#95;SUSPEND&#95;VDI
+
+VM cannot be resumed because it has no suspend VDI
+
+_Signature:_
+```
+VM_HAS_NO_SUSPEND_VDI(vm)
+```
+
 #### VM&#95;HAS&#95;PCI&#95;ATTACHED
 
 This operation could not be performed, because the VM has one or more PCI devices passed through.
@@ -36093,6 +39423,15 @@ This operation could not be performed, because the VM has one or more virtual GP
 _Signature:_
 ```
 VM_HAS_VGPU(vm)
+```
+
+#### VM&#95;HAS&#95;VUSBS
+
+The operation is not allowed when the VM has VUSBs.
+
+_Signature:_
+```
+VM_HAS_VUSBS(VM)
 ```
 
 #### VM&#95;HOST&#95;INCOMPATIBLE&#95;VERSION
@@ -36381,6 +39720,15 @@ You attempted to run a VM on a host on which the vGPU required by the VM cannot 
 _Signature:_
 ```
 VM_REQUIRES_VGPU(vm, GPU_group, vGPU_type)
+```
+
+#### VM&#95;REQUIRES&#95;VUSB
+
+You attempted to run a VM on a host on which the VUSB required by the VM cannot be allocated on any PUSBs in the USB&#95;group needed by the VM.
+
+_Signature:_
+```
+VM_REQUIRES_VUSB(vm, USB_group)
 ```
 
 #### VM&#95;REVERT&#95;FAILED
