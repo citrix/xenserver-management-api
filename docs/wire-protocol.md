@@ -5,7 +5,7 @@ the [XML-RPC](http://xmlrpc.scripting.com/spec.html) protocol. Here we describe
 how the higher-level types used in our API Reference are mapped to primitive
 XML-RPC types.
 
-In our API Reference we specify the signatures of API functions in the following style:
+We specify the signatures of API functions in the following style:
 
 ```python
 (VM ref set)  VM.get_all()
@@ -213,7 +213,7 @@ function.
 This section describes how an interactive session might look, using the python
 XML-RPC client library.
 
-First, initialize python:
+First, initialise python:
 
 ```bash
 $ python2.7

@@ -1,20 +1,16 @@
-Citrix XenServer 7.1 LTSR Management API
+Citrix XenServer 7.3 CR Management API
 ========================================
-API Revision 2.6
+API Revision 2.8
 ----------------
-
-> Note: The offial PDF version of this API reference is provided on the 
-> [docs.citrix.com](https://docs.citrix.com/content/dam/docs/en-us/xenserver/7-1/downloads/xenserver-7-1-management-api-guide.pdf)
-> website. For XenServer 7.1 LTSR, this markdown version is provided as a convenience.
 
 ## Introduction
 
 This document defines the XenServer Management API - an interface for remotely
-configuring and controlling virtualized guests running on a Xen-enabled host.
+configuring and controlling virtualised guests running on a Xen-enabled host.
 
 The API is presented here as a set of Remote Procedure Calls (RPCs), with a wire
 format based upon [XML-RPC](http://xmlrpc.scripting.com/spec.html). No specific
-language bindings are prescribed, although examples will be given in the Python
+language bindings are prescribed, although examples will be given in the python
 programming language.
 
 Although we adopt some terminology from object-oriented programming,
@@ -42,11 +38,18 @@ _qualifiers_. A qualifier is one of:
 
 ## Types
 
-A full list of types is given in Chapter 2. However, there are three types that require explicit mention:
+The following types are used to specify methods and fields in the API Reference:
 
-- `t ref`: Reference to an object of type `t`.
-- `t set`: A set containing values of type `t`.
-- `(k -> v) map`: Mapping from values of type `k` to values of type `v`.
+* `string`: Text strings.
+* `int`: 64-bit integers.
+* `float`: IEEE double-precision floating-point numbers.
+* `bool`: Boolean.
+* `datetime`: Date and timestamp.
+* `c ref`: Reference to an object of class `c`.
+* `t set`: Arbitrary-length set of values of type `t`.
+* `(k -> v) map`: Mapping from values of type `k` to values of type `v`.
+* `e enum`: Enumeration type with name `e`. Enums are defined in the
+  API reference together with classes that use them.
 
 Note that there are a number of cases where `ref`s are _doubly linked_.
 For example, a `VM` has a field called `VIFs` of type `VIF ref set`;
@@ -74,29 +77,30 @@ Each field, `f`, has an RPC accessor associated with it that returns `f`'s value
 Each field, `f`, with qualifier `RW` and whose outermost type is `set` has the
 following additional RPCs associated with it:
 
-- `add_f(r, v)`: adds a new element `v` to the set.
+* `add_f(r, v)`: adds a new element `v` to the set.
   Note that sets cannot contain duplicate values, hence this operation has
   no action in the case that `v` is already in the set.
 
-- `remove_f(r, v)`: removes element `v` from the set.
+* `remove_f(r, v)`: removes element `v` from the set.
 
 Each field, `f`, with qualifier `RW` and whose outermost type is `map` has the
 following additional RPCs associated with it:
 
-- `add_to_f(r, k, v)`: adds new pair `k -> v` to the mapping stored in `f` in
-  object`r`. Adding a new pair for duplicate key, `k`, overwrites any previous mapping for `k`.
+* `add_to_f(r, k, v)`: adds new pair `k -> v` to the mapping stored in `f` in
+  object`r`. Attempting to add a new pair for duplicate key, `k`, fails with a
+  `MAP_DUPLICATE_KEY` error.
 
-- `remove_from_f(r, k)`: removes the pair with key `k`
+* `remove_from_f(r, k)`: removes the pair with key `k`
   from the mapping stored in `f` in object `r`.
 
 Each field whose outermost type is neither `set` nor `map`, but whose
 qualifier is `RW` has an RPC accessor associated with it that sets its value:
 
-- `set_f(r, v)`: sets the field `f` on object `r` to value `v`.
+* `set_f(r, v)`: sets the field `f` on object `r` to value `v`.
 
 ## RPCs associated with classes
 
-* Each class has a _constructor_ RPC named `create` that
+* Most classes have a _constructor_ RPC named `create` that
   takes as parameters all fields marked `RW` and `RO/constructor`. The result
   of this RPC is that a new _persistent_ object is created on the server-side
   with the specified field values.
@@ -108,14 +112,12 @@ qualifier is `RW` has an RPC accessor associated with it that sets its value:
   `get_by_name_label(name_label)` RPC that returns a set of objects of that
   class that have the specified `name_label`.
 
-* Each class has a `destroy(r)` RPC that explicitly deletes
+* Most classes have a `destroy(r)` RPC that explicitly deletes
   the persistent object specified by `r` from the system.  This is a
   non-cascading delete - if the object being removed is referenced by another
   object then the `destroy` call will fail.
 
-### Additional RPCs
-
-As well as the RPCs enumerated above, some classes have additional RPCs
+Apart from the RPCs enumerated above, some classes have additional RPCs
 associated with them. For example, the `VM` class has RPCs for cloning,
 suspending, starting etc. Such additional RPCs are described explicitly
 in the API reference.
