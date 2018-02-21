@@ -195,6 +195,13 @@ The following enumeration types are used:
 |`rfb                                   `|Remote FrameBuffer protocol &#40;as used in VNC&#41;|
 |`vt100                                 `|VT100 terminal                          |
 
+|`enum domain_type                      `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`hvm                                   `|HVM; Fully Virtualised                  |
+|`pv                                    `|PV: Paravirtualised                     |
+|`pv_in_pvh                             `|PV inside a PVH container               |
+|`unspecified                           `|Not specified or unknown domain type    |
+
 |`enum event_operation                  `|                                        |
 |:---------------------------------------|:---------------------------------------|
 |`add                                   `|An object has been created              |
@@ -25144,6 +25151,7 @@ A virtual GPU &#40;vGPU&#41;
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
+|compatibility&#95;metadata|`(string -> string) map`|_RO/runtime_   |VGPU metadata to determine whether a VGPU can migrate between two PGPUs|
 |currently&#95;attached|`bool              `|_RO/runtime_   |Reflects whether the virtual device is currently connected to a physical device|
 |device              |`string            `|_RO/runtime_   |Order in which the devices are plugged into the VM|
 |GPU&#95;group       |`GPU_group ref     `|_RO/runtime_   |GPU group used by the vGPU              |
@@ -25267,6 +25275,28 @@ _Arguments:_
 _Return Type:_ `VGPU ref`
 
 reference to the object
+
+#### RPC name: get&#95;compatibility&#95;metadata
+
+_Overview:_
+
+Get the compatibility&#95;metadata field of the given VGPU.
+
+_Signature:_
+
+```
+(string -> string) map get_compatibility_metadata (session ref session_id, VGPU ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VGPU ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
 
 #### RPC name: get&#95;currently&#95;attached
 
@@ -33303,6 +33333,7 @@ The metrics associated with a VM
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
+|current&#95;domain&#95;type|`domain_type       `|_RO/runtime_   |Not yet implemented &#40;for future use&#41;|
 |hvm                 |`bool              `|_RO/runtime_   |hardware virtual machine                |
 |install&#95;time    |`datetime          `|_RO/runtime_   |Time at which the VM was installed      |
 |last&#95;updated    |`datetime          `|_RO/runtime_   |Time at which this information was last updated|
@@ -33386,6 +33417,28 @@ _Arguments:_
 _Return Type:_ `VM_metrics ref`
 
 reference to the object
+
+#### RPC name: get&#95;current&#95;domain&#95;type
+
+_Overview:_
+
+Get the current&#95;domain&#95;type field of the given VM&#95;metrics.
+
+_Signature:_
+
+```
+domain_type get_current_domain_type (session ref session_id, VM_metrics ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM_metrics ref              `|self                          |reference to the object                 |
+
+_Return Type:_ `domain_type`
+
+value of the field
 
 #### RPC name: get&#95;hvm
 

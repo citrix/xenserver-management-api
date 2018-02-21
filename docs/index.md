@@ -1,9 +1,6 @@
-Citrix XenServer 7.3 CR Management API
-========================================
-API Revision 2.8
-----------------
+# Citrix XenServer 7.4 CR Management API
 
-## Introduction
+## API Revision 2.9
 
 This document defines the XenServer Management API - an interface for remotely
 configuring and controlling virtualised guests running on a Xen-enabled host.
