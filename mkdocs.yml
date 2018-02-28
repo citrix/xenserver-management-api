@@ -1,5 +1,5 @@
-site_name: Citrix XenServer 7.3 CR Management API Reference
-site_description: Citrix XenServer 7.3 CR Management API Reference
+site_name: Citrix XenServer 7.4 CR Management API Reference
+site_description: Citrix XenServer 7.4 CR Management API Reference
 theme_dir: citrix-sdk
 markdown_extensions:
   - admonition
@@ -8,7 +8,7 @@ markdown_extensions:
      anchorlink: True
 
 pages:
-- Introduction: index.md
+- Citrix XenServer 7.4 CR Management API Reference: index.md
 - Wire Protocol for Remote API Calls: wire-protocol.md
 - VM Lifecycle: vm-lifecycle.md
 - API Reference: api-ref-autogen.md
