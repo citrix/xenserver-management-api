@@ -10,6 +10,8 @@ The following classes are defined:
 |`auth              `|Management of remote authentication services                          |
 |`blob              `|A placeholder for a binary blob                                       |
 |`Bond              `|                                                                      |
+|`Cluster           `|Cluster&#45;wide Cluster metadata                                     |
+|`Cluster_host      `|Cluster member metadata                                               |
 |`console           `|A console                                                             |
 |`crashdump         `|**Deprecated**. A VM crashdump                                        |
 |`data_source       `|Data sources for logging in RRDs                                      |
@@ -25,6 +27,7 @@ The following classes are defined:
 |`LVHD              `|LVHD SR specific operations                                           |
 |`message           `|An message for the attention of the administrator                     |
 |`network           `|A virtual network                                                     |
+|`network_sriov     `|network&#45;sriov which connects logical pif and physical pif         |
 |`PBD               `|The physical block devices through which hosts access SRs             |
 |`PCI               `|A PCI device                                                          |
 |`PGPU              `|A physical GPU &#40;pGPU&#41;                                         |
@@ -33,6 +36,7 @@ The following classes are defined:
 |`pool              `|Pool&#45;wide information                                             |
 |`pool_patch        `|**Deprecated**. Pool&#45;wide patches                                 |
 |`pool_update       `|Pool&#45;wide updates to the host software                            |
+|`probe_result      `|A set of properties that describe one result element of SR.probe. Result elements and properties can change dynamically based on changes to the the SR.probe input&#45;parameters or the target.|
 |`PUSB              `|A physical USB device                                                 |
 |`PVS_cache_storage `|Describes the storage that is available to a PVS site for caching purposes|
 |`PVS_proxy         `|a proxy connects a VM/VIF with a PVS site                             |
@@ -44,6 +48,7 @@ The following classes are defined:
 |`session           `|A session                                                             |
 |`SM                `|A storage manager plugin                                              |
 |`SR                `|A storage repository                                                  |
+|`sr_stat           `|A set of high&#45;level properties associated with an SR.             |
 |`subject           `|A user or group that can log in xapi                                  |
 |`task              `|A long&#45;running asynchronous task                                  |
 |`tunnel            `|A tunnel for network traffic                                          |
@@ -90,6 +95,7 @@ Fields that are bound together are shown in the following table:
 |`crashdump.VM                          `|`VM.crash_dumps                        `|one-to-many    |
 |`VIF.VM                                `|`VM.VIFs                               `|one-to-many    |
 |`VIF.network                           `|`network.VIFs                          `|one-to-many    |
+|`Cluster_host.cluster                  `|`Cluster.cluster_hosts                 `|one-to-many    |
 |`PIF.host                              `|`host.PIFs                             `|one-to-many    |
 |`PIF.network                           `|`network.PIFs                          `|one-to-many    |
 |`VDI.SR                                `|`SR.VDIs                               `|one-to-many    |
@@ -127,10 +133,12 @@ Fields that are bound together are shown in the following table:
 |`VUSB.USB_group                        `|`USB_group.VUSBs                       `|one-to-many    |
 |`VUSB.VM                               `|`VM.VUSBs                              `|one-to-many    |
 |`Feature.host                          `|`host.features                         `|one-to-many    |
+|`network_sriov.physical_PIF            `|`PIF.sriov_physical_PIF_of             `|one-to-many    |
+|`network_sriov.logical_PIF             `|`PIF.sriov_logical_PIF_of              `|one-to-many    |
 
 The following figure represents bound fields (as specified above) diagramatically, using crow's foot notation to specify one-to-one, one-to-many or many-to-many relationships:
 
-![Class relationships](media/classes.png 'Class relationships')
+![Class relationships](classes.png 'Class relationships')
 
 ## Types
 
@@ -188,6 +196,20 @@ The following enumeration types are used:
 |`VM                                    `|VM                                      |
 |`VMPP                                  `|VMPP                                    |
 |`VMSS                                  `|VMSS                                    |
+
+|`enum cluster_host_operation           `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`destroy                               `|completely destroying a cluster host    |
+|`disable                               `|disabling cluster membership on a particular host|
+|`enable                                `|enabling cluster membership on a particular host|
+
+|`enum cluster_operation                `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`add                                   `|adding a new member to the cluster      |
+|`destroy                               `|completely destroying a cluster         |
+|`disable                               `|disabling any cluster member            |
+|`enable                                `|enabling any cluster member             |
+|`remove                                `|removing a member from the cluster      |
 
 |`enum console_protocol                 `|                                        |
 |:---------------------------------------|:---------------------------------------|
@@ -293,6 +315,7 @@ The following enumeration types are used:
 
 |`enum pool_allowed_operations          `|                                        |
 |:---------------------------------------|:---------------------------------------|
+|`cluster_create                        `|Indicates this pool is in the process of creating a cluster|
 |`ha_disable                            `|Indicates this pool is in the process of disabling HA|
 |`ha_enable                             `|Indicates this pool is in the process of enabling HA|
 
@@ -313,6 +336,17 @@ The following enumeration types are used:
 |:---------------------------------------|:---------------------------------------|
 |`pssl                                  `|Passive ssl connection                  |
 |`ssl                                   `|Active ssl connection                   |
+
+|`enum sr_health                        `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`healthy                               `|Storage is fully available              |
+|`recovering                            `|Storage is busy recovering, e.g. rebuilding mirrors.|
+
+|`enum sriov_configuration_mode         `|                                        |
+|:---------------------------------------|:---------------------------------------|
+|`modprobe                              `|Configure network sriov by modprobe, need reboot|
+|`sysfs                                 `|Configure network sriov by sysfs, do not need reboot|
+|`unknown                               `|Unknown mode                            |
 
 |`enum storage_operations               `|                                        |
 |:---------------------------------------|:---------------------------------------|
@@ -1410,6 +1444,895 @@ _Arguments:_
 |`string                      `|value                         |The property value                      |
 
 _Return Type:_ `void`
+
+## Class: Cluster
+
+Cluster&#45;wide Cluster metadata
+
+### Fields for class: Cluster
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|allowed&#95;operations|`cluster_operation set`|_RO/runtime_   |list of the operations allowed in this state. This list is advisory only and the server state may have changed by the time this field is read by a client.|
+|cluster&#95;config  |`(string -> string) map`|_RO/constructor_|Contains read&#45;only settings for the cluster, such as timeouts and other options. It can only be set at cluster create time|
+|cluster&#95;hosts   |`Cluster_host ref set`|_RO/runtime_   |A list of the cluster&#95;host objects associated with the Cluster|
+|cluster&#95;stack   |`string            `|_RO/constructor_|Simply the string 'corosync'. No other cluster stacks are currently supported|
+|cluster&#95;token   |`string            `|_RO/constructor_|The secret key used by xapi&#45;clusterd when it talks to itself on other hosts|
+|current&#95;operations|`(string -> cluster_operation) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
+|network             |`network ref       `|_RO/constructor_|Reference to the single network on which corosync carries out its inter&#45;host communications|
+|other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
+|pool&#95;auto&#95;join|`bool              `|_RO/constructor_|True if xapi is automatically joining new pool members to the cluster. This will be `true` in the first release|
+|token&#95;timeout   |`int               `|_RO/constructor_|The corosync token timeout in ms        |
+|token&#95;timeout&#95;coefficient|`int               `|_RO/constructor_|The corosync token timeout coefficient in ms|
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+
+### RPCs associated with class: Cluster
+
+#### RPC name: add&#95;to&#95;other&#95;config
+
+_Overview:_
+
+Add the given key&#45;value pair to the other&#95;config field of the given Cluster.
+
+_Signature:_
+
+```
+void add_to_other_config (session ref session_id, Cluster ref self, string key, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to add                              |
+|`string                      `|value                         |Value to add                            |
+
+_Return Type:_ `void`
+
+#### RPC name: create
+
+_Overview:_
+
+Creates a Cluster object and one Cluster&#95;host object as its first member
+
+_Signature:_
+
+```
+Cluster ref create (session ref session_id, network ref network, string cluster_stack, bool pool_auto_join, float token_timeout, float token_timeout_coefficient)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|network                       |the single network on which corosync carries out its inter&#45;host communications|
+|`string                      `|cluster&#95;stack             |simply the string 'corosync'. No other cluster stacks are currently supported|
+|`bool                        `|pool&#95;auto&#95;join        |true if xapi is automatically joining new pool members to the cluster|
+|`float                       `|token&#95;timeout             |Corosync token timeout in seconds       |
+|`float                       `|token&#95;timeout&#95;coefficient|Corosync token timeout coefficient in seconds|
+
+_Return Type:_ `Cluster ref`
+
+the new Cluster
+
+#### RPC name: destroy
+
+_Overview:_
+
+Destroys a Cluster object and the one remaining Cluster&#95;host member
+
+_Signature:_
+
+```
+void destroy (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |the Cluster to destroy                  |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the Clusters known to the system.
+
+_Signature:_
+
+```
+Cluster ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of Cluster references to Cluster records for all Clusters known to the system.
+
+_Signature:_
+
+```
+(Cluster ref -> Cluster record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;allowed&#95;operations
+
+_Overview:_
+
+Get the allowed&#95;operations field of the given Cluster.
+
+_Signature:_
+
+```
+cluster_operation set get_allowed_operations (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `cluster_operation set`
+
+value of the field
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the Cluster instance with the specified UUID.
+
+_Signature:_
+
+```
+Cluster ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `Cluster ref`
+
+reference to the object
+
+#### RPC name: get&#95;cluster&#95;config
+
+_Overview:_
+
+Get the cluster&#95;config field of the given Cluster.
+
+_Signature:_
+
+```
+(string -> string) map get_cluster_config (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;cluster&#95;hosts
+
+_Overview:_
+
+Get the cluster&#95;hosts field of the given Cluster.
+
+_Signature:_
+
+```
+Cluster_host ref set get_cluster_hosts (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `Cluster_host ref set`
+
+value of the field
+
+#### RPC name: get&#95;cluster&#95;stack
+
+_Overview:_
+
+Get the cluster&#95;stack field of the given Cluster.
+
+_Signature:_
+
+```
+string get_cluster_stack (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;cluster&#95;token
+
+_Overview:_
+
+Get the cluster&#95;token field of the given Cluster.
+
+_Signature:_
+
+```
+string get_cluster_token (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;current&#95;operations
+
+_Overview:_
+
+Get the current&#95;operations field of the given Cluster.
+
+_Signature:_
+
+```
+(string -> cluster_operation) map get_current_operations (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> cluster_operation) map`
+
+value of the field
+
+#### RPC name: get&#95;network
+
+_Overview:_
+
+Get the network field of the given Cluster.
+
+_Signature:_
+
+```
+network ref get_network (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `network ref`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given Cluster.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;pool&#95;auto&#95;join
+
+_Overview:_
+
+Get the pool&#95;auto&#95;join field of the given Cluster.
+
+_Signature:_
+
+```
+bool get_pool_auto_join (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given Cluster.
+
+_Signature:_
+
+```
+Cluster record get_record (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `Cluster record`
+
+all fields from the object
+
+#### RPC name: get&#95;token&#95;timeout
+
+_Overview:_
+
+Get the token&#95;timeout field of the given Cluster.
+
+_Signature:_
+
+```
+int get_token_timeout (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `int`
+
+value of the field
+
+#### RPC name: get&#95;token&#95;timeout&#95;coefficient
+
+_Overview:_
+
+Get the token&#95;timeout&#95;coefficient field of the given Cluster.
+
+_Signature:_
+
+```
+int get_token_timeout_coefficient (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `int`
+
+value of the field
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given Cluster.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: pool&#95;create
+
+_Overview:_
+
+Attempt to create a Cluster from the entire pool
+
+_Signature:_
+
+```
+Cluster ref pool_create (session ref session_id, network ref network, string cluster_stack, float token_timeout, float token_timeout_coefficient)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network ref                 `|network                       |the single network on which corosync carries out its inter&#45;host communications|
+|`string                      `|cluster&#95;stack             |simply the string 'corosync'. No other cluster stacks are currently supported|
+|`float                       `|token&#95;timeout             |Corosync token timeout in seconds       |
+|`float                       `|token&#95;timeout&#95;coefficient|Corosync token timeout coefficient in seconds|
+
+_Return Type:_ `Cluster ref`
+
+the new Cluster
+
+#### RPC name: pool&#95;destroy
+
+_Overview:_
+
+Attempt to destroy the Cluster&#95;host objects for all hosts in the pool and then destroy the Cluster.
+
+_Signature:_
+
+```
+void pool_destroy (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |The cluster to destroy.                 |
+
+_Return Type:_ `void`
+
+#### RPC name: pool&#95;force&#95;destroy
+
+_Overview:_
+
+Attempt to force destroy the Cluster&#95;host objects, and then destroy the Cluster.
+
+_Signature:_
+
+```
+void pool_force_destroy (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |The cluster to force destroy.           |
+
+_Return Type:_ `void`
+
+#### RPC name: pool&#95;resync
+
+_Overview:_
+
+Resynchronise the cluster&#95;host objects across the pool. Creates them where they need creating and then plugs them
+
+_Signature:_
+
+```
+void pool_resync (session ref session_id, Cluster ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |The cluster to resync                   |
+
+_Return Type:_ `void`
+
+#### RPC name: remove&#95;from&#95;other&#95;config
+
+_Overview:_
+
+Remove the given key and its corresponding value from the other&#95;config field of the given Cluster.  If the key is not in that Map, then do nothing.
+
+_Signature:_
+
+```
+void remove_from_other_config (session ref session_id, Cluster ref self, string key)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+|`string                      `|key                           |Key to remove                           |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;other&#95;config
+
+_Overview:_
+
+Set the other&#95;config field of the given Cluster.
+
+_Signature:_
+
+```
+void set_other_config (session ref session_id, Cluster ref self, (string -> string) map value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|self                          |reference to the object                 |
+|`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+## Class: Cluster&#95;host
+
+Cluster member metadata
+
+### Fields for class: Cluster&#95;host
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|allowed&#95;operations|`cluster_host_operation set`|_RO/runtime_   |list of the operations allowed in this state. This list is advisory only and the server state may have changed by the time this field is read by a client.|
+|cluster             |`Cluster ref       `|_RO/constructor_|Reference to the Cluster object         |
+|current&#95;operations|`(string -> cluster_host_operation) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
+|enabled             |`bool              `|_RO/constructor_|Whether the cluster host believes that clustering should be enabled on this host|
+|host                |`host ref          `|_RO/constructor_|Reference to the Host object            |
+|other&#95;config    |`(string -> string) map`|_RO/constructor_|Additional configuration                |
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+
+### RPCs associated with class: Cluster&#95;host
+
+#### RPC name: create
+
+_Overview:_
+
+Add a new host to an existing cluster.
+
+_Signature:_
+
+```
+Cluster_host ref create (session ref session_id, Cluster ref cluster, host ref host)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster ref                 `|cluster                       |Cluster to join                         |
+|`host ref                    `|host                          |new cluster member                      |
+
+_Return Type:_ `Cluster_host ref`
+
+the newly created cluster&#95;host object
+
+#### RPC name: destroy
+
+_Overview:_
+
+Remove a host from an existing cluster.
+
+_Signature:_
+
+```
+void destroy (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |the cluster&#95;host to remove from the cluster|
+
+_Return Type:_ `void`
+
+#### RPC name: disable
+
+_Overview:_
+
+Disable cluster membership for an enabled cluster host.
+
+_Signature:_
+
+```
+void disable (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |the cluster&#95;host to disable         |
+
+_Return Type:_ `void`
+
+#### RPC name: enable
+
+_Overview:_
+
+Enable cluster membership for a disabled cluster host.
+
+_Signature:_
+
+```
+void enable (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |the cluster&#95;host to enable          |
+
+_Return Type:_ `void`
+
+#### RPC name: force&#95;destroy
+
+_Overview:_
+
+Remove a host from an existing cluster forcefully.
+
+_Signature:_
+
+```
+void force_destroy (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |the cluster&#95;host to remove from the cluster|
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the Cluster&#95;hosts known to the system.
+
+_Signature:_
+
+```
+Cluster_host ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of Cluster&#95;host references to Cluster&#95;host records for all Cluster&#95;hosts known to the system.
+
+_Signature:_
+
+```
+(Cluster_host ref -> Cluster_host record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;allowed&#95;operations
+
+_Overview:_
+
+Get the allowed&#95;operations field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+cluster_host_operation set get_allowed_operations (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `cluster_host_operation set`
+
+value of the field
+
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the Cluster&#95;host instance with the specified UUID.
+
+_Signature:_
+
+```
+Cluster_host ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `Cluster_host ref`
+
+reference to the object
+
+#### RPC name: get&#95;cluster
+
+_Overview:_
+
+Get the cluster field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+Cluster ref get_cluster (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `Cluster ref`
+
+value of the field
+
+#### RPC name: get&#95;current&#95;operations
+
+_Overview:_
+
+Get the current&#95;operations field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+(string -> cluster_host_operation) map get_current_operations (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> cluster_host_operation) map`
+
+value of the field
+
+#### RPC name: get&#95;enabled
+
+_Overview:_
+
+Get the enabled field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+bool get_enabled (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;host
+
+_Overview:_
+
+Get the host field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+host ref get_host (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `host ref`
+
+value of the field
+
+#### RPC name: get&#95;other&#95;config
+
+_Overview:_
+
+Get the other&#95;config field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+(string -> string) map get_other_config (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `(string -> string) map`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+Cluster_host record get_record (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `Cluster_host record`
+
+all fields from the object
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given Cluster&#95;host.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, Cluster_host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`Cluster_host ref            `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
 
 ## Class: console
 
@@ -3123,12 +4046,14 @@ A physical host
 |ha&#95;statefiles   |`string set        `|_RO/runtime_   |The set of statefiles accessible from this host|
 |host&#95;CPUs       |`host_cpu ref set  `|_RO/runtime_   |The physical CPUs on this host          |
 |hostname            |`string            `|_RW_           |The hostname of this host               |
+|iscsi&#95;iqn       |`string            `|_RO/constructor_|The initiator IQN for the host          |
 |license&#95;params  |`(string -> string) map`|_RO/runtime_   |State of the current license            |
 |license&#95;server  |`(string -> string) map`|_RW_           |Contact information of the license server|
 |local&#95;cache&#95;sr|`SR ref            `|_RO/constructor_|The SR that is used as a local cache    |
 |logging             |`(string -> string) map`|_RW_           |logging configuration                   |
 |memory&#95;overhead |`int               `|_RO/runtime_   |Virtualization memory overhead &#40;bytes&#41;.|
 |metrics             |`host_metrics ref  `|_RO/runtime_   |metrics associated with this host       |
+|multipathing        |`bool              `|_RO/constructor_|Specifies whether multipathing is enabled|
 |name&#95;description|`string            `|_RW_           |a notes field containing human&#45;readable description|
 |name&#95;label      |`string            `|_RW_           |a human&#45;readable name               |
 |other&#95;config    |`(string -> string) map`|_RW_           |additional configuration                |
@@ -4483,6 +5408,28 @@ _Return Type:_ `string`
 
 value of the field
 
+#### RPC name: get&#95;iscsi&#95;iqn
+
+_Overview:_
+
+Get the iscsi&#95;iqn field of the given host.
+
+_Signature:_
+
+```
+string get_iscsi_iqn (session ref session_id, host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
 #### RPC name: get&#95;license&#95;params
 
 _Overview:_
@@ -4656,6 +5603,28 @@ _Arguments:_
 |`host ref                    `|self                          |reference to the object                 |
 
 _Return Type:_ `host_metrics ref`
+
+value of the field
+
+#### RPC name: get&#95;multipathing
+
+_Overview:_
+
+Get the multipathing field of the given host.
+
+_Signature:_
+
+```
+bool get_multipathing (session ref session_id, host ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
 
 value of the field
 
@@ -5925,6 +6894,27 @@ _Return Type:_ `void`
 
 _Possible Error Codes:_ `HOST_NAME_INVALID`
 
+#### RPC name: set&#95;iscsi&#95;iqn
+
+_Overview:_
+
+Sets the initiator IQN for the host
+
+_Signature:_
+
+```
+void set_iscsi_iqn (session ref session_id, host ref host, string value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|host                          |The host                                |
+|`string                      `|value                         |The value to which the IQN should be set|
+
+_Return Type:_ `void`
+
 #### RPC name: set&#95;license&#95;server
 
 _Overview:_
@@ -5964,6 +6954,27 @@ _Arguments:_
 |session ref                   |session_id                    |Reference to a valid session            |
 |`host ref                    `|self                          |reference to the object                 |
 |`(string -> string) map      `|value                         |New value to set                        |
+
+_Return Type:_ `void`
+
+#### RPC name: set&#95;multipathing
+
+_Overview:_
+
+Specifies whether multipathing is enabled
+
+_Signature:_
+
+```
+void set_multipathing (session ref session_id, host ref host, bool value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|host                          |The host                                |
+|`bool                        `|value                         |Whether multipathing should be enabled  |
 
 _Return Type:_ `void`
 
@@ -8814,6 +9825,263 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+## Class: network&#95;sriov
+
+network&#45;sriov which connects logical pif and physical pif
+
+### Fields for class: network&#95;sriov
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|configuration&#95;mode|`sriov_configuration_mode`|_RO/runtime_   |The mode for configure network sriov    |
+|logical&#95;PIF     |`PIF ref           `|_RO/constructor_|The logical PIF to connect to the SR&#45;IOV network after enable SR&#45;IOV on the physical PIF|
+|physical&#95;PIF    |`PIF ref           `|_RO/constructor_|The PIF that has SR&#45;IOV enabled     |
+|requires&#95;reboot |`bool              `|_RO/runtime_   |Indicates whether the host need to be rebooted before SR&#45;IOV is enabled on the physical PIF|
+|uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
+
+### RPCs associated with class: network&#95;sriov
+
+#### RPC name: create
+
+_Overview:_
+
+Enable SR&#45;IOV on the specific PIF. It will create a network&#45;sriov based on the specific PIF and automatically create a logical PIF to connect the specific network.
+
+_Signature:_
+
+```
+network_sriov ref create (session ref session_id, PIF ref pif, network ref network)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PIF ref                     `|pif                           |PIF on which to enable SR&#45;IOV       |
+|`network ref                 `|network                       |Network to connect SR&#45;IOV virtual functions with VM VIFs|
+
+_Return Type:_ `network_sriov ref`
+
+The reference of the created network&#95;sriov object
+
+#### RPC name: destroy
+
+_Overview:_
+
+Disable SR&#45;IOV on the specific PIF. It will destroy the network&#45;sriov and the logical PIF accordingly.
+
+_Signature:_
+
+```
+void destroy (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |SRIOV to destroy                        |
+
+_Return Type:_ `void`
+
+#### RPC name: get&#95;all
+
+_Overview:_
+
+Return a list of all the network&#95;sriovs known to the system.
+
+_Signature:_
+
+```
+network_sriov ref set get_all (session ref session_id)
+```
+#### RPC name: get&#95;all&#95;records
+
+_Overview:_
+
+Return a map of network&#95;sriov references to network&#95;sriov records for all network&#95;sriovs known to the system.
+
+_Signature:_
+
+```
+(network_sriov ref -> network_sriov record) map get_all_records (session ref session_id)
+```
+#### RPC name: get&#95;by&#95;uuid
+
+_Overview:_
+
+Get a reference to the network&#95;sriov instance with the specified UUID.
+
+_Signature:_
+
+```
+network_sriov ref get_by_uuid (session ref session_id, string uuid)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`string                      `|uuid                          |UUID of object to return                |
+
+_Return Type:_ `network_sriov ref`
+
+reference to the object
+
+#### RPC name: get&#95;configuration&#95;mode
+
+_Overview:_
+
+Get the configuration&#95;mode field of the given network&#95;sriov.
+
+_Signature:_
+
+```
+sriov_configuration_mode get_configuration_mode (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `sriov_configuration_mode`
+
+value of the field
+
+#### RPC name: get&#95;logical&#95;PIF
+
+_Overview:_
+
+Get the logical&#95;PIF field of the given network&#95;sriov.
+
+_Signature:_
+
+```
+PIF ref get_logical_PIF (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `PIF ref`
+
+value of the field
+
+#### RPC name: get&#95;physical&#95;PIF
+
+_Overview:_
+
+Get the physical&#95;PIF field of the given network&#95;sriov.
+
+_Signature:_
+
+```
+PIF ref get_physical_PIF (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `PIF ref`
+
+value of the field
+
+#### RPC name: get&#95;record
+
+_Overview:_
+
+Get a record containing the current state of the given network&#95;sriov.
+
+_Signature:_
+
+```
+network_sriov record get_record (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `network_sriov record`
+
+all fields from the object
+
+#### RPC name: get&#95;remaining&#95;capacity
+
+_Overview:_
+
+Get the number of free SR&#45;IOV VFs on the associated PIF
+
+_Signature:_
+
+```
+int get_remaining_capacity (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |the NETWORK&#95;SRIOV object            |
+
+_Return Type:_ `int`
+
+The number of free SR&#45;IOV VFs on the associated PIF
+
+#### RPC name: get&#95;requires&#95;reboot
+
+_Overview:_
+
+Get the requires&#95;reboot field of the given network&#95;sriov.
+
+_Signature:_
+
+```
+bool get_requires_reboot (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `bool`
+
+value of the field
+
+#### RPC name: get&#95;uuid
+
+_Overview:_
+
+Get the uuid field of the given network&#95;sriov.
+
+_Signature:_
+
+```
+string get_uuid (session ref session_id, network_sriov ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`network_sriov ref           `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
 ## Class: PBD
 
 The physical block devices through which hosts access SRs
@@ -9209,6 +10477,7 @@ A PCI device
 |class&#95;name      |`string            `|_RO/constructor_|PCI class name                          |
 |dependencies        |`PCI ref set       `|_RO/runtime_   |List of dependent PCI devices           |
 |device&#95;name     |`string            `|_RO/constructor_|Device name                             |
+|driver&#95;name     |`string            `|_RO/constructor_|Driver name                             |
 |host                |`host ref          `|_RO/constructor_|Physical machine that owns the PCI device|
 |other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
 |pci&#95;id          |`string            `|_RO/constructor_|PCI ID of the physical device           |
@@ -9339,6 +10608,28 @@ _Signature:_
 
 ```
 string get_device_name (session ref session_id, PCI ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PCI ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `string`
+
+value of the field
+
+#### RPC name: get&#95;driver&#95;name
+
+_Overview:_
+
+Get the driver&#95;name field of the given PCI.
+
+_Signature:_
+
+```
+string get_driver_name (session ref session_id, PCI ref self)
 ```
 _Arguments:_
 
@@ -10150,7 +11441,7 @@ A physical network interface &#40;note separate VLANs are represented as several
 |capabilities        |`string set        `|_RO/runtime_   |Additional capabilities on the interface.|
 |currently&#95;attached|`bool              `|_RO/runtime_   |true if this interface is online        |
 |device              |`string            `|_RO/constructor_|machine&#45;readable name of the interface &#40;e.g. eth0&#41;|
-|disallow&#95;unplug |`bool              `|_RW_           |Prevent this PIF from being unplugged; set this to notify the management tool&#45;stack that the PIF has a special use and should not be unplugged under any circumstances &#40;e.g. because you're running storage traffic over it&#41;|
+|disallow&#95;unplug |`bool              `|_RO/runtime_   |Prevent this PIF from being unplugged; set this to notify the management tool&#45;stack that the PIF has a special use and should not be unplugged under any circumstances &#40;e.g. because you're running storage traffic over it&#41;|
 |DNS                 |`string            `|_RO/runtime_   |IP address of DNS servers to use        |
 |gateway             |`string            `|_RO/runtime_   |IP gateway                              |
 |host                |`host ref          `|_RO/constructor_|physical machine to which this pif is connected|
@@ -10168,9 +11459,12 @@ A physical network interface &#40;note separate VLANs are represented as several
 |netmask             |`string            `|_RO/runtime_   |IP netmask                              |
 |network             |`network ref       `|_RO/constructor_|virtual network to which this pif is connected|
 |other&#95;config    |`(string -> string) map`|_RW_           |Additional configuration                |
+|PCI                 |`PCI ref           `|_RO/runtime_   |Link to underlying PCI device           |
 |physical            |`bool              `|_RO/runtime_   |true if this represents a physical network interface|
 |primary&#95;address&#95;type|`primary_address_type`|_RO/runtime_   |Which protocol should define the primary address of this interface|
 |properties          |`(string -> string) map`|_RO/runtime_   |Additional configuration properties for the interface.|
+|sriov&#95;logical&#95;PIF&#95;of|`network_sriov ref set`|_RO/runtime_   |Indicates which network&#95;sriov this interface is logical of|
+|sriov&#95;physical&#95;PIF&#95;of|`network_sriov ref set`|_RO/runtime_   |Indicates which network&#95;sriov this interface is physical of|
 |tunnel&#95;access&#95;PIF&#95;of|`tunnel ref set    `|_RO/runtime_   |Indicates to which tunnel this PIF gives access|
 |tunnel&#95;transport&#95;PIF&#95;of|`tunnel ref set    `|_RO/runtime_   |Indicates to which tunnel this PIF provides transport|
 |uuid                |`string            `|_RO/runtime_   |Unique identifier/object reference      |
@@ -10339,7 +11633,7 @@ _Arguments:_
 
 _Return Type:_ `void`
 
-_Possible Error Codes:_ `PIF_TUNNEL_STILL_EXISTS`
+_Possible Error Codes:_ `PIF_TUNNEL_STILL_EXISTS`, `CLUSTERING_ENABLED_ON_NETWORK`
 
 #### RPC name: get&#95;all
 
@@ -10891,6 +12185,28 @@ _Return Type:_ `(string -> string) map`
 
 value of the field
 
+#### RPC name: get&#95;PCI
+
+_Overview:_
+
+Get the PCI field of the given PIF.
+
+_Signature:_
+
+```
+PCI ref get_PCI (session ref session_id, PIF ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PIF ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `PCI ref`
+
+value of the field
+
 #### RPC name: get&#95;physical
 
 _Overview:_
@@ -10978,6 +12294,50 @@ _Arguments:_
 _Return Type:_ `PIF record`
 
 all fields from the object
+
+#### RPC name: get&#95;sriov&#95;logical&#95;PIF&#95;of
+
+_Overview:_
+
+Get the sriov&#95;logical&#95;PIF&#95;of field of the given PIF.
+
+_Signature:_
+
+```
+network_sriov ref set get_sriov_logical_PIF_of (session ref session_id, PIF ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PIF ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `network_sriov ref set`
+
+value of the field
+
+#### RPC name: get&#95;sriov&#95;physical&#95;PIF&#95;of
+
+_Overview:_
+
+Get the sriov&#95;physical&#95;PIF&#95;of field of the given PIF.
+
+_Signature:_
+
+```
+network_sriov ref set get_sriov_physical_PIF_of (session ref session_id, PIF ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`PIF ref                     `|self                          |reference to the object                 |
+
+_Return Type:_ `network_sriov ref set`
+
+value of the field
 
 #### RPC name: get&#95;tunnel&#95;access&#95;PIF&#95;of
 
@@ -11183,6 +12543,8 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+_Possible Error Codes:_ `CLUSTERING_ENABLED_ON_NETWORK`
+
 #### RPC name: reconfigure&#95;ipv6
 
 _Overview:_
@@ -11206,6 +12568,8 @@ _Arguments:_
 |`string                      `|DNS                           |the new DNS settings                    |
 
 _Return Type:_ `void`
+
+_Possible Error Codes:_ `CLUSTERING_ENABLED_ON_NETWORK`
 
 #### RPC name: remove&#95;from&#95;other&#95;config
 
@@ -11252,7 +12616,7 @@ _Return Type:_ `void`
 
 _Overview:_
 
-Set the disallow&#95;unplug field of the given PIF.
+Set whether unplugging the PIF is allowed
 
 _Signature:_
 
@@ -11264,10 +12628,12 @@ _Arguments:_
 |type                          |name                          |description                             |
 |:-----------------------------|:-----------------------------|:---------------------------------------|
 |session ref                   |session_id                    |Reference to a valid session            |
-|`PIF ref                     `|self                          |reference to the object                 |
+|`PIF ref                     `|self                          |Reference to the object                 |
 |`bool                        `|value                         |New value to set                        |
 
 _Return Type:_ `void`
+
+_Possible Error Codes:_ `CLUSTERING_ENABLED_ON_NETWORK`
 
 #### RPC name: set&#95;other&#95;config
 
@@ -11352,6 +12718,8 @@ _Arguments:_
 |`PIF ref                     `|self                          |the PIF object to unplug                |
 
 _Return Type:_ `void`
+
+_Possible Error Codes:_ `HA_OPERATION_WOULD_BREAK_FAILOVER_PLAN`, `VIF_IN_USE`, `PIF_DOES_NOT_ALLOW_UNPLUG`, `PIF_HAS_FCOE_SR_IN_USE`
 
 ## Class: PIF&#95;metrics
 
@@ -15257,6 +16625,23 @@ _Arguments:_
 |`(string -> string) map      `|value                         |New value to set                        |
 
 _Return Type:_ `void`
+
+## Class: probe&#95;result
+
+A set of properties that describe one result element of SR.probe. Result elements and properties can change dynamically based on changes to the the SR.probe input&#45;parameters or the target.
+
+### Fields for class: probe&#95;result
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|complete            |`bool              `|_RO/runtime_   |True if this configuration is complete and can be used to call SR.create. False if it requires further iterative calls to SR.probe, to potentially narrow down on a configuration that can be used.|
+|configuration       |`(string -> string) map`|_RO/runtime_   |Plugin&#45;specific configuration which describes where and how to locate the storage repository. This may include the physical block device name, a remote NFS server and path or an RBD storage pool.|
+|extra&#95;info      |`(string -> string) map`|_RO/runtime_   |Additional plugin&#45;specific information about this configuration, that might be of use for an API user. This can for example include the LUN or the WWPN.|
+|sr                  |`sr_stat record option`|_RO/runtime_   |Existing SR found for this configuration|
+
+### RPCs associated with class: probe&#95;result
+
+Class probe&#95;result has no additional RPCs associated with it.
 
 ## Class: PUSB
 
@@ -19663,6 +21048,31 @@ _Return Type:_ `string`
 
 An XML fragment containing the scan results.  These are specific to the scan being performed, and the backend.
 
+#### RPC name: probe&#95;ext
+
+_Overview:_
+
+Perform a backend&#45;specific scan, using the given device&#95;config.  If the device&#95;config is complete, then this will return a list of the SRs present of this type on the device, if any.  If the device&#95;config is partial, then a backend&#45;specific scan will be performed, returning results that will guide the user in improving the device&#95;config.
+
+_Signature:_
+
+```
+probe_result record set probe_ext (session ref session_id, host ref host, (string -> string) map device_config, string type, (string -> string) map sm_config)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`host ref                    `|host                          |The host to create/make the SR on       |
+|`(string -> string) map      `|device&#95;config             |The device config string that will be passed to backend SR driver|
+|`string                      `|type                          |The type of the SR; used to specify the SR backend driver to use|
+|`(string -> string) map      `|sm&#95;config                 |Storage backend specific configuration options|
+
+_Return Type:_ `probe_result record set`
+
+A set of records containing the scan results.
+
 #### RPC name: query&#95;data&#95;source
 
 _Overview:_
@@ -19998,6 +21408,26 @@ _Arguments:_
 |`SR ref                      `|sr                            |The SR whose fields should be refreshed |
 
 _Return Type:_ `void`
+
+## Class: sr&#95;stat
+
+A set of high&#45;level properties associated with an SR.
+
+### Fields for class: sr&#95;stat
+
+|Field               |Type                |Qualifier      |Description                             |
+|:-------------------|:-------------------|:--------------|:---------------------------------------|
+|clustered           |`bool              `|_RO/runtime_   |Indicates whether the SR uses clustered local storage.|
+|free&#95;space      |`int               `|_RO/runtime_   |Number of bytes free on the backing storage &#40;in bytes&#41;|
+|health              |`sr_health         `|_RO/runtime_   |The health status of the SR.            |
+|name&#95;description|`string            `|_RO/runtime_   |Longer, human&#45;readable description of the SR. Descriptions are generally only displayed by clients when the user is examining SRs in detail.|
+|name&#95;label      |`string            `|_RO/runtime_   |Short, human&#45;readable label for the SR.|
+|total&#95;space     |`int               `|_RO/runtime_   |Total physical size of the backing storage &#40;in bytes&#41;|
+|uuid                |`string option     `|_RO/runtime_   |Uuid that uniquely identifies this SR, if one is available.|
+
+### RPCs associated with class: sr&#95;stat
+
+Class sr&#95;stat has no additional RPCs associated with it.
 
 ## Class: subject
 
@@ -21979,7 +23409,7 @@ A virtual block device
 |device              |`string            `|_RO/runtime_   |device seen by the guest e.g. hda1      |
 |empty               |`bool              `|_RO/constructor_|if true this represents an empty drive  |
 |metrics             |`VBD_metrics ref   `|_RO/runtime_   |**Removed**. metrics associated with this VBD|
-|mode                |`vbd_mode          `|_RW_           |the mode the VBD should be mounted with |
+|mode                |`vbd_mode          `|_RO/constructor_|the mode the VBD should be mounted with |
 |other&#95;config    |`(string -> string) map`|_RW_           |additional configuration                |
 |qos&#95;algorithm&#95;params|`(string -> string) map`|_RW_           |parameters for chosen QoS algorithm     |
 |qos&#95;algorithm&#95;type|`string            `|_RW_           |QoS algorithm to use                    |
@@ -22787,7 +24217,7 @@ _Return Type:_ `void`
 
 _Overview:_
 
-Set the mode field of the given VBD.
+Sets the mode of the VBD. The power&#95;state of the VM must be halted.
 
 _Signature:_
 
@@ -22799,7 +24229,7 @@ _Arguments:_
 |type                          |name                          |description                             |
 |:-----------------------------|:-----------------------------|:---------------------------------------|
 |session ref                   |session_id                    |Reference to a valid session            |
-|`VBD ref                     `|self                          |reference to the object                 |
+|`VBD ref                     `|self                          |Reference to the object                 |
 |`vbd_mode                    `|value                         |New value to set                        |
 
 _Return Type:_ `void`
@@ -27737,7 +29167,7 @@ A virtual machine &#40;or 'guest'&#41;.
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
-|actions&#95;after&#95;crash|`on_crash_behaviour`|_RW_           |action to take if the guest crashes     |
+|actions&#95;after&#95;crash|`on_crash_behaviour`|_RO/constructor_|action to take if the guest crashes     |
 |actions&#95;after&#95;reboot|`on_normal_exit    `|_RW_           |action to take after the guest has rebooted itself|
 |actions&#95;after&#95;shutdown|`on_normal_exit    `|_RW_           |action to take after the guest has shutdown itself|
 |affinity            |`host ref          `|_RW_           |A host which the VM has some affinity for &#40;or NULL&#41;. This is used as a hint to the start call when it decides where to run the VM. Resource constraints may cause the VM to be started elsewhere.|
@@ -27751,6 +29181,7 @@ A virtual machine &#40;or 'guest'&#41;.
 |consoles            |`console ref set   `|_RO/runtime_   |virtual console devices                 |
 |crash&#95;dumps     |`crashdump ref set `|_RO/runtime_   |crash dumps associated with this VM     |
 |current&#95;operations|`(string -> vm_operations) map`|_RO/runtime_   |links each of the running tasks using this object &#40;by reference&#41; to a current&#95;operation enum which describes the nature of the task.|
+|domain&#95;type     |`domain_type       `|_RO/constructor_|The type of domain that will be created when the VM is started|
 |domarch             |`string            `|_RO/runtime_   |Domain architecture &#40;if available, null string otherwise&#41;|
 |domid               |`int               `|_RO/runtime_   |domain ID &#40;if available, &#45;1 otherwise&#41;|
 |generation&#95;id   |`string            `|_RO/constructor_|Generation ID of the VM                 |
@@ -27760,7 +29191,7 @@ A virtual machine &#40;or 'guest'&#41;.
 |hardware&#95;platform&#95;version|`int               `|_RW_           |The host virtual hardware platform version the VM can run on|
 |has&#95;vendor&#95;device|`bool              `|_RO/constructor_|When an HVM guest starts, this controls the presence of the emulated C000 PCI device which triggers Windows Update to fetch or update PV drivers.|
 |HVM&#95;boot&#95;params|`(string -> string) map`|_RW_           |HVM boot params                         |
-|HVM&#95;boot&#95;policy|`string            `|_RW_           |HVM boot policy                         |
+|HVM&#95;boot&#95;policy|`string            `|_RO/constructor_|**Deprecated**. HVM boot policy         |
 |HVM&#95;shadow&#95;multiplier|`float             `|_RO/constructor_|multiplier applied to the amount of shadow that will be made available to the guest|
 |is&#95;a&#95;snapshot|`bool              `|_RO/runtime_   |true if this is a snapshot. Snapshotted VMs can never be started, they are used only for cloning other VMs|
 |is&#95;a&#95;template|`bool              `|_RW_           |true if this is a template. Template VMs can never be started, they are used only for cloning other VMs|
@@ -28877,6 +30308,28 @@ _Return Type:_ `data_source record set`
 
 A set of data sources
 
+#### RPC name: get&#95;domain&#95;type
+
+_Overview:_
+
+Get the domain&#95;type field of the given VM.
+
+_Signature:_
+
+```
+domain_type get_domain_type (session ref session_id, VM ref self)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |reference to the object                 |
+
+_Return Type:_ `domain_type`
+
+value of the field
+
 #### RPC name: get&#95;domarch
 
 _Overview:_
@@ -29078,6 +30531,8 @@ _Return Type:_ `(string -> string) map`
 value of the field
 
 #### RPC name: get&#95;HVM&#95;boot&#95;policy
+
+**This message is deprecated.**
 
 _Overview:_
 
@@ -31085,7 +32540,7 @@ _Possible Error Codes:_ `VM_BAD_POWER_STATE`
 
 _Overview:_
 
-Set the actions/after&#95;crash field of the given VM.
+Sets the actions&#95;after&#95;crash parameter
 
 _Signature:_
 
@@ -31097,8 +32552,8 @@ _Arguments:_
 |type                          |name                          |description                             |
 |:-----------------------------|:-----------------------------|:---------------------------------------|
 |session ref                   |session_id                    |Reference to a valid session            |
-|`VM ref                      `|self                          |reference to the object                 |
-|`on_crash_behaviour          `|value                         |New value to set                        |
+|`VM ref                      `|self                          |The VM to set                           |
+|`on_crash_behaviour          `|value                         |The new value to set                    |
 
 _Return Type:_ `void`
 
@@ -31230,6 +32685,27 @@ _Arguments:_
 
 _Return Type:_ `void`
 
+#### RPC name: set&#95;domain&#95;type
+
+_Overview:_
+
+Set the VM.domain&#95;type field of the given VM, which will take effect when it is next started
+
+_Signature:_
+
+```
+void set_domain_type (session ref session_id, VM ref self, domain_type value)
+```
+_Arguments:_
+
+|type                          |name                          |description                             |
+|:-----------------------------|:-----------------------------|:---------------------------------------|
+|session ref                   |session_id                    |Reference to a valid session            |
+|`VM ref                      `|self                          |The VM                                  |
+|`domain_type                 `|value                         |The new domain type                     |
+
+_Return Type:_ `void`
+
 #### RPC name: set&#95;ha&#95;always&#95;run
 
 **This message is deprecated.**
@@ -31339,9 +32815,11 @@ _Return Type:_ `void`
 
 #### RPC name: set&#95;HVM&#95;boot&#95;policy
 
+**This message is deprecated.**
+
 _Overview:_
 
-Set the HVM/boot&#95;policy field of the given VM.
+Set the VM.HVM&#95;boot&#95;policy field of the given VM, which will take effect when it is next started
 
 _Signature:_
 
@@ -31353,8 +32831,8 @@ _Arguments:_
 |type                          |name                          |description                             |
 |:-----------------------------|:-----------------------------|:---------------------------------------|
 |session ref                   |session_id                    |Reference to a valid session            |
-|`VM ref                      `|self                          |reference to the object                 |
-|`string                      `|value                         |New value to set                        |
+|`VM ref                      `|self                          |The VM                                  |
+|`string                      `|value                         |The new HVM boot policy                 |
 
 _Return Type:_ `void`
 
@@ -33333,7 +34811,7 @@ The metrics associated with a VM
 
 |Field               |Type                |Qualifier      |Description                             |
 |:-------------------|:-------------------|:--------------|:---------------------------------------|
-|current&#95;domain&#95;type|`domain_type       `|_RO/runtime_   |Not yet implemented &#40;for future use&#41;|
+|current&#95;domain&#95;type|`domain_type       `|_RO/runtime_   |The current domain type of the VM &#40;for running,suspended, or paused VMs&#41;. The last&#45;known domain type for halted VMs.|
 |hvm                 |`bool              `|_RO/runtime_   |hardware virtual machine                |
 |install&#95;time    |`datetime          `|_RO/runtime_   |Time at which the VM was installed      |
 |last&#95;updated    |`datetime          `|_RO/runtime_   |Time at which this information was last updated|
@@ -36239,34 +37717,57 @@ _Return Type:_ `void`
 ## Error Handling
 
 When a low-level transport error occurs, or a request is malformed at the HTTP
-or XML-RPC level, the server may send an XML-RPC Fault response, or the client
-may simulate the same.  The client must be prepared to handle these errors,
-though they may be treated as fatal.  On the wire, these are transmitted in a
-form similar to this:
+or RPC level, the server may send an HTTP 500 error response, or the client
+may simulate the same. The client must be prepared to handle these errors,
+though they may be treated as fatal.
 
-```xml
-    <methodResponse>
-      <fault>
-        <value>
-          <struct>
-            <member>
-                <name>faultCode</name>
-                <value><int>-1</int></value>
-              </member>
-              <member>
-                <name>faultString</name>
-                <value><string>Malformed request</string></value>
-            </member>
-          </struct>
-        </value>
-      </fault>
-    </methodResponse>
+On the wire, these are transmitted in a form similar to this when using the
+XML-RPC protocol:
+
+```
+$curl -D - -X POST https://server -H 'Content-Type: application/xml' \
+> -d '<?xml version="1.0"?>
+> <methodCall>
+>   <methodName>session.logout</methodName>
+> </methodCall>'
+HTTP/1.1 500 Internal Error
+content-length: 297
+content-type:text/html
+connection:close
+cache-control:no-cache, no-store
+
+<html><body><h1>HTTP 500 internal server error</h1>An unexpected error occurred;
+ please wait a while and try again. If the problem persists, please contact your
+ support representative.<h1> Additional information </h1>Xmlrpc.Parse_error(&quo
+t;close_tag&quot;, &quot;open_tag&quot;, _)</body></html>
+```
+
+When using the JSON-RPC protocol:
+
+```
+$curl -D - -X POST https://server/jsonrpc -H 'Content-Type: application/json' \
+> -d '{
+>     "jsonrpc": "2.0",
+>     "method": "session.login_with_password",
+>     "id": 0
+> }'
+HTTP/1.1 500 Internal Error
+content-length: 308
+content-type:text/html
+connection:close
+cache-control:no-cache, no-store
+
+<html><body><h1>HTTP 500 internal server error</h1>An unexpected error occurred;
+ please wait a while and try again. If the problem persists, please contact your
+ support representative.<h1> Additional information </h1>Jsonrpc.Malformed_metho
+d_request(&quot;{jsonrpc=...,method=...,id=...}&quot;)</body></html>
 ```
 
 All other failures are reported with a more structured error response, to
 allow better automatic response to failures, proper internationalisation of
-any error message, and easier debugging.  On the wire, these are transmitted
-like this:
+any error message, and easier debugging.
+
+On the wire, these are transmitted like this when using the XML-RPC protocol:
 
 ```xml
     <struct>
@@ -36296,6 +37797,34 @@ strings representing error parameters relating to that code.  In this case,
 the client has attempted to add the mapping _Customer &#45;&gt;
 eSpiel Incorporated_ to a Map, but it already contains the mapping
 _Customer &#45;&gt; eSpiel Inc._, and so the request has failed.
+
+When using the JSON-RPC protocol v2.0, the above error is transmitted as:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "error": {
+        "code": 1,
+        "message": "MAP_DUPLICATE_KEY",
+        "data": [
+            "Customer","eSpiel Inc.","eSpiel Incorporated"
+        ]
+    },
+    "id": 3
+  }
+```
+
+Finally, when using the JSON-RPC protocol v1.0:
+
+```json
+{
+  "result": null,
+  "error": [
+      "MAP_DUPLICATE_KEY","Customer","eSpiel Inc.","eSpiel Incorporated"
+  ],
+  "id": "xyz"
+}
+```
 
 Each possible error code is documented in the following section.
 
@@ -36493,6 +38022,24 @@ _Signature:_
 CANNOT_ADD_TUNNEL_TO_BOND_SLAVE(PIF)
 ```
 
+#### CANNOT&#95;ADD&#95;TUNNEL&#95;TO&#95;SRIOV&#95;LOGICAL
+
+This is a network SR&#45;IOV logical PIF and cannot have a tunnel on it.
+
+_Signature:_
+```
+CANNOT_ADD_TUNNEL_TO_SRIOV_LOGICAL(PIF)
+```
+
+#### CANNOT&#95;ADD&#95;TUNNEL&#95;TO&#95;VLAN&#95;ON&#95;SRIOV&#95;LOGICAL
+
+This is a vlan PIF on network SR&#45;IOV and cannot have a tunnel on it.
+
+_Signature:_
+```
+CANNOT_ADD_TUNNEL_TO_VLAN_ON_SRIOV_LOGICAL(PIF)
+```
+
 #### CANNOT&#95;ADD&#95;VLAN&#95;TO&#95;BOND&#95;SLAVE
 
 This PIF is a bond slave and cannot have a VLAN on it.
@@ -36595,6 +38142,15 @@ The requested update could not be found. Please upload the update again. This ca
 
 No parameters.
 
+#### CANNOT&#95;FORGET&#95;SRIOV&#95;LOGICAL
+
+This is a network SR&#45;IOV logical PIF and cannot do forget on it
+
+_Signature:_
+```
+CANNOT_FORGET_SRIOV_LOGICAL(PIF)
+```
+
 #### CANNOT&#95;PLUG&#95;BOND&#95;SLAVE
 
 This PIF is a bond slave and cannot be plugged.
@@ -36680,6 +38236,72 @@ An SR is using clustered local storage. It is not safe to reboot a host at the m
 _Signature:_
 ```
 CLUSTERED_SR_DEGRADED(sr)
+```
+
+#### CLUSTERING&#95;DISABLED
+
+An operation was attempted while clustering was disabled on the cluster&#95;host.
+
+_Signature:_
+```
+CLUSTERING_DISABLED(cluster_host)
+```
+
+#### CLUSTERING&#95;ENABLED
+
+An operation was attempted while clustering was enabled on the cluster&#95;host.
+
+_Signature:_
+```
+CLUSTERING_ENABLED(cluster_host)
+```
+
+#### CLUSTERING&#95;ENABLED&#95;ON&#95;NETWORK
+
+The network has cluster objects attached.
+
+_Signature:_
+```
+CLUSTERING_ENABLED_ON_NETWORK(network)
+```
+
+#### CLUSTER&#95;ALREADY&#95;EXISTS
+
+A cluster already exists in the pool.
+
+No parameters.
+
+#### CLUSTER&#95;CREATE&#95;IN&#95;PROGRESS
+
+The operation could not be performed because cluster creation is in progress.
+
+No parameters.
+
+#### CLUSTER&#95;DOES&#95;NOT&#95;HAVE&#95;ONE&#95;NODE
+
+The cluster does not have only one node.
+
+_Signature:_
+```
+CLUSTER_DOES_NOT_HAVE_ONE_NODE(number_of_nodes)
+```
+
+#### CLUSTER&#95;FORCE&#95;DESTROY&#95;FAILED
+
+Force destroy failed on a Cluster&#95;host while force destroying the cluster.
+
+_Signature:_
+```
+CLUSTER_FORCE_DESTROY_FAILED(cluster)
+```
+
+#### CLUSTER&#95;STACK&#95;IN&#95;USE
+
+The cluster stack is already in use.
+
+_Signature:_
+```
+CLUSTER_STACK_IN_USE(cluster_stack)
 ```
 
 #### COULD&#95;NOT&#95;FIND&#95;NETWORK&#95;INTERFACE&#95;WITH&#95;SPECIFIED&#95;DEVICE&#95;NAME&#95;AND&#95;MAC&#95;ADDRESS
@@ -37744,6 +39366,24 @@ _Signature:_
 NETWORK_CONTAINS_VIF(vifs)
 ```
 
+#### NETWORK&#95;HAS&#95;INCOMPATIBLE&#95;SRIOV&#95;PIFS
+
+The PIF is not compatible with the selected SR&#45;IOV network
+
+_Signature:_
+```
+NETWORK_HAS_INCOMPATIBLE_SRIOV_PIFS(PIF, network)
+```
+
+#### NETWORK&#95;HAS&#95;INCOMPATIBLE&#95;VLAN&#95;ON&#95;SRIOV&#95;PIFS
+
+VLAN on the PIF is not compatible with the selected SR&#45;IOV VLAN network
+
+_Signature:_
+```
+NETWORK_HAS_INCOMPATIBLE_VLAN_ON_SRIOV_PIFS(PIF, network)
+```
+
 #### NETWORK&#95;INCOMPATIBLE&#95;PURPOSES
 
 You tried to add a purpose to a network but the new purpose is not compatible with an existing purpose of the network or other networks.
@@ -37751,6 +39391,87 @@ You tried to add a purpose to a network but the new purpose is not compatible wi
 _Signature:_
 ```
 NETWORK_INCOMPATIBLE_PURPOSES(new_purpose, conflicting_purpose)
+```
+
+#### NETWORK&#95;INCOMPATIBLE&#95;WITH&#95;BOND
+
+The network is incompatible with bond
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_WITH_BOND(network)
+```
+
+#### NETWORK&#95;INCOMPATIBLE&#95;WITH&#95;SRIOV
+
+The network is incompatible with sriov
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_WITH_SRIOV(network)
+```
+
+#### NETWORK&#95;INCOMPATIBLE&#95;WITH&#95;TUNNEL
+
+The network is incompatible with tunnel
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_WITH_TUNNEL(network)
+```
+
+#### NETWORK&#95;INCOMPATIBLE&#95;WITH&#95;VLAN&#95;ON&#95;BRIDGE
+
+The network is incompatible with vlan on bridge
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_WITH_VLAN_ON_BRIDGE(network)
+```
+
+#### NETWORK&#95;INCOMPATIBLE&#95;WITH&#95;VLAN&#95;ON&#95;SRIOV
+
+The network is incompatible with vlan on sriov
+
+_Signature:_
+```
+NETWORK_INCOMPATIBLE_WITH_VLAN_ON_SRIOV(network)
+```
+
+#### NETWORK&#95;SRIOV&#95;ALREADY&#95;ENABLED
+
+The PIF selected for the SR&#45;IOV network is already enabled
+
+_Signature:_
+```
+NETWORK_SRIOV_ALREADY_ENABLED(PIF)
+```
+
+#### NETWORK&#95;SRIOV&#95;DISABLE&#95;FAILED
+
+Failed to disable SR&#45;IOV on PIF
+
+_Signature:_
+```
+NETWORK_SRIOV_DISABLE_FAILED(PIF, msg)
+```
+
+#### NETWORK&#95;SRIOV&#95;ENABLE&#95;FAILED
+
+Failed to enable SR&#45;IOV on PIF
+
+_Signature:_
+```
+NETWORK_SRIOV_ENABLE_FAILED(PIF, msg)
+```
+
+#### NETWORK&#95;SRIOV&#95;INSUFFICIENT&#95;CAPACITY
+
+There is insufficient capacity for VF reservation
+
+_Signature:_
+```
+NETWORK_SRIOV_INSUFFICIENT_CAPACITY(network)
 ```
 
 #### NETWORK&#95;UNMANAGED
@@ -37799,6 +39520,15 @@ The given VM is not registered as a system domain. This operation can only be pe
 _Signature:_
 ```
 NOT_SYSTEM_DOMAIN(vm)
+```
+
+#### NO&#95;COMPATIBLE&#95;CLUSTER&#95;HOST
+
+The host does not have a Cluster&#95;host with a compatible cluster stack.
+
+_Signature:_
+```
+NO_COMPATIBLE_CLUSTER_HOST(host)
 ```
 
 #### NO&#95;HOSTS&#95;AVAILABLE
@@ -38047,6 +39777,15 @@ _Signature:_
 PGPU_NOT_COMPATIBLE_WITH_GPU_GROUP(type, group_types)
 ```
 
+#### PIF&#95;ALLOWS&#95;UNPLUG
+
+The operation you requested cannot be performed because the specified PIF allows unplug.
+
+_Signature:_
+```
+PIF_ALLOWS_UNPLUG(PIF)
+```
+
 #### PIF&#95;ALREADY&#95;BONDED
 
 This operation cannot be performed because the pif is bonded.
@@ -38098,6 +39837,15 @@ _Signature:_
 PIF_DOES_NOT_ALLOW_UNPLUG(PIF)
 ```
 
+#### PIF&#95;HAS&#95;FCOE&#95;SR&#95;IN&#95;USE
+
+The operation you requested cannot be performed because the specified PIF has FCoE SR in use.
+
+_Signature:_
+```
+PIF_HAS_FCOE_SR_IN_USE(PIF, SR)
+```
+
 #### PIF&#95;HAS&#95;NO&#95;NETWORK&#95;CONFIGURATION
 
 PIF has no IP configuration &#40;mode currently set to 'none'&#41;
@@ -38134,6 +39882,24 @@ _Signature:_
 PIF_IS_MANAGEMENT_INTERFACE(PIF)
 ```
 
+#### PIF&#95;IS&#95;NOT&#95;PHYSICAL
+
+You tried to perform an operation which is only available on physical PIF
+
+_Signature:_
+```
+PIF_IS_NOT_PHYSICAL(PIF)
+```
+
+#### PIF&#95;IS&#95;NOT&#95;SRIOV&#95;CAPABLE
+
+The selected PIF is not capable of network SR&#45;IOV
+
+_Signature:_
+```
+PIF_IS_NOT_SRIOV_CAPABLE(PIF)
+```
+
 #### PIF&#95;IS&#95;PHYSICAL
 
 You tried to destroy a PIF, but it represents an aspect of the physical host configuration, and so cannot be destroyed.  The parameter echoes the PIF handle you gave.
@@ -38141,6 +39907,15 @@ You tried to destroy a PIF, but it represents an aspect of the physical host con
 _Signature:_
 ```
 PIF_IS_PHYSICAL(PIF)
+```
+
+#### PIF&#95;IS&#95;SRIOV&#95;LOGICAL
+
+You tried to create a bond on top of a network SR&#45;IOV logical PIF &#45; use the underlying physical PIF instead
+
+_Signature:_
+```
+PIF_IS_SRIOV_LOGICAL(PIF)
 ```
 
 #### PIF&#95;IS&#95;VLAN
@@ -38159,6 +39934,15 @@ This host has no PIF on the given network.
 _Signature:_
 ```
 PIF_NOT_PRESENT(host, network)
+```
+
+#### PIF&#95;SRIOV&#95;STILL&#95;EXISTS
+
+The PIF is still related with a network SR&#45;IOV
+
+_Signature:_
+```
+PIF_SRIOV_STILL_EXISTS(PIF)
 ```
 
 #### PIF&#95;TUNNEL&#95;STILL&#95;EXISTS
@@ -38323,6 +40107,12 @@ No parameters.
 #### POOL&#95;JOINING&#95;HOST&#95;HAS&#95;BONDS
 
 The host joining the pool must not have any bonds.
+
+No parameters.
+
+#### POOL&#95;JOINING&#95;HOST&#95;HAS&#95;NETWORK&#95;SRIOVS
+
+The host joining the pool must not have any network SR&#45;IOVs.
 
 No parameters.
 
@@ -38681,6 +40471,15 @@ The operation cannot be performed until the SR has been upgraded
 _Signature:_
 ```
 SR_REQUIRES_UPGRADE(SR)
+```
+
+#### SR&#95;SOURCE&#95;SPACE&#95;INSUFFICIENT
+
+The source SR does not have sufficient temporary space available to proceed the operation.
+
+_Signature:_
+```
+SR_SOURCE_SPACE_INSUFFICIENT(sr)
 ```
 
 #### SR&#95;UNKNOWN&#95;DRIVER
@@ -39422,7 +41221,10 @@ VM_DUPLICATE_VBD_DEVICE(vm, vbd, device)
 
 VM didn't acknowledge the need to shutdown.
 
-No parameters.
+_Signature:_
+```
+VM_FAILED_SHUTDOWN_ACKNOWLEDGMENT(vm)
+```
 
 #### VM&#95;HALTED
 
@@ -39630,6 +41432,12 @@ _Signature:_
 ```
 VM_MEMORY_SIZE_TOO_LOW(vm)
 ```
+
+#### VM&#95;MIGRATE&#95;CONTACT&#95;REMOTE&#95;SERVICE&#95;FAILED
+
+Failed to contact service on the destination host.
+
+No parameters.
 
 #### VM&#95;MIGRATE&#95;FAILED
 
