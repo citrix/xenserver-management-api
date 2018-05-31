@@ -1,14 +1,15 @@
-# Citrix XenServer 7.4 CR Management API
+# Citrix XenServer 7.5 CR Management API
 
-## API Revision 2.9
+## API Revision 2.10
 
 This document defines the XenServer Management API - an interface for remotely
 configuring and controlling virtualised guests running on a Xen-enabled host.
 
-The API is presented here as a set of Remote Procedure Calls (RPCs), with a wire
-format based upon [XML-RPC](http://xmlrpc.scripting.com/spec.html). No specific
-language bindings are prescribed, although examples will be given in the python
-programming language.
+The API is presented here as a set of Remote Procedure Calls (RPCs). There are
+two supported wire formats, one based upon [XML-RPC](http://xmlrpc.scripting.com/spec.html)
+and one based upon [JSON-RPC](http://www.jsonrpc.org) (v1.0 and v2.0 are both
+recognised). No specific language bindings are prescribed, although examples
+will be given in the python programming language.
 
 Although we adopt some terminology from object-oriented programming,
 future client language bindings may or may not be object oriented.
@@ -22,16 +23,16 @@ access their fields via get/set RPCs.
 For each class we specify a list of fields along with their _types_ and
 _qualifiers_. A qualifier is one of:
 
-- `RO/runtime`: the field is Read Only. Furthermore, its value is
+* `RO/runtime`: the field is Read Only. Furthermore, its value is
   automatically computed at runtime. For example, current CPU load and disk IO
   throughput.
 
-- `RO/constructor`: the field must be manually set when a new object is
+* `RO/constructor`: the field must be manually set when a new object is
   created, but is then Read Only for the duration of the object's life.
   For example, the maximum memory addressable by a guest is set
   before the guest boots.
 
-- `RW`: the field is Read/Write. For example, the name of a VM.
+* `RW`: the field is Read/Write. For example, the name of a VM.
 
 ## Types
 
@@ -68,7 +69,7 @@ one-many, many-many).
 
 Each field, `f`, has an RPC accessor associated with it that returns `f`'s value:
 
-- `get_f (r)`: takes a `ref`, `r` that refers to an object and returns the value
+* `get_f (r)`: takes a `ref`, `r` that refers to an object and returns the value
   of `f`.
 
 Each field, `f`, with qualifier `RW` and whose outermost type is `set` has the
