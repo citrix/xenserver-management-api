@@ -1,5 +1,7 @@
 # Citrix XenServer 7.6 CR Management API
 
+The latest version of the Management API documentation for Citrix Hypervisor (formerly XenServer) is available at <https://developer-docs.citrix.com/projects/citrix-hypervisor-management-api/en/latest/>.
+
 ## API Revision 2.11
 
 This document defines the XenServer Management API - an interface for remotely
